@@ -14,7 +14,11 @@
 
 <template name="hello">
   <button>Click Me</button>
+  {{#if counter}}
   <p>You've pressed the button {{counter}} times.</p>
+  {{else}}
+  <p>David suggests clicking the button.</p>
+  {{/if}}
 </template>
 
 <template name="info">
