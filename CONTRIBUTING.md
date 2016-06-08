@@ -1,8 +1,6 @@
 
 Note this project is for team members of the Penn State Software Enginnering 500, Summer 2016, Team 5 group. If you are not one of those team members, any pull requests, bug reports, etc will be rejected until the end of August, 2016. 
 
-This is a temporary change to practice merging with Steve B.
-
 # Repositories
 
 There are going to be several levels of source control in use. 
