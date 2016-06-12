@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "meteor test --driver-package practicalmeteor:mocha --port 8081"
+    "test": "meteor test --driver-package practicalmeteor:mocha --port 8082"
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0"
