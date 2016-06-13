@@ -3,8 +3,8 @@ machine:
     version: 0.10.43
 dependencies:
   override:
-    -curl https://install.meteor.com | /bin/sh
-    -npm install
+    - curl https://install.meteor.com | /bin/sh
+    - npm install
 test:
   override:
     - meteor test --once --driver-package dispatch:mocha-phantomjs
