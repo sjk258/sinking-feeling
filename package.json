@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "meteor test --driver-package practicalmeteor:mocha --port 8082"
+    "test": "meteor test --driver-package practicalmeteor:mocha --port 8082",
+    "test-cli": "meteor test --driver-package dispatch:mocha-phantomjs",
+    "test-cli-once": "meteor test --driver-package dispatch:mocha-phantomjs --once"
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0"
