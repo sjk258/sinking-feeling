@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 export const AI = {
     'makeMove'(game) {
         const board = game.opponent_board;
@@ -9,6 +11,6 @@ export const AI = {
                 if (board[row][col] == "E") return [row, col];
             }
         }
-        return false;
+        throw new Meteor.Error('no-moves-left', 'No more moves are possible');
     },
 };

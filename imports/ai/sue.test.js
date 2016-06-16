@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { assert } from 'meteor/practicalmeteor:chai';
 import { AI } from './sue.js';
 
@@ -74,6 +75,26 @@ describe('Sequential Sue AI', function () {
             };
             const move = AI.makeMove(game);
             assert.deepEqual(move, [9,9]);
+        });
+        it('throws error when board full', function () {
+            const game = {
+                opponent_board: [
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"],
+                    ["X","X","X","X","X","X","X","X","X","X"]
+                ],
+            };
+            const makeMove = function() {
+                AI.makeMove(game);
+            };
+            assert.throws(makeMove, Meteor.error, 'no-moves-left');
         });
     });
 });
