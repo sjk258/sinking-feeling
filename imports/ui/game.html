@@ -1,0 +1,102 @@
+<template name="game">
+	<h1>Test Game</h1>
+
+	<span class="text">Owner: {{owner_id}}</span>
+	<br />
+	<span class="text">Game State: {{state}}</span>
+	<br />
+	<span class="text">Time Created: {{time_created}}</span>
+	<br />
+	<span class="text">Time Started: {{time_started}}</span>
+	<br />
+	<span class="text">Computer ID: {{computer_id}}</span> 
+	<br />
+	<br />
+	<span class="text" style="font-size:22">Turn {{turn_number}}</span>
+	<br />
+	<br />
+	<span><strong>Owner Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
+	<br />
+	<span style="font-family:monospace"><strong>----| A | B | C | D | E | F | G | H | I | J |</strong></span>
+	<br />
+	<span style="font-family:monospace"><strong>- 0 |</strong>  {{owner_board.A0}} | {{owner_board.B0}} | {{owner_board.C0}} | {{owner_board.D0}} | {{owner_board.E0}} | 
+											  					{{owner_board.F0}} | {{owner_board.G0}} | {{owner_board.H0}} | {{owner_board.I0}} | {{owner_board.J0}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 1 |</strong>	{{owner_board.A1}} | {{owner_board.B1}} | {{owner_board.C1}} | {{owner_board.D1}} | {{owner_board.E1}} | 
+											  					{{owner_board.F1}} | {{owner_board.G1}} | {{owner_board.H1}} | {{owner_board.I1}} | {{owner_board.J1}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 2 |</strong> 	{{owner_board.A2}} | {{owner_board.B2}} | {{owner_board.C2}} | {{owner_board.D2}} | {{owner_board.E2}} | 
+											  					{{owner_board.F2}} | {{owner_board.G2}} | {{owner_board.H2}} | {{owner_board.I2}} | {{owner_board.J2}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 3 |</strong> 	{{owner_board.A3}} | {{owner_board.B3}} | {{owner_board.C3}} | {{owner_board.D3}} | {{owner_board.E3}} | 
+											  					{{owner_board.F3}} | {{owner_board.G3}} | {{owner_board.H3}} | {{owner_board.I3}} | {{owner_board.J3}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 4 |</strong> 	{{owner_board.A4}} | {{owner_board.B4}} | {{owner_board.C4}} | {{owner_board.D4}} | {{owner_board.E4}} | 
+											  					{{owner_board.F4}} | {{owner_board.G4}} | {{owner_board.H4}} | {{owner_board.I4}} | {{owner_board.J4}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 5 |</strong> 	{{owner_board.A5}} | {{owner_board.B5}} | {{owner_board.C5}} | {{owner_board.D5}} | {{owner_board.E5}} | 
+											  					{{owner_board.F5}} | {{owner_board.G5}} | {{owner_board.H5}} | {{owner_board.I5}} | {{owner_board.J5}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 6 |</strong> 	{{owner_board.A6}} | {{owner_board.B6}} | {{owner_board.C6}} | {{owner_board.D6}} | {{owner_board.E6}} | 
+											  					{{owner_board.F6}} | {{owner_board.G6}} | {{owner_board.H6}} | {{owner_board.I6}} | {{owner_board.J6}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 7 |</strong> 	{{owner_board.A7}} | {{owner_board.B7}} | {{owner_board.C7}} | {{owner_board.D7}} | {{owner_board.E7}} | 
+											  					{{owner_board.F7}} | {{owner_board.G7}} | {{owner_board.H7}} | {{owner_board.I7}} | {{owner_board.J7}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 8 |</strong> 	{{owner_board.A8}} | {{owner_board.B8}} | {{owner_board.C8}} | {{owner_board.D8}} | {{owner_board.E8}} | 
+											  					{{owner_board.F8}} | {{owner_board.G8}} | {{owner_board.H8}} | {{owner_board.I8}} | {{owner_board.J8}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 9 |</strong> 	{{owner_board.A9}} | {{owner_board.B9}} | {{owner_board.C9}} | {{owner_board.D9}} | {{owner_board.E9}} | 
+											  					{{owner_board.F9}} | {{owner_board.G9}} | {{owner_board.H9}} | {{owner_board.I9}} | {{owner_board.J9}} |</span>
+
+	<br />
+	<br />
+	<span><strong>Opponent Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
+	<br />
+	<span style="font-family:monospace"><strong>----| A | B | C | D | E | F | G | H | I | J |</strong></span>
+	<br />
+	<span style="font-family:monospace"><strong>- 0 |</strong>  {{opponent_board.A0}} | {{opponent_board.B0}} | {{opponent_board.C0}} | {{opponent_board.D0}} | {{opponent_board.E0}} | 
+											  					{{opponent_board.F0}} | {{opponent_board.G0}} | {{opponent_board.H0}} | {{opponent_board.I0}} | {{opponent_board.J0}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 1 |</strong>	{{opponent_board.A1}} | {{opponent_board.B1}} | {{opponent_board.C1}} | {{opponent_board.D1}} | {{opponent_board.E1}} | 
+											  					{{opponent_board.F1}} | {{opponent_board.G1}} | {{opponent_board.H1}} | {{opponent_board.I1}} | {{opponent_board.J1}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 2 |</strong> 	{{opponent_board.A2}} | {{opponent_board.B2}} | {{opponent_board.C2}} | {{opponent_board.D2}} | {{opponent_board.E2}} | 
+											  					{{opponent_board.F2}} | {{opponent_board.G2}} | {{opponent_board.H2}} | {{opponent_board.I2}} | {{opponent_board.J2}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 3 |</strong> 	{{opponent_board.A3}} | {{opponent_board.B3}} | {{opponent_board.C3}} | {{opponent_board.D3}} | {{opponent_board.E3}} | 
+											  					{{opponent_board.F3}} | {{opponent_board.G3}} | {{opponent_board.H3}} | {{opponent_board.I3}} | {{opponent_board.J3}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 4 |</strong> 	{{opponent_board.A4}} | {{opponent_board.B4}} | {{opponent_board.C4}} | {{opponent_board.D4}} | {{opponent_board.E4}} | 
+											  					{{opponent_board.F4}} | {{opponent_board.G4}} | {{opponent_board.H4}} | {{opponent_board.I4}} | {{opponent_board.J4}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 5 |</strong> 	{{opponent_board.A5}} | {{opponent_board.B5}} | {{opponent_board.C5}} | {{opponent_board.D5}} | {{opponent_board.E5}} | 
+											  					{{opponent_board.F5}} | {{opponent_board.G5}} | {{opponent_board.H5}} | {{opponent_board.I5}} | {{opponent_board.J5}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 6 |</strong> 	{{opponent_board.A6}} | {{opponent_board.B6}} | {{opponent_board.C6}} | {{opponent_board.D6}} | {{opponent_board.E6}} | 
+											  					{{opponent_board.F6}} | {{opponent_board.G6}} | {{opponent_board.H6}} | {{opponent_board.I6}} | {{opponent_board.J6}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 7 |</strong> 	{{opponent_board.A7}} | {{opponent_board.B7}} | {{opponent_board.C7}} | {{opponent_board.D7}} | {{opponent_board.E7}} | 
+											  					{{opponent_board.F7}} | {{opponent_board.G7}} | {{opponent_board.H7}} | {{opponent_board.I7}} | {{opponent_board.J7}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 8 |</strong> 	{{opponent_board.A8}} | {{opponent_board.B8}} | {{opponent_board.C8}} | {{opponent_board.D8}} | {{opponent_board.E8}} | 
+											  					{{opponent_board.F8}} | {{opponent_board.G8}} | {{opponent_board.H8}} | {{opponent_board.I8}} | {{opponent_board.J8}} |</span>
+	<br />
+	<span style="font-family:monospace"><strong>- 9 |</strong> 	{{opponent_board.A9}} | {{opponent_board.B9}} | {{opponent_board.C9}} | {{opponent_board.D9}} | {{opponent_board.E9}} | 
+											  					{{opponent_board.F9}} | {{opponent_board.G9}} | {{opponent_board.H9}} | {{opponent_board.I9}} | {{opponent_board.J9}} |</span>		
+
+	<br />
+	<br />
+
+	<span>Whose turn is it? {{current_player}}</span>
+	<form>
+		<span>Selection (A0 for example...)</span>
+		<input type="text" name="selection" />
+		<br />
+		<span>Result (E, M, H)</span>
+		<input type="text" name="result" />
+		<br />
+		<input type="submit" value="Submit" />
+	</form>
+</template>
+
