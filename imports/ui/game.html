@@ -23,9 +23,9 @@
 	<span style="font-family:monospace">
 		<strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
 		<br />
-		{{#each owner_board.row}}
+		{{#each owner_board}}
 			<strong>- {{@index}} |</strong>
-			{{#each col}}
+			{{#each this}}
 				{{val}} |
 			{{/each}}
 			<br />
@@ -39,9 +39,9 @@
 	<span style="font-family:monospace">
 		<strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
 		<br />
-		{{#each opponent_board.row}}
+		{{#each opponent_board}}
 			<strong>- {{@index}} |</strong>
-			{{#each col}}
+			{{#each this}}
 				{{val}} |
 			{{/each}}
 			<br />
@@ -62,4 +62,3 @@
 		<input type="submit" value="Submit" />
 	</form>
 </template>
-

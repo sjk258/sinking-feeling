@@ -17,7 +17,7 @@ Template.game.events({
 		var col = convertToIndex(selection.slice(0, 1));
 		var row = selection.slice(1, 2);
 
-		var searchParam = 'row.' + row + '.col.' + col + '.val';
+		var searchParam = row + '.' + col + '.val';
 
 		if (game['current_player'] === "owner")
 		{
