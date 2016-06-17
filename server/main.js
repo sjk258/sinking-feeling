@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 
 import { Games } from '../imports/api/games.js';
+import { makeBoard } from '../imports/api/board.js';
 
 Meteor.startup(() => {
 	// code to run on server at startup
@@ -18,30 +19,8 @@ Meteor.startup(() => {
 			state: "ACTIVE",
 			time_created: new Date(),
 			computer_id: "SUE",
-			owner_board: [
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-			],
-			opponent_board: [
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-				[ { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" }, { val: "E" } ],
-			],
+			owner_board: makeBoard(),
+			opponent_board: makeBoard(),
 			time_started: new Date(),
 			turn_number: 0,
 			first_player: "owner",
