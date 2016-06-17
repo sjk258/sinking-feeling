@@ -43,5 +43,10 @@ describe('AI handler', function() {
             assert.isObject(ai);
             assert(ai.name, AI.default_name);
         });
+        it('treats name without case sensitivity', function() {
+            const ai = AI.getPlayer('SuE');
+            assert.isObject(ai);
+            assert(ai.name, 'sue');
+        });
     });
 });

@@ -45,6 +45,7 @@ export function getNames() {
  * on the provided board data.
  */
 export function getPlayer(name) {
+    name = name.toLowerCase();
     if (!(name in ai_players)) {
         name = default_name;
     }
