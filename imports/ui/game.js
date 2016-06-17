@@ -14,26 +14,62 @@ Template.game.events({
 
 		console.log(game);
 
+		var col = convertToIndex(selection.slice(0, 1));
+		var row = selection.slice(1, 2);
+
+		var searchParam = 'row.' + row + '.col.' + col + '.val';
+
 		if (game['current_player'] === "owner")
 		{
 			console.log("owner turn taken");
-			selection = 'owner_board.' + selection;
+
+			searchParam = 'owner_board.' + searchParam;
 			nextPlayer = 'opponent';
 		}
 		else
 		{
 			console.log("opponent turn taken");
-			selection = 'opponent_board.' + selection;
+			searchParam = 'opponent_board.' + searchParam;
 			nextPlayer = 'owner';
 		}
 
 		var result = event.target.elements.result.value;
 
 		var dynamicQuery = {};
-		dynamicQuery[selection] = result;
+		dynamicQuery[searchParam] = result;
 		dynamicQuery['turn_number'] = game['turn_number'] + 1;
 		dynamicQuery['current_player'] = nextPlayer;
 
-		Games.update( { _id: 'test' }, { $set:dynamicQuery } );
+		console.log(dynamicQuery);
+
+		Games.update( { _id: 'test' }, { $set: dynamicQuery } );
 	}
 });
+
+function convertToIndex(val) {
+	switch(val)
+	{
+		case 'A':
+			return 0;
+		case 'B':
+			return 1;
+		case 'C':
+			return 2;
+		case 'D':
+			return 3;
+		case 'E':
+			return 4;
+		case 'F':
+			return 5;
+		case 'G':
+			return 6;
+		case 'H':
+			return 7;
+		case 'I':
+			return 8;
+		case 'J':
+			return 9;
+		default:
+			return -1;
+	}
+}
