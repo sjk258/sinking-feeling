@@ -1,9 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import { assert } from 'meteor/practicalmeteor:chai';
-import { AI } from './sue.js';
+import * as AI from './sue.js';
 
 describe('Sequential Sue AI', function () {
-    describe('makeMove', function () {
+    describe('constant name', function () {
+        it('should be "sue"', function () {
+            assert(AI.name, 'sue');
+        });
+    });
+    describe('function makeMove', function () {
         it('returns 0,0 for first move', function () {
             const game = {
                 opponent_board: [
