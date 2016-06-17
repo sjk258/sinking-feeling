@@ -4,8 +4,8 @@
   "scripts": {
     "start": "meteor run",
     "test": "meteor test --driver-package practicalmeteor:mocha --port 8082",
-    "test-cli": "meteor test --driver-package dispatch:mocha-phantomjs",
-    "test-cli-once": "meteor test --driver-package dispatch:mocha-phantomjs --once"
+    "test-cli": "spacejam test --driver-package practicalmeteor:mocha-console-runner",
+    "test-cli-once": "spacejam test --driver-package practicalmeteor:mocha-console-runner --once"
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0"
