@@ -11,10 +11,10 @@ export const ship_types = ["carrier", "battleship", "cruiser", "submarine", "des
  * Returns a game board initialized with all cells empty.
  */
 export function makeEmptyBoard() {
+  return _.times(10, function(n) {
     return _.times(10, function(n) {
-        return _.times(10, function(n) {
-            return {val: 'E'};
-        });
+       return {val: 'E'};
+    });
     });
 }
 
@@ -24,12 +24,12 @@ export function makeEmptyBoard() {
  * value.
  */
 export function setRange(board, row, col, rowCount, colCount, val) {
-    let r, c;
-    for(r = row; r < row + rowCount; r++) {
-        for(c = col; c < col + colCount; c++) {
-            board[r][c].val = val;
-        }
+  let r, c;
+  for(r = row; r < row + rowCount; r++) {
+    for(c = col; c < col + colCount; c++) {
+      board[r][c].val = val;
     }
+  }
 }
 
 export function placeShip(ship_type, row, col, vertical, game) {
