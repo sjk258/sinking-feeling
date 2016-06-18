@@ -29,11 +29,17 @@ describe('AI handler', function() {
           const ai = AI.getPlayer(name);
           assert.isObject(ai);
         });
-        it('returns an object with string attribute "name"', function() {
+        it('returns an object with string attribute name', function() {
           const ai = AI.getPlayer(name);
           assert.isObject(ai);
           assert.property(ai, 'name');
           assert.isString(ai.name);
+        });
+        it('returns an object with string attribute full_name', function() {
+          const ai = AI.getPlayer(name);
+          assert.isObject(ai);
+          assert.property(ai, 'full_name');
+          assert.isString(ai.full_name);
         });
         it('returns an object with method makeMove', function() {
           const ai = AI.getPlayer(name);

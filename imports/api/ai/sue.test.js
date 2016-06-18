@@ -9,6 +9,11 @@ describe('Sequential Sue AI', function() {
       assert(AI.name, 'sue');
     });
   });
+  describe('constant full_name', function() {
+    it('should be "Sequential Sue"', function() {
+      assert(AI.name, 'Sequential Sue');
+    });
+  });
   describe('function makeMove', function() {
     it('returns 0,0 for first move', function() {
       const board = Board.makeEmptyBoard();
