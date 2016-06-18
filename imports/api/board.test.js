@@ -4,12 +4,12 @@ import * as Board from './board.js';
 describe('board', function() {
     describe('makeBoard', function() {
         it('returns an array of size 10', function () {
-            const board = Board.makeBoard();
+            const board = Board.makeEmptyBoard();
             assert.isArray(board);
             assert(board.length, 10);
         });
         it('returns an array with rows of size 10', function () {
-            const board = Board.makeBoard();
+            const board = Board.makeEmptyBoard();
             assert.isArray(board);
             for(let row of board) {
                 assert.isArray(row);
@@ -17,7 +17,7 @@ describe('board', function() {
             }
         });
         it('returns an array with all cells empty', function () {
-            const board = Board.makeBoard();
+            const board = Board.makeEmptyBoard();
             assert.isArray(board);
             for(let row of board) {
                 assert.isArray(row);
@@ -29,7 +29,7 @@ describe('board', function() {
     });
     describe('setRange', function	     () {
         it('works correctly for a single cell', function () {
-            const board = Board.makeBoard();
+            const board = Board.makeEmptyBoard();
             const exp = [
                 "EEEEEEEEEE",
                 "EEEEEEEEEE",
@@ -51,7 +51,7 @@ describe('board', function() {
             }
         });
         it('works correctly for a horizontal ship', function () {
-            const board = Board.makeBoard();
+            const board = Board.makeEmptyBoard();
             const exp = [
                 "EEEEEEEEEE",
                 "EEEEEEEEEE",
@@ -73,7 +73,7 @@ describe('board', function() {
             }
         });
         it('works correctly for a vertical ship', function () {
-            const board = Board.makeBoard();
+            const board = Board.makeEmptyBoard();
             const exp = [
                 "XEEEEEEEEE",
                 "XEEEEEEEEE",
@@ -95,7 +95,7 @@ describe('board', function() {
             }
         });
         it('works correctly for a block', function () {
-            const board = Board.makeBoard();
+            const board = Board.makeEmptyBoard();
             const exp = [
                 "EEEEEEEEEE",
                 "EEEEEEEEEE",

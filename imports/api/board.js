@@ -10,7 +10,7 @@ export const ship_types = ["carrier", "battleship", "cruiser", "submarine", "des
  * makeBoard()
  * Returns a game board initialized with all cells empty.
  */
-export function makeBoard() {
+export function makeEmptyBoard() {
     return _.times(10, function(n) {
         return _.times(10, function(n) {
             return {val: 'E'};
