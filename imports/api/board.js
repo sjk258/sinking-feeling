@@ -4,6 +4,8 @@
 
 import { _ } from 'meteor/underscore';
 
+export const ship_types = ["carrier", "battleship", "cruiser", "submarine", "destroyer"];
+
 /**
  * makeBoard()
  * Returns a game board initialized with all cells empty.
@@ -33,11 +35,15 @@ export function setRange(board, row, col, rowCount, colCount, val) {
 export function placeShip(ship_type, row, col, vertical, game) {
   if (typeof game.positions == 'undefined')
   {
-  	 game.positions = {};
+    game.positions = {};
   }
   if (typeof game.positions[ship_type] == 'undefined')
   {
-  	 game.positions[ship_type] = {};
+    game.positions[ship_type] = {};
+  }
+  if(ship_types.indexOf(ship_type) < 0)
+  {
+    throw 'Unrecognised ship type';
   }
   
   game.positions[ship_type].row = row;

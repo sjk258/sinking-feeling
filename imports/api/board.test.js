@@ -1,4 +1,4 @@
-import { assert } from 'meteor/practicalmeteor:chai';
+import { assert, expect } from 'meteor/practicalmeteor:chai';
 import * as Board from './board.js';
 
 describe('board', function() {
@@ -27,7 +27,7 @@ describe('board', function() {
             }
         });
     });
-    describe('setRange', function() {
+    describe('setRange', function	     () {
         it('works correctly for a single cell', function () {
             const board = Board.makeBoard();
             const exp = [
@@ -118,21 +118,57 @@ describe('board', function() {
         });
     });
     describe('placeShip', function() {
-    	it('vertical at origin', function(){
-    		var game = {};
-			var row = 0;
-			var col = 0;
-			var vertical = true;
-			
-			Board.placeShip("carrier", row, col, vertical, game);
-			
-			console.log(game.positions);
-			assert.equal(1, Object.keys(game.positions).length);
-			console.log(row);
-			console.log(game.positions.carrier.row);
-			assert.equal(row, game.positions.carrier.row);
-			assert.equal(col, game.positions.carrier.col);
-			assert.equal(vertical, game.positions.carrier.vertical);
-    	});
+      it('vertical at origin', function(){
+        var game = {};
+        var row = 0;
+        var col = 0;
+        var vertical = true;
+
+        Board.placeShip("carrier", row, col, vertical, game);
+
+        assert.equal(1, Object.keys(game.positions).length);
+        assert.equal(row, game.positions.carrier.row);
+        assert.equal(col, game.positions.carrier.col);
+        assert.equal(vertical, game.positions.carrier.vertical);
+      });
+      it('all five', function(){
+        var game = {};
+        var ships = ["carrier", "battleship", "cruiser", "submarine", "destroyer"];
+        var row = 0;
+        var col = 0;
+        var vertical = true;
+
+        ships.forEach(function(shipType){
+          Board.placeShip(shipType, row, col, vertical, game);
+          col++;
+        });
+
+        assert.equal(ships.length, Object.keys(game.positions).length);
+        assert.equal(0, game.positions.carrier.col);
+        assert.equal(1, game.positions.battleship.col);
+        assert.equal(2, game.positions.cruiser.col);
+        assert.equal(3, game.positions.submarine.col);
+        assert.equal(4, game.positions.destroyer.col);    		
+      });
+      it('change existing', function(){
+        var game = {};
+        var ship = "carrier";
+        var row = 0;
+        var col1 = 0;
+        var col2 = 5;
+        var vertical = true;
+
+        Board.placeShip(ship, row, col1, vertical, game);
+        Board.placeShip(ship, row, col2, vertical, game);
+
+        assert.equal(1, Object.keys(game.positions).length);
+        assert.equal(col2, game.positions.carrier.col);
+      });
+      it('invalid type', function(){
+	var invalid_ship = "pt boat";
+	expect(function(){
+	  Board.placeShip(invalid_ship, 0, 0, true, {});
+	}).to.throw('Unrecognised ship type');
+      });
     });
 });
