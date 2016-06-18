@@ -29,3 +29,18 @@ export function setRange(board, row, col, rowCount, colCount, val) {
         }
     }
 }
+
+export function placeShip(ship_type, row, col, vertical, game) {
+  if (typeof game.positions == 'undefined')
+  {
+  	 game.positions = {};
+  }
+  if (typeof game.positions[ship_type] == 'undefined')
+  {
+  	 game.positions[ship_type] = {};
+  }
+  
+  game.positions[ship_type].row = row;
+  game.positions[ship_type].col = col;
+  game.positions[ship_type].vertical = vertical;
+}

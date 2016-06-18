@@ -117,4 +117,22 @@ describe('board', function() {
             }
         });
     });
+    describe('placeShip', function() {
+    	it('vertical at origin', function(){
+    		var game = {};
+			var row = 0;
+			var col = 0;
+			var vertical = true;
+			
+			Board.placeShip("carrier", row, col, vertical, game);
+			
+			console.log(game.positions);
+			assert.equal(1, Object.keys(game.positions).length);
+			console.log(row);
+			console.log(game.positions.carrier.row);
+			assert.equal(row, game.positions.carrier.row);
+			assert.equal(col, game.positions.carrier.col);
+			assert.equal(vertical, game.positions.carrier.vertical);
+    	});
+    });
 });
