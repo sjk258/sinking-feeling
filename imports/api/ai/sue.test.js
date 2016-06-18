@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { assert } from 'meteor/practicalmeteor:chai';
+import * as Board from '../board.js';
 import * as AI from './sue.js';
 
 describe('Sequential Sue AI', function() {
@@ -10,94 +11,39 @@ describe('Sequential Sue AI', function() {
   });
   describe('function makeMove', function() {
     it('returns 0,0 for first move', function() {
-      const game = {
-        opponent_board: [
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"]
-        ],
-      };
-      const move = AI.makeMove(game);
+      const board = Board.makeEmptyBoard();
+      const state = {};
+      const move = AI.makeMove(board, state);
       assert.deepEqual(move, [0, 0]);
     });
     it('returns 0,9 for tenth move', function() {
-      const game = {
-        opponent_board: [
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"]
-        ],
-      };
-      const move = AI.makeMove(game);
+      const board = Board.makeEmptyBoard();
+      Board.setRange(board, 0, 0, 1, 9, 'X');
+      const state = {};
+      const move = AI.makeMove(board, state);
       assert.deepEqual(move, [0, 9]);
     });
     it('returns 1,0 for eleventh move', function() {
-      const game = {
-        opponent_board: [
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"],
-          ["E", "E", "E", "E", "E", "E", "E", "E", "E", "E"]
-        ],
-      };
-      const move = AI.makeMove(game);
+      const board = Board.makeEmptyBoard();
+      Board.setRange(board, 0, 0, 1, 10, 'X');
+      const state = {};
+      const move = AI.makeMove(board, state);
       assert.deepEqual(move, [1, 0]);
     });
     it('returns 9,9 for hundredth move', function() {
-      const game = {
-        opponent_board: [
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "E"]
-        ],
-      };
-      const move = AI.makeMove(game);
+      const board = Board.makeEmptyBoard();
+      Board.setRange(board, 0, 0, 10, 10, 'X');
+      Board.setRange(board, 9, 9, 1, 1, 'E');
+      const state = {};
+      const move = AI.makeMove(board, state);
       assert.deepEqual(move, [9, 9]);
     });
     it('throws error when board full', function() {
-      const game = {
-        opponent_board: [
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
-          ["X", "X", "X", "X", "X", "X", "X", "X", "X", "X"]
-        ],
-      };
+      const board = Board.makeEmptyBoard();
+      Board.setRange(board, 0, 0, 10, 10, 'X');
+      const state = {};
       const makeMove = function() {
-        AI.makeMove(game);
+        AI.makeMove(board, state);
       };
       assert.throws(makeMove, Meteor.error, 'no-moves-left');
     });

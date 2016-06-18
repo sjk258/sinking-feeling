@@ -40,7 +40,7 @@ export function getNames() {
  * The name of the AI player. This will match the name provided to the function
  * if it was recognized.
  *
- * ai.makeMove(board)
+ * ai.makeMove(board, state)
  * Returns [row,col] indicating the next move the AI would like to make based
  * on the provided board data.
  */
