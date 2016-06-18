@@ -11,7 +11,7 @@ import * as AI_Sue from './ai/sue.js';
 
 // Manually map each AI player with its name
 const ai_players = {
-    'sue': AI_Sue,
+  'sue': AI_Sue,
 };
 
 /**
@@ -25,7 +25,7 @@ export const default_name = 'sue';
  * Returns an array of all of the AI player names, in an arbitrary order.
  */
 export function getNames() {
-    return Object.keys(ai_players);
+  return Object.keys(ai_players);
 }
 
 /**
@@ -45,9 +45,9 @@ export function getNames() {
  * on the provided board data.
  */
 export function getPlayer(name) {
-    name = name.toLowerCase();
-    if (!(name in ai_players)) {
-        name = default_name;
-    }
-    return ai_players[name];
+  name = name.toLowerCase();
+  if (!(name in ai_players)) {
+    name = default_name;
+  }
+  return ai_players[name];
 }
