@@ -7,10 +7,10 @@ import './game.js';
 import './body.html';
 
 Template.body.helpers({
-	games() {
-		return Games.find({});
-	},
-	testGame() {
-		return Games.find({});
-	}
+  games() {
+    return Games.find({});
+  },
+  testGame() {
+    return Games.find({});
+  }
 });
