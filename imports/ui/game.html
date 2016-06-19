@@ -1,64 +1,64 @@
 <template name="game">
-	<h1>Test Game</h1>
+  <h1>Test Game</h1>
 
-	<span class="text">Owner: {{owner_id}}</span>
-	<br />
-	<span class="text">Game State: {{state}}</span>
-	<br />
-	<span class="text">Time Created: {{time_created}}</span>
-	<br />
-	<span class="text">Time Started: {{time_started}}</span>
-	<br />
-	<span class="text">Computer ID: {{computer_id}}</span> 
-	<br />
-	<br />
-	<span class="text" style="font-size:22">Turn {{turn_number}}</span>
-	<br />
+  <span class="text">Owner: {{owner_id}}</span>
+  <br />
+  <span class="text">Game State: {{state}}</span>
+  <br />
+  <span class="text">Time Created: {{time_created}}</span>
+  <br />
+  <span class="text">Time Started: {{time_started}}</span>
+  <br />
+  <span class="text">Computer ID: {{computer_id}}</span> 
+  <br />
+  <br />
+  <span class="text" style="font-size:22">Turn {{turn_number}}</span>
+  <br />
 
 
 
-	<br />
-	<span><strong>Owner Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
-	<br />
-	<span style="font-family:monospace">
-		<strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
-		<br />
-		{{#each owner_board}}
-			<strong>- {{@index}} |</strong>
-			{{#each this}}
-				{{val}} |
-			{{/each}}
-			<br />
-		{{/each}}
-	</span>
+  <br />
+  <span><strong>Owner Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
+  <br />
+  <span style="font-family:monospace">
+    <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
+    <br />
+    {{#each owner_board}}
+      <strong>- {{@index}} |</strong>
+      {{#each this}}
+        {{val}} |
+      {{/each}}
+      <br />
+    {{/each}}
+  </span>
 
-	<br />
-	<br />
-	<span><strong>Opponent Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
-	<br />
-	<span style="font-family:monospace">
-		<strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
-		<br />
-		{{#each opponent_board}}
-			<strong>- {{@index}} |</strong>
-			{{#each this}}
-				{{val}} |
-			{{/each}}
-			<br />
-		{{/each}}
-	</span>
+  <br />
+  <br />
+  <span><strong>Opponent Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
+  <br />
+  <span style="font-family:monospace">
+    <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
+    <br />
+    {{#each opponent_board}}
+      <strong>- {{@index}} |</strong>
+      {{#each this}}
+        {{val}} |
+      {{/each}}
+      <br />
+    {{/each}}
+  </span>
 
-	<br />
-	<br />
+  <br />
+  <br />
 
-	<span>Whose turn is it? {{current_player}}</span>
-	<form>
-		<span>Selection (A0 for example...)</span>
-		<input type="text" name="selection" />
-		<br />
-		<span>Result (E, M, H)</span>
-		<input type="text" name="result" />
-		<br />
-		<input type="submit" value="Submit" />
-	</form>
+  <span>Whose turn is it? {{current_player}}</span>
+  <form>
+    <span>Selection (A0 for example...)</span>
+    <input type="text" name="selection" />
+    <br />
+    <span>Result (E, M, H)</span>
+    <input type="text" name="result" />
+    <br />
+    <input type="submit" value="Submit" />
+  </form>
 </template>
