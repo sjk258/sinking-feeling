@@ -82,7 +82,7 @@ export function shotWasHit(shot, ships)
   return false;
 };
 
-export function addShotsToOwn(board, shots, ships)
+export function addShots(board, shots, ships)
 {
   shots.forEach(function(shot){
     if(shotWasHit(shot, ships))
@@ -96,9 +96,7 @@ export function addShotsToOwn(board, shots, ships)
   });
 };
 
-export function getOwnBoard(game, user){
-  var board = Board.makeEmptyBoard();
-  addOwnShips(board, game[user].ships);
+export function oppositeUser(user){
   var opposite_user = "";
   if(user == "creator")
   {
@@ -108,8 +106,18 @@ export function getOwnBoard(game, user){
   {
     opposite_user = "creator";
   }
-  addShotsToOwn(board, game[opposite_user].shots, game[user].ships);
-  
+  return opposite_user;
+};
+
+export function getOwnBoard(game, user){
+  var board = Board.makeEmptyBoard();
+  addOwnShips(board, game[user].ships);
+  addShots(board, game[oppositeUser(user)].shots, game[user].ships);  
   return board;
 };
 
+export function getAttackBoard(game, user){
+  var board = Board.makeEmptyBoard();
+  addShots(board, game[user].shots, game[oppositeUser(user)].ships);
+  return board;
+};

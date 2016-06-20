@@ -302,7 +302,85 @@ describe('game', function() {
       });
     });
   });
-
+  describe('opposite user', function(){
+    it('creator', function(){
+      var user = 'creator';
+      var expected = 'challenger';
+      
+      var result = Game.oppositeUser(user);
+      
+      assert.equal(expected, result);
+    });
+    it('challenger', function(){
+      var user = 'challenger';
+      var expected = 'creator';
+      
+      var result = Game.oppositeUser(user);
+      
+      assert.equal(expected, result);
+    });
+  });
+  describe('attack', function(){
+    it('empty board', function(){
+      var game = { creator: { ships: {}, shots: []}, challenger: { ships: {}, shots: []} };
+      var user = 'creator';
+      
+      var board = Game.getAttackBoard(game, user);
+      
+    });
+    it('only no ships', function(){
+      const exp = [
+        "MEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+      ];
+      
+      var game = {
+        creator: {
+          ships: {},
+          shots: [{row: 0, col: 0}]
+        },
+        challenger: { ships: {}, shots: []} };
+      var user = 'creator';
+      
+      var board = Game.getAttackBoard(game, user);
+      
+      checkBoard(exp, board);
+    });
+    it('hit and miss', function(){
+      const exp = [
+        "HEEEEEEEEE",
+        "EMEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+      ];
+      
+      var game = {
+        creator: {
+          ships: {},
+          shots: [{row: 0, col: 0}, {row: 1, col: 1}]
+        },
+        challenger: { ships: {carrier: { row: 0, col: 0, vertical: true }}, shots: []} };
+      var user = 'creator';
+      
+      var board = Game.getAttackBoard(game, user);
+      
+      checkBoard(exp, board);
+    });
+  });
 });
 
  

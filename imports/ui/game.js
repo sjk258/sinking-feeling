@@ -1,36 +1,45 @@
 import { Meteor } from 'meteor/meteor';
 import { Games } from '../api/games.js';
+import { getOwnBoard, getAttackBoard } from '../api/game.js';
 
 import './game.html';
+
+Template.game.helpers({
+  ownBoard() {
+    //TODO: This is hard-coded to the creator, it really needs to be the current user
+    return getOwnBoard(this, this['current_player']);
+  },
+  attackBoard() {
+    return getAttackBoard(this, this['current_player']);
+  }
+});
 
 Template.game.events({
   'submit form'(event) {
     event.preventDefault();
 
-    var game = Games.findOne({ _id: 'test' });
+    var game = this; //Games.findOne({ _id: 'test' });
 
     var selection = event.target.elements.selection.value;
     var nextPlayer = '';
-
-    console.log(game);
 
     var col = convertToIndex(selection.slice(0, 1));
     var row = selection.slice(1, 2);
 
     var searchParam = row + '.' + col + '.val';
 
-    if (game['current_player'] === "owner")
+    if (game['current_player'] === "creator")
     {
       console.log("owner turn taken");
 
       searchParam = 'owner_board.' + searchParam;
-      nextPlayer = 'opponent';
+      nextPlayer = 'challenger';
     }
     else
     {
       console.log("opponent turn taken");
       searchParam = 'opponent_board.' + searchParam;
-      nextPlayer = 'owner';
+      nextPlayer = 'creator';
     }
 
     var result = event.target.elements.result.value;
