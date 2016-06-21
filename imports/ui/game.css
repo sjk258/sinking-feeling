@@ -1,0 +1,24 @@
+table.board {
+  font-family: monospace;
+}
+
+table.board th, table.board td {
+  width: 1em;
+  text-align: center;
+}
+
+table.board th {
+  font-weight: bold;
+}
+
+table.board td {
+  font-weight: normal;
+}
+
+table.board .miss {
+  color: blue;
+}
+
+table.board .hit, table.board .sunk {
+  color: red;
+}

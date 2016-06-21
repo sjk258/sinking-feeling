@@ -3,6 +3,7 @@ import { Games } from '../api/games.js';
 import { getOwnBoard, getAttackBoard } from '../api/game.js';
 
 import './game.html';
+import './game.css';
 
 Template.game.helpers({
   ownBoard() {
@@ -52,6 +53,26 @@ Template.game.events({
     console.log(dynamicQuery);
 
     Games.update( { _id: 'test' }, { $set: dynamicQuery } );
+  }
+});
+
+Template.board_cell.helpers({
+  className() {
+    switch (this.val) {
+      case 'H': return 'hit';
+      case 'M': return 'miss';
+      case 'S': return 'ship';
+      case 'X': return 'sunk';
+      case 'E': return 'empty';
+      default: return '';
+    }
+  },
+  symbol() {
+    switch (this.val) {
+      case 'E': return '\u00B7';
+      case 'M': return '~';
+      default: return this.val;
+    }
   }
 });
 
