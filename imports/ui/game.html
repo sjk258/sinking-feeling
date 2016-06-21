@@ -18,12 +18,12 @@
 
 
   <br />
-  <span><strong>Owner Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
+  <span><strong>Attack Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
   <br />
   <span style="font-family:monospace">
     <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
     <br />
-    {{#each owner_board}}
+    {{#each attackBoard}}
       <strong>- {{@index}} |</strong>
       {{#each this}}
         {{val}} |
@@ -31,15 +31,14 @@
       <br />
     {{/each}}
   </span>
-
   <br />
   <br />
-  <span><strong>Opponent Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
+  <span><strong>User's Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
   <br />
   <span style="font-family:monospace">
     <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
     <br />
-    {{#each opponent_board}}
+    {{#each ownBoard}}
       <strong>- {{@index}} |</strong>
       {{#each this}}
         {{val}} |
