@@ -1,5 +1,6 @@
 table.board {
   font-family: monospace;
+  cursor: default;
 }
 
 table.board th, table.board td {
@@ -21,4 +22,8 @@ table.board .miss {
 
 table.board .hit, table.board .sunk {
   color: red;
+}
+
+table.board .cell:hover {
+  background-color: orange;
 }
