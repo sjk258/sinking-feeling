@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Games } from '../api/games.js';
 import { getOwnBoard, getAttackBoard } from '../api/game.js';
+import { $ } from 'meteor/jquery';
 
 import './game.html';
 import './game.css';
@@ -73,6 +74,20 @@ Template.board_cell.helpers({
       case 'M': return '~';
       default: return this.val;
     }
+  },
+  cell() {
+    const row = 'ABCDEFGHIJ'[this.row];
+    return row + this.col;
+  },
+  selected() {
+    return false;
+  },
+});
+
+Template.board_cell.events({
+  "click .cell"(event) {
+    const target = event.currentTarget;
+    $('#selection').val(target.dataset.cell);
   }
 });
 

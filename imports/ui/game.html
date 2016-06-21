@@ -33,7 +33,7 @@
   <span>Whose turn is it? {{current_player}}</span>
   <form>
     <span>Selection (A0 for example...)</span>
-    <input type="text" name="selection" />
+    <input type="text" name="selection" id="selection" />
     <br />
     <span>Result (E, M, H)</span>
     <input type="text" name="result" />
@@ -58,18 +58,23 @@
       <th>J</th>
     </tr>
     {{#each board}}
-    <tr>
-      <th>{{@index}}</th>
-      {{#each this}}
-        {{> board_cell}}
-      {{/each}}
-    </tr>
+      {{> board_row data=this row=@index }}
     {{/each}}
   </table>
 </template>
 
+<template name="board_row">
+  <tr>
+    <th>{{row}}</th>
+    {{#each data}}
+      {{> board_cell row=../row col=@index val=this.val}}
+    {{/each}}
+  </tr>
+</template>
+
 <template name="board_cell">
-  <td class="{{className}}">
+  <td class="cell {{className}} {{#if selected}}selected{{/if}}"
+  data-state="{{val}}" data-cell="{{cell}}">
     {{symbol}}
   </td>
 </template>
