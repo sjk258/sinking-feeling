@@ -20,32 +20,12 @@
   <br />
   <span><strong>Attack Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
   <br />
-  <span style="font-family:monospace">
-    <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
-    <br />
-    {{#each attackBoard}}
-      <strong>- {{@index}} |</strong>
-      {{#each this}}
-        {{val}} |
-      {{/each}}
-      <br />
-    {{/each}}
-  </span>
+  {{> board board=attackBoard}}
   <br />
   <br />
   <span><strong>User's Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
   <br />
-  <span style="font-family:monospace">
-    <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
-    <br />
-    {{#each ownBoard}}
-      <strong>- {{@index}} |</strong>
-      {{#each this}}
-        {{val}} |
-      {{/each}}
-      <br />
-    {{/each}}
-  </span>
+  {{> board board=ownBoard}}
 
   <br />
   <br />
@@ -60,4 +40,18 @@
     <br />
     <input type="submit" value="Submit" />
   </form>
+</template>
+
+<template name="board">
+  <span style="font-family:monospace">
+    <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
+    <br />
+    {{#each board}}
+      <strong>- {{@index}} |</strong>
+      {{#each this}}
+        {{val}} |
+      {{/each}}
+      <br />
+    {{/each}}
+  </span>
 </template>
