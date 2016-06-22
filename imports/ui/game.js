@@ -1,8 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Games } from '../api/games.js';
 import { getOwnBoard, getAttackBoard } from '../api/game.js';
+import { $ } from 'meteor/jquery';
 
 import './game.html';
+import './game.css';
 
 Template.game.helpers({
   ownBoard() {
@@ -55,30 +57,40 @@ Template.game.events({
   }
 });
 
-function convertToIndex(val) {
-  switch(val)
-  {
-    case 'A':
-      return 0;
-    case 'B':
-      return 1;
-    case 'C':
-      return 2;
-    case 'D':
-      return 3;
-    case 'E':
-      return 4;
-    case 'F':
-      return 5;
-    case 'G':
-      return 6;
-    case 'H':
-      return 7;
-    case 'I':
-      return 8;
-    case 'J':
-      return 9;
-    default:
-      return -1;
+Template.board_cell.helpers({
+  className() {
+    switch (this.val) {
+      case 'H': return 'hit';
+      case 'M': return 'miss';
+      case 'S': return 'ship';
+      case 'X': return 'sunk';
+      case 'E': return 'empty';
+      default: return '';
+    }
+  },
+  symbol() {
+    switch (this.val) {
+      case 'E': return '\u00B7';
+      case 'M': return '~';
+      default: return this.val;
+    }
+  },
+  cell() {
+    const row = 'ABCDEFGHIJ'[this.row];
+    return row + this.col;
+  },
+  selected() {
+    return false;
+  },
+});
+
+Template.board_cell.events({
+  "click .cell"(event) {
+    const target = event.currentTarget;
+    $('#selection').val(target.dataset.cell);
   }
+});
+
+function convertToIndex(val) {
+  return 'ABCDEFGHIJ'.indexOf(val);
 }
