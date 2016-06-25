@@ -1,15 +1,15 @@
 <template name="game">
   <h1>Test Game</h1>
 
-  <span class="text">Owner: {{owner_id}}</span>
+  <span class="text">Owner: {{creator.user}}</span>
   <br />
   <span class="text">Game State: {{state}}</span>
   <br />
-  <span class="text">Time Created: {{time_created}}</span>
+  <span class="text">Time Created: {{created_at}}</span>
   <br />
   <span class="text">Time Started: {{time_started}}</span>
   <br />
-  <span class="text">Computer ID: {{computer_id}}</span> 
+  <span class="text">Computer ID: {{computer_id}}</span>
   <br />
   <br />
   <span class="text" style="font-size:22">Turn {{turn_number}}</span>
