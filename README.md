@@ -9,4 +9,4 @@ Waffle.io issues ready to be worked:
 CircleCI Build status:
 [![CircleCI](https://circleci.com/gh/PSU-SW500-SU16-T5/sinking-feeling.svg?style=svg)](https://circleci.com/gh/PSU-SW500-SU16-T5/sinking-feeling)
 
-Team communication is happening in [slack](https://sinkingfeeling.slack.com/). 
+Team communication is happening in [slack](https://sinkingfeeling.slack.com/).
