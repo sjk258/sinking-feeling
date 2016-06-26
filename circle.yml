@@ -3,9 +3,5 @@ machine:
     version: 0.10.43
 dependencies:
   override:
-    - npm install -g spacejam
     - curl https://install.meteor.com | /bin/sh
     - npm install
-test:
-  override:
-    - meteor npm run test-cli-once
