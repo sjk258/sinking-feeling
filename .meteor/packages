@@ -23,3 +23,6 @@ practicalmeteor:mocha-console-runner
 practicalmeteor:mocha
 underscore
 xolvio:cleaner
+dispatch:mocha-phantomjs
+kadira:flow-router
+kadira:blaze-layout
