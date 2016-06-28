@@ -2,7 +2,8 @@ import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import * as Game from './game.js';
 import {checkBoard} from './board.test.js';
-import {Games} from './games.js'
+import {Games} from './games.js';
+import {ship_types} from './board.js';
 
 Meteor.methods({
   'test.resetDatabase': () => resetDatabase(),
@@ -70,6 +71,14 @@ describe('game', function() {
       var result = Games.findOne({"creator.user": test_creator});
 
       assert.equal(test_creator, result.creator.user);
+    });
+    it('ships loaded', function(){
+      var game = Game.create();
+
+      ship_types.forEach(function(type){
+        assert.isDefined(game.creator.ships[type]);
+        assert.isDefined(game.challenger.ships[type]);
+      });
     });
   });
   describe('shot', function() {

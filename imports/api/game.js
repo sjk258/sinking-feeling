@@ -1,22 +1,6 @@
 import * as Board from './board.js';
 import {Games} from './games.js';
 
-export function create(creator, id=null){
-  var game = {
-    created_at: new Date(),
-    turn_number: 0,
-    creator_ready: false,
-    challenger_ready: false,
-    creator: {user: creator, ships: {}, shots: []},
-    challenger: {ships: {}, shots: []},
-  };
-  if(id){
-    game._id = id;
-  }
-  Games.insert(game);
-  return game;
-}
-
 export function placeShip(ship_type, row, col, vertical, positions) {
   if (typeof positions[ship_type] == 'undefined')
   {
@@ -30,6 +14,44 @@ export function placeShip(ship_type, row, col, vertical, positions) {
   positions[ship_type].row = row;
   positions[ship_type].col = col;
   positions[ship_type].vertical = vertical;
+}
+
+export function randomShips(game){
+  //TODO: This is only random in that I randomly selected the upper-left
+  // corner to place the ships at.
+  // https://xkcd.com/221/
+
+  placeShip("carrier", 0, 0, true, game.creator.ships);
+  placeShip("battleship", 0, 1, true, game.creator.ships);
+  placeShip("cruiser", 0, 2, true, game.creator.ships);
+  placeShip("submarine", 0, 3, true, game.creator.ships);
+  placeShip("destroyer", 0, 4, true, game.creator.ships);
+
+  placeShip("carrier", 0, 0, true, game.challenger.ships);
+  placeShip("battleship", 0, 1, true, game.challenger.ships);
+  placeShip("cruiser", 0, 2, true, game.challenger.ships);
+  placeShip("submarine", 0, 3, true, game.challenger.ships);
+  placeShip("destroyer", 0, 4, true, game.challenger.ships);
+}
+
+export function create(creator, id=null){
+  var game = {
+    created_at: new Date(),
+    turn_number: 0,
+    creator_ready: false,
+    challenger_ready: false,
+    creator: {user: creator, ships: {}, shots: []},
+    challenger: {ships: {}, shots: []},
+  };
+
+  randomShips(game);
+
+  if(id){
+    game._id = id;
+  }
+
+  Games.insert(game);
+  return game;
 }
 
 export function shot(game, player, row, col){
