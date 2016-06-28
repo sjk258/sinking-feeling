@@ -33,7 +33,7 @@ Template.game.events({
   'submit form'(event) {
     event.preventDefault();
 
-    var game = this; //Games.findOne({ _id: 'test' });
+    const game = getGame();
 
     var selection = event.target.elements.selection.value;
     var nextPlayer = '';
