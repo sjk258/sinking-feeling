@@ -27,34 +27,14 @@
   <span><strong>Attack Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
   {{/with}}
   <br />
-  <span style="font-family:monospace">
-    <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
-    <br />
-    {{#each attackBoard}}
-      <strong>- {{@index}} |</strong>
-      {{#each this}}
-        {{val}} |
-      {{/each}}
-      <br />
-    {{/each}}
-  </span>
+  {{> board board=attackBoard}}
   <br />
   <br />
   {{#with game}}
   <span><strong>User's Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
   {{/with}}
   <br />
-  <span style="font-family:monospace">
-    <strong>----| A | B | C | D | E | F | G | H | I | J |</strong>
-    <br />
-    {{#each ownBoard}}
-      <strong>- {{@index}} |</strong>
-      {{#each this}}
-        {{val}} |
-      {{/each}}
-      <br />
-    {{/each}}
-  </span>
+  {{> board board=ownBoard}}
 
   <br />
   <br />
@@ -64,7 +44,7 @@
   {{/with}}
   <form>
     <span>Selection (A0 for example...)</span>
-    <input type="text" name="selection" />
+    <input type="text" name="selection" id="selection" />
     <br />
     <span>Result (E, M, H)</span>
     <input type="text" name="result" />
@@ -72,4 +52,41 @@
     <input type="submit" value="Submit" />
   </form>
   {{/if}}
+</template>
+
+<template name="board">
+  <table class="board">
+    <tr>
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+      <th>F</th>
+      <th>G</th>
+      <th>H</th>
+      <th>I</th>
+      <th>J</th>
+    </tr>
+    {{#each board}}
+      {{> board_row data=this row=@index }}
+    {{/each}}
+  </table>
+</template>
+
+<template name="board_row">
+  <tr>
+    <th>{{row}}</th>
+    {{#each data}}
+      {{> board_cell row=../row col=@index val=this.val}}
+    {{/each}}
+  </tr>
+</template>
+
+<template name="board_cell">
+  <td class="cell {{className}} {{#if selected}}selected{{/if}}"
+  data-state="{{val}}" data-cell="{{cell}}">
+    {{symbol}}
+  </td>
 </template>
