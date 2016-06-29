@@ -22,19 +22,25 @@
 
 
   <br />
+  {{#with game}}
   <span><strong>Attack Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
+  {{/with}}
   <br />
   {{> board board=attackBoard}}
   <br />
   <br />
+  {{#with game}}
   <span><strong>User's Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
+  {{/with}}
   <br />
   {{> board board=ownBoard}}
 
   <br />
   <br />
 
+  {{#with game}}
   <span>Whose turn is it? {{current_player}}</span>
+  {{/with}}
   <form>
     <span>Selection (A0 for example...)</span>
     <input type="text" name="selection" id="selection" />

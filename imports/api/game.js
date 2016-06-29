@@ -67,7 +67,7 @@ export function shot(game, player, row, col){
 
   var shot = {row: row, col: col};
   game[player].shots.push(shot);
-};
+}
 
 // only exported for testing, don't call this
 export function addOwnShips(board, ships)
@@ -76,7 +76,7 @@ export function addOwnShips(board, ships)
   {
     var row = ships[ship].row;
     var col = ships[ship].col;
-    for(i = 0; i < Board.ship_lengths[ship]; i++)
+    for(let i = 0; i < Board.ship_lengths[ship]; i++)
     {
       board[row][col].val = 'S';
       if(ships[ship].vertical)
@@ -89,7 +89,7 @@ export function addOwnShips(board, ships)
       }
     }
   }
-};
+}
 
 // only exported for testing, don't call this
 export function shotHitInSpace(shot, space)
@@ -106,7 +106,7 @@ export function shotWasHit(shot, ships)
 {
   for(var ship in ships)
   {
-    for(i = 0; i < Board.ship_lengths[ship]; i++)
+    for(let i = 0; i < Board.ship_lengths[ship]; i++)
     {
       var space = { row: ships[ship].row, col: ships[ship].col };
       if(ships[ship].vertical){
@@ -122,7 +122,7 @@ export function shotWasHit(shot, ships)
     }
   }
   return false;
-};
+}
 
 // only exported for testing, don't call this
 export function addShots(board, shots, ships)
@@ -137,7 +137,7 @@ export function addShots(board, shots, ships)
       board[shot.row][shot.col].val = 'M';
     }
   });
-};
+}
 
 // only exported for testing, don't call this
 export function oppositeUser(user){
@@ -151,17 +151,17 @@ export function oppositeUser(user){
     opposite_user = "creator";
   }
   return opposite_user;
-};
+}
 
 export function getOwnBoard(game, user){
   var board = Board.makeEmptyBoard();
   addOwnShips(board, game[user].ships);
   addShots(board, game[oppositeUser(user)].shots, game[user].ships);
   return board;
-};
+}
 
 export function getAttackBoard(game, user){
   var board = Board.makeEmptyBoard();
   addShots(board, game[user].shots, game[oppositeUser(user)].ships);
   return board;
-};
+}

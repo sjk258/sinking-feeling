@@ -1,4 +1,4 @@
-import { assert, expect } from 'meteor/practicalmeteor:chai';
+import { assert } from 'meteor/practicalmeteor:chai';
 import * as Board from './board.js';
 
 export function checkBoard(expected, board)
@@ -9,7 +9,7 @@ export function checkBoard(expected, board)
       assert.equal(expected[r][c], board[r][c].val, "row: " + r.toString() + " col: " + c.toString());
     }
   }  
-};
+}
 
 describe('board', function() {
   describe('makeBoard', function() {
@@ -45,7 +45,7 @@ describe('board', function() {
       const board = Board.makeEmptyBoard();
       Board.setRange(board, x, y, len, width, value);
       checkBoard(expected, board);
-    };
+    }
     
     it('works correctly for a single cell', function () {
       const exp = [
