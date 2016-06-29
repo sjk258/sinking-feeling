@@ -2,7 +2,7 @@
 /* globals FlowRouter */
 
 import { Games } from '../api/games.js';
-import { getOwnBoard, getAttackBoard } from '../api/game.js';
+import { getOwnBoard, getAttackBoard, shot, update } from '../api/game.js';
 import { $ } from 'meteor/jquery';
 
 import './game.html';
@@ -36,39 +36,31 @@ Template.game.events({
     event.preventDefault();
 
     const game = getGame();
+    const selection = event.target.elements.selection.value;
+    const row = parseInt(selection.slice(1, 2));
+    const col = convertToIndex(selection.slice(0, 1));
 
-    var selection = event.target.elements.selection.value;
-    var nextPlayer = '';
+    console.log(game['current_player'] + " taking shot.\nAttempting to hit position: " + selection);
 
-    var col = convertToIndex(selection.slice(0, 1));
-    var row = selection.slice(1, 2);
+    // Get shot information (TODO: Check if shot is valid!)
+    shot(game, game['current_player'], row, col);
 
-    var searchParam = row + '.' + col + '.val';
-
-    if (game['current_player'] === "creator")
+    // Update game information
+    //  - change player turn
+    //  - increment turn number
+    //  - 
+    if(game['current_player'] === "creator")
     {
-      console.log("owner turn taken");
-
-      searchParam = 'owner_board.' + searchParam;
-      nextPlayer = 'challenger';
+      game['current_player'] = "challenger";
     }
     else
     {
-      console.log("opponent turn taken");
-      searchParam = 'opponent_board.' + searchParam;
-      nextPlayer = 'creator';
+      game['current_player'] = "creator";
     }
 
-    var result = event.target.elements.result.value;
+    game['turn_number'] = game['turn_number'] + 1;
 
-    var dynamicQuery = {};
-    dynamicQuery[searchParam] = result;
-    dynamicQuery['turn_number'] = game['turn_number'] + 1;
-    dynamicQuery['current_player'] = nextPlayer;
-
-    console.log(dynamicQuery);
-
-    Games.update( { _id: 'test' }, { $set: dynamicQuery } );
+    update(game);
   }
 });
 
@@ -91,8 +83,8 @@ Template.board_cell.helpers({
     }
   },
   cell() {
-    const row = 'ABCDEFGHIJ'[this.row];
-    return row + this.col;
+    const col = 'ABCDEFGHIJ'[this.col];
+    return col + this.row;
   },
   selected() {
     return false;
