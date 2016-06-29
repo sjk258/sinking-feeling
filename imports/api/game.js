@@ -1,4 +1,5 @@
 import * as Board from './board.js';
+import {Games} from './games.js';
 
 export function placeShip(ship_type, row, col, vertical, positions) {
   if (typeof positions[ship_type] == 'undefined')
@@ -9,10 +10,48 @@ export function placeShip(ship_type, row, col, vertical, positions) {
   {
     throw 'Unrecognised ship type';
   }
-  
+
   positions[ship_type].row = row;
   positions[ship_type].col = col;
   positions[ship_type].vertical = vertical;
+}
+
+export function randomShips(game){
+  //TODO: This is only random in that I randomly selected the upper-left
+  // corner to place the ships at.
+  // https://xkcd.com/221/
+
+  placeShip("carrier", 0, 0, true, game.creator.ships);
+  placeShip("battleship", 0, 1, true, game.creator.ships);
+  placeShip("cruiser", 0, 2, true, game.creator.ships);
+  placeShip("submarine", 0, 3, true, game.creator.ships);
+  placeShip("destroyer", 0, 4, true, game.creator.ships);
+
+  placeShip("carrier", 0, 0, true, game.challenger.ships);
+  placeShip("battleship", 0, 1, true, game.challenger.ships);
+  placeShip("cruiser", 0, 2, true, game.challenger.ships);
+  placeShip("submarine", 0, 3, true, game.challenger.ships);
+  placeShip("destroyer", 0, 4, true, game.challenger.ships);
+}
+
+export function create(creator, id=null){
+  var game = {
+    created_at: new Date(),
+    turn_number: 0,
+    creator_ready: false,
+    challenger_ready: false,
+    creator: {user: creator, ships: {}, shots: []},
+    challenger: {ships: {}, shots: []},
+  };
+
+  randomShips(game);
+
+  if(id){
+    game._id = id;
+  }
+
+  Games.insert(game);
+  return game;
 }
 
 export function shot(game, player, row, col){
@@ -20,16 +59,17 @@ export function shot(game, player, row, col){
   {
     game[player] = {};
   }
-  
+
   if (typeof game[player].shots == 'undefined')
   {
     game[player].shots = [];
-  }  
-  
+  }
+
   var shot = {row: row, col: col};
   game[player].shots.push(shot);
 }
 
+// only exported for testing, don't call this
 export function addOwnShips(board, ships)
 {
   for(var ship in ships)
@@ -46,11 +86,12 @@ export function addOwnShips(board, ships)
       else
       {
         col++;
-      }     
+      }
     }
   }
 }
 
+// only exported for testing, don't call this
 export function shotHitInSpace(shot, space)
 {
   if((shot.row == space.row) && (shot.col == space.col))
@@ -60,6 +101,7 @@ export function shotHitInSpace(shot, space)
   return false;
 }
 
+// only exported for testing, don't call this
 export function shotWasHit(shot, ships)
 {
   for(var ship in ships)
@@ -82,6 +124,7 @@ export function shotWasHit(shot, ships)
   return false;
 }
 
+// only exported for testing, don't call this
 export function addShots(board, shots, ships)
 {
   shots.forEach(function(shot){
@@ -96,6 +139,7 @@ export function addShots(board, shots, ships)
   });
 }
 
+// only exported for testing, don't call this
 export function oppositeUser(user){
   var opposite_user = "";
   if(user == "creator")
@@ -112,7 +156,7 @@ export function oppositeUser(user){
 export function getOwnBoard(game, user){
   var board = Board.makeEmptyBoard();
   addOwnShips(board, game[user].ships);
-  addShots(board, game[oppositeUser(user)].shots, game[user].ships);  
+  addShots(board, game[oppositeUser(user)].shots, game[user].ships);
   return board;
 }
 
