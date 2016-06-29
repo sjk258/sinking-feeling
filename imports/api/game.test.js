@@ -7,7 +7,7 @@ describe('game', function() {
     it('added to array', function () {
       var row = 7;
       var col = 8;
-      game = {creator: {shots: [{row: 0, col: 0}]}};
+      const game = {creator: {shots: [{row: 0, col: 0}]}};
       
       Game.shot(game, "creator", row, col);
       
@@ -19,7 +19,7 @@ describe('game', function() {
       var row = 7;
       var col = 8;
       var player = "challenger";
-      game = {};
+      const game = {};
       game[player] = {shots: [{row: 0, col: 0}]};
       
       Game.shot(game, player, row, col);
@@ -32,7 +32,7 @@ describe('game', function() {
       var row = 7;
       var col = 8;
       var player = "creator";
-      game = {};
+      const game = {};
       
       Game.shot(game, player, row, col);
       

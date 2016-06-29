@@ -2,8 +2,6 @@ import { Meteor } from 'meteor/meteor';
 
 import { Games } from '../imports/api/games.js';
 import * as Game from '../imports/api/game.js';
-import { makeEmptyBoard, placeShip } from '../imports/api/board.js';
-
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -15,7 +13,7 @@ Meteor.startup(() => {
     console.log("Removed test game...");
   }
 
-  default_game = {
+  const default_game = {
     _id: "test",
     owner_id: "test",
     state: "ACTIVE",
