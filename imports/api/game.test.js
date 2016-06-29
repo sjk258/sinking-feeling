@@ -178,6 +178,19 @@ describe('game', function() {
 
   describe('users board', function(){
     it('empty board', function(){
+      const exp = [
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+      ];
+
       var game = {
         creator: { ships: {}, shots: []},
         challenger: { ships: {}, shots: []}
@@ -186,6 +199,7 @@ describe('game', function() {
 
       var board = Game.getOwnBoard(game, user);
 
+      checkBoard(exp, board);
     });
     it('only single ship', function(){
       const exp = [
@@ -403,6 +417,19 @@ describe('game', function() {
   });
   describe('attack', function(){
     it('empty board', function(){
+      const exp = [
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+      ];
+
       var game = {
         creator: { ships: {}, shots: []},
         challenger: { ships: {}, shots: []}
@@ -411,6 +438,7 @@ describe('game', function() {
 
       var board = Game.getAttackBoard(game, user);
 
+      checkBoard(exp, board);
     });
     it('only no ships', function(){
       const exp = [
