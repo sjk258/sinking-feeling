@@ -121,6 +121,9 @@ export function create(creator, id=null){
     challenger: {ships: initShips(), shots: []},
   };
 
+  randomizeShips(game.creator.ships);
+  randomizeShips(game.challenger.ships);
+
   if(id){
     game._id = id;
   }
