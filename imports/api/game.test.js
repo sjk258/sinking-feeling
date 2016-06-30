@@ -1,6 +1,7 @@
 import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import * as Game from './game.js';
+import * as Board from './board.js';
 import {checkBoard} from './board.test.js';
 import {Games} from './games.js';
 import {ship_types} from './board.js';
@@ -217,6 +218,19 @@ describe('game', function() {
       Game.placeShip("carrier", 1, 0, true, positions);
 
       assert.equal(1, Object.keys(positions).length); // Still there
+    });
+  });
+
+  describe('initShips', function() {
+    it('should return an object with all defined ship types', function() {
+      const ships = Game.initShips();
+      assert.sameMembers(Object.keys(ships), Board.ship_types);
+    });
+    it('should provide each ship with keys row, col, and vertical', function() {
+      const ships = Game.initShips();
+      Board.ship_types.forEach(type => {
+        assert.sameMembers(Object.keys(ships[type]), ['row', 'col', 'vertical']);
+      });
     });
   });
 
