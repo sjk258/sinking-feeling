@@ -318,61 +318,61 @@ describe('game', function() {
     });
   });
   describe('shot to ship', function(){
-    it('shot hit space', function(){
-      var shot = {row: 1, col: 2};
-      var space = {row: 1, col: 2};
+    it('spaces are the same', function(){
+      var space1 = {row: 1, col: 2};
+      var space2 = {row: 1, col: 2};
 
-      assert.equal(true, Game.shotHitInSpace(shot, space));
+      assert.equal(true, Game.spacesAreSame(space1, space2));
 
-      shot.row = 3;
-      assert.equal(false, Game.shotHitInSpace(shot, space));
+      space1.row = 3;
+      assert.equal(false, Game.spacesAreSame(space1, space2));
 
-      shot.row = 1;
-      shot.col = 3;
-      assert.equal(false, Game.shotHitInSpace(shot, space));
+      space1.row = 1;
+      space1.col = 3;
+      assert.equal(false, Game.spacesAreSame(space1, space2));
 
-      shot.row = 3;
-      shot.col = 3;
-      assert.equal(false, Game.shotHitInSpace(shot, space));
+      space1.row = 3;
+      space1.col = 3;
+      assert.equal(false, Game.spacesAreSame(space1, space2));
 
-      shot.row = 2;
-      shot.col = 1;
-      assert.equal(false, Game.shotHitInSpace(shot, space));
+      space1.row = 2;
+      space1.col = 1;
+      assert.equal(false, Game.spacesAreSame(space1, space2));
     });
     it('shot to carrier vertical', function(){
       var ships = { carrier: { row: 0, col: 0, vertical: true } };
       var shot = { row: 0, col: 0 };
 
-      assert.equal(true, Game.shotWasHit(shot, ships));
+      assert.equal(true, Game.spaceIsOnShip(shot, ships));
 
       shot.row = 1;
-      assert.equal(true, Game.shotWasHit(shot, ships));
+      assert.equal(true, Game.spaceIsOnShip(shot, ships));
 
       shot.row = 4;
-      assert.equal(true, Game.shotWasHit(shot, ships));
+      assert.equal(true, Game.spaceIsOnShip(shot, ships));
 
       shot.row = 5;
-      assert.equal(false, Game.shotWasHit(shot, ships));
+      assert.equal(false, Game.spaceIsOnShip(shot, ships));
 
       shot.row = 0;
       shot.col = 1;
-      assert.equal(false, Game.shotWasHit(shot, ships));
+      assert.equal(false, Game.spaceIsOnShip(shot, ships));
     });
     it('shot to destroyer horizontal', function(){
       var ships = { destroyer: { row: 0, col: 0, vertical: false } };
       var shot = { row: 0, col: 0 };
 
-      assert.equal(true, Game.shotWasHit(shot, ships));
+      assert.equal(true, Game.spaceIsOnShip(shot, ships));
 
       shot.row = 1;
-      assert.equal(false, Game.shotWasHit(shot, ships));
+      assert.equal(false, Game.spaceIsOnShip(shot, ships));
 
       shot.row = 0;
       shot.col = 1;
-      assert.equal(true, Game.shotWasHit(shot, ships));
+      assert.equal(true, Game.spaceIsOnShip(shot, ships));
 
       shot.col = 2;
-      assert.equal(false, Game.shotWasHit(shot, ships));
+      assert.equal(false, Game.spaceIsOnShip(shot, ships));
     });
     it('multiple ships', function(){
       var ships = {
@@ -390,10 +390,10 @@ describe('game', function() {
       ];
 
       success_shots.forEach( function(shot){
-        assert.equal(true, Game.shotWasHit(shot, ships));
+        assert.equal(true, Game.spaceIsOnShip(shot, ships));
       });
       fail_shots.forEach( function(shot){
-        assert.equal(false, Game.shotWasHit(shot, ships));
+        assert.equal(false, Game.spaceIsOnShip(shot, ships));
       });
     });
   });
