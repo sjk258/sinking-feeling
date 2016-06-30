@@ -21,7 +21,6 @@ Template.game.helpers({
     return getGame();
   },
   ownBoard() {
-    //TODO: This is hard-coded to the creator, it really needs to be the current user
     const game = getGame();
     return getOwnBoard(game, game['current_player']);
   },
