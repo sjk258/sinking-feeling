@@ -1,5 +1,6 @@
 import * as Board from './board.js';
 import {Games} from './games.js';
+import {_} from 'meteor/underscore';
 
 // only exported for testing, don't call this
 export function spacesAreSame(space1, space2){
@@ -75,10 +76,29 @@ export function placeShip(ship_type, row, col, vertical, positions) {
   positions[ship_type].vertical = vertical;
 }
 
-export function randomShips(game){
-  //TODO: This is only random in that I randomly selected the upper-left
-  // corner to place the ships at.
-  // https://xkcd.com/221/
+export function randomizeShips(ships) {
+  const makePossibilities = function (length) {
+    let i, j;
+    const result = [];
+    for (i = 0; i < 10; i++) {
+      for (j = 0; j < 10 - length; j++) {
+        result.push([i, j, false]);
+        result.push([j, i, true]);
+      }
+    }
+    return result;
+  };
+  Board.ship_types.forEach(type => {
+    const possibs = _.shuffle(makePossibilities(Board.ship_lengths[type]));
+    _.some(possibs, possib => {
+      try {
+        placeShip(type, possib[0], possib[1], possib[2], ships);
+        return true;
+      } catch(e) {
+        return false;
+      }
+    });
+  });
 }
 
 export function initShips() {

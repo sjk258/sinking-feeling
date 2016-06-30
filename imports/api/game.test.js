@@ -1,5 +1,6 @@
 import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { _ } from 'meteor/underscore';
 import * as Game from './game.js';
 import * as Board from './board.js';
 import {checkBoard} from './board.test.js';
@@ -41,7 +42,6 @@ describe('game', function() {
     it('created time', function(){
       var game = Game.create();
       var now = new Date();
-      console.log(now);
 
       assert.equal(now.getDate(), game.created_at.getDate());
       assert.equal(now.getMonth(), game.created_at.getMonth());
@@ -218,6 +218,22 @@ describe('game', function() {
       Game.placeShip("carrier", 1, 0, true, positions);
 
       assert.equal(1, Object.keys(positions).length); // Still there
+    });
+  });
+
+  describe('randomizeShips', function() {
+    it('should change the positions of the ships', function () {
+      const ships1 = Game.initShips();
+      const ships2 = {};
+      Board.ship_types.forEach(type => {
+        ships2[type] = _.clone(ships1[type]);
+      });
+      Game.randomizeShips(ships1);
+      assert(_.some(Board.ship_types, type => {
+        return ships1[type].row != ships2[type].row ||
+          ships1[type].col != ships2[type].col ||
+          ships1[type].vertical != ships2[type].vertical;
+      }));
     });
   });
 
