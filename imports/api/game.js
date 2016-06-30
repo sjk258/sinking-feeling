@@ -1,13 +1,72 @@
 import * as Board from './board.js';
 import {Games} from './games.js';
 
-export function placeShip(ship_type, row, col, vertical, positions) {
-  if (typeof positions[ship_type] == 'undefined')
+// only exported for testing, don't call this
+export function spacesAreSame(space1, space2){
+  if((space1.row == space2.row) && (space1.col == space2.col))
   {
+    return true;
+  }
+  return false;
+}
+
+// only exported for testing, don't call this
+export function spaceIsOnShip(space, ships){
+  for(var ship in ships)
+  {
+    for(let i = 0; i < Board.ship_lengths[ship]; i++) {
+      var ship_space = { row: ships[ship].row, col: ships[ship].col };
+      if(ships[ship].vertical){
+        ship_space.row += i;
+      }
+      else{
+        ship_space.col += i;
+      }
+      if(spacesAreSame(space, ship_space))
+      {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export function overlap(ship, row, col, vertical, ships) {
+  for(let i = 0; i < Board.ship_lengths[ship]; i++) {
+    var ship_space = { row: row, col: col };
+    if(vertical){
+      ship_space.row += i;
+    }
+    else{
+      ship_space.col += i;
+    }
+    if(spaceIsOnShip(ship_space, ships))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function checkOverlap(ship_type, row, col, vertical, positions) {
+  if (typeof positions[ship_type] != 'undefined'){
+    // This is moving a ship, we don't want to include the pre-move ship in the
+    // overlap test. This makes a copy that we can remove it from.
+    positions = JSON.parse(JSON.stringify(positions));
+    delete positions[ship_type];
+  }
+  if(overlap(ship_type, row, col, vertical, positions)){
+    throw 'Ships Overlapping';
+  }
+}
+
+export function placeShip(ship_type, row, col, vertical, positions) {
+  checkOverlap(ship_type, row, col, vertical, positions);
+
+  if (typeof positions[ship_type] == 'undefined') {
     positions[ship_type] = {};
   }
-  if(Board.ship_types.indexOf(ship_type) < 0)
-  {
+  if(Board.ship_types.indexOf(ship_type) < 0) {
     throw 'Unrecognised ship type';
   }
 
@@ -70,8 +129,7 @@ export function shot(game, player, row, col){
 }
 
 // only exported for testing, don't call this
-export function addOwnShips(board, ships)
-{
+export function addOwnShips(board, ships){
   for(var ship in ships)
   {
     var row = ships[ship].row;
@@ -92,43 +150,9 @@ export function addOwnShips(board, ships)
 }
 
 // only exported for testing, don't call this
-export function shotHitInSpace(shot, space)
-{
-  if((shot.row == space.row) && (shot.col == space.col))
-  {
-    return true;
-  }
-  return false;
-}
-
-// only exported for testing, don't call this
-export function shotWasHit(shot, ships)
-{
-  for(var ship in ships)
-  {
-    for(let i = 0; i < Board.ship_lengths[ship]; i++)
-    {
-      var space = { row: ships[ship].row, col: ships[ship].col };
-      if(ships[ship].vertical){
-        space.row += i;
-      }
-      else{
-        space.col += i;
-      }
-      if(shotHitInSpace(shot, space))
-      {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-// only exported for testing, don't call this
-export function addShots(board, shots, ships)
-{
+export function addShots(board, shots, ships){
   shots.forEach(function(shot){
-    if(shotWasHit(shot, ships))
+    if(spaceIsOnShip(shot, ships))
     {
       board[shot.row][shot.col].val = 'H';
     }
