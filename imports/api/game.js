@@ -14,8 +14,7 @@ export function spacesAreSame(space1, space2){
 export function spaceIsOnShip(space, ships){
   for(var ship in ships)
   {
-    for(let i = 0; i < Board.ship_lengths[ship]; i++)
-    {
+    for(let i = 0; i < Board.ship_lengths[ship]; i++) {
       var ship_space = { row: ships[ship].row, col: ships[ship].col };
       if(ships[ship].vertical){
         ship_space.row += i;
@@ -32,15 +31,42 @@ export function spaceIsOnShip(space, ships){
   return false;
 }
 
+export function overlap(ship, row, col, vertical, ships) {
+  for(let i = 0; i < Board.ship_lengths[ship]; i++) {
+    var ship_space = { row: row, col: col };
+    if(vertical){
+      ship_space.row += i;
+    }
+    else{
+      ship_space.col += i;
+    }
+    if(spaceIsOnShip(ship_space, ships))
+    {
+      return true;
+    }
+  }
+  return false;
+}
 
+export function checkOverlap(ship_type, row, col, vertical, positions) {
+  if (typeof positions[ship_type] != 'undefined'){
+    // This is moving a ship, we don't want to include the pre-move ship in the
+    // overlap test. This makes a copy that we can remove it from.
+    positions = JSON.parse(JSON.stringify(positions));
+    delete positions[ship_type];
+  }
+  if(overlap(ship_type, row, col, vertical, positions)){
+    throw 'Ships Overlapping';
+  }
+}
 
 export function placeShip(ship_type, row, col, vertical, positions) {
-  if (typeof positions[ship_type] == 'undefined')
-  {
+  checkOverlap(ship_type, row, col, vertical, positions);
+
+  if (typeof positions[ship_type] == 'undefined') {
     positions[ship_type] = {};
   }
-  if(Board.ship_types.indexOf(ship_type) < 0)
-  {
+  if(Board.ship_types.indexOf(ship_type) < 0) {
     throw 'Unrecognised ship type';
   }
 
