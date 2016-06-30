@@ -13,7 +13,7 @@ describe('game', function() {
   describe('create', function(){
     beforeEach(function(){
       Meteor.call('test.resetDatabase');
-    })
+    });
     it('basic setup', function(){
       assert.isObject(Game.create());
     });
@@ -56,7 +56,7 @@ describe('game', function() {
     });
     it('in database', function(){
       var test_creator = "TEST_CREATOR";
-      var id = "test_id"
+      var id = "test_id";
       var game = Game.create(test_creator, id);
 
       var result = Games.findOne({_id: id});
@@ -66,7 +66,7 @@ describe('game', function() {
     });
     it('in database anonymous id', function(){
       var test_creator = "TEST_CREATOR";
-      var game = Game.create(test_creator);
+      Game.create(test_creator);
 
       var result = Games.findOne({"creator.user": test_creator});
 
@@ -120,27 +120,27 @@ describe('game', function() {
 
   describe('overlap', function(){
     it('single space', function(){
-      expected = true;
-      positions = {cruiser: { row: 0, col: 0, vertical: true}};
-      test_type = "submarine";
-      test_row = 2;
-      test_col = 0;
-      test_vertical = true;
+      const expected = true;
+      const positions = {cruiser: { row: 0, col: 0, vertical: true}};
+      const test_type = "submarine";
+      const test_row = 2;
+      const test_col = 0;
+      const test_vertical = true;
 
-      result = Game.overlap(test_type, test_row, test_col, test_vertical,
+      const result = Game.overlap(test_type, test_row, test_col, test_vertical,
          positions);
 
       assert.equal(expected, result);
     });
     it('nothing', function(){
-      expected = false;
-      positions = {cruiser: { row: 0, col: 0, vertical: true}};
-      test_type = "submarine";
-      test_row = 3;
-      test_col = 0;
-      test_vertical = true;
+      const expected = false;
+      const positions = {cruiser: { row: 0, col: 0, vertical: true}};
+      const test_type = "submarine";
+      const test_row = 3;
+      const test_col = 0;
+      const test_vertical = true;
 
-      result = Game.overlap(test_type, test_row, test_col, test_vertical,
+      const result = Game.overlap(test_type, test_row, test_col, test_vertical,
          positions);
 
       assert.equal(expected, result);
@@ -201,11 +201,10 @@ describe('game', function() {
       }).to.throw('Unrecognised ship type');
     });
     it('ship overlaps another', function(){
-      positions = {}
+      const positions = {};
       Game.placeShip("carrier", 0, 0, true, positions);
       Game.placeShip("battleship", 0, 1, true, positions);
 
-      debugger
       assert.throw(function(){
         Game.placeShip("battleship", 0, 0, true, positions);
       }, "Ships Overlapping");
@@ -213,7 +212,7 @@ describe('game', function() {
       assert.equal(0, positions.carrier.col); // Still there
     });
     it('move overlaps same', function(){
-      positions = {}
+      const positions = {};
       Game.placeShip("carrier", 0, 0, true, positions);
       Game.placeShip("carrier", 1, 0, true, positions);
 
