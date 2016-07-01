@@ -20,3 +20,10 @@ Template.home.events({
     FlowRouter.go('game', { id: game._id });
   }
 });
+
+Template.home_game.events({
+  'click .deleteGame'(event) {
+    event.preventDefault();
+    Games.remove(this._id);
+  }
+});
