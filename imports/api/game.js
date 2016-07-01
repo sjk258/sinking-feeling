@@ -128,7 +128,7 @@ export function create(creator, id=null){
     game._id = id;
   }
 
-  Games.insert(game);
+  game._id = Games.insert(game);
   return game;
 }
 
