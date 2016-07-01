@@ -151,6 +151,7 @@ export function shot(game, player, row, col){
 export function addOwnShips(board, ships, mark) {
   for(let j = 0; j < Board.ship_types.length; j++) {
     const ship = Board.ship_types[j];
+    if(!(ship in ships)) continue;
     let row = ships[ship].row;
     let col = ships[ship].col;
     for(let i = 0; i < Board.ship_lengths[ship]; i++)
