@@ -75,7 +75,7 @@ describe('AI handler', function() {
             // Create a copy of the name where each character has alternating
             // case
             const garbled = _.map(name.split(''), function(c,i) {
-              if(i % 2 == 0) {
+              if(i % 2 === 0) {
                 return c.toUpperCase();
               } else {
                 return c.toLowerCase();

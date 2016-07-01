@@ -21,13 +21,12 @@ Template.game.helpers({
     return getGame();
   },
   ownBoard() {
-    //TODO: This is hard-coded to the creator, it really needs to be the current user
     const game = getGame();
-    return getOwnBoard(game, game['current_player']);
+    return getOwnBoard(game, game.current_player);
   },
   attackBoard() {
     const game = getGame();
-    return getAttackBoard(game, game['current_player']);
+    return getAttackBoard(game, game.current_player);
   }
 });
 
@@ -66,7 +65,7 @@ Template.game.events({
 
 Template.board_cell.helpers({
   className() {
-    switch (this.val) {
+    switch (this.ship.val) {
       case 'H': return 'hit';
       case 'M': return 'miss';
       case 'S': return 'ship';
@@ -76,10 +75,12 @@ Template.board_cell.helpers({
     }
   },
   symbol() {
-    switch (this.val) {
+    switch (this.ship.val) {
       case 'E': return '\u00B7';
       case 'M': return '~';
-      default: return this.val;
+      case 'S': return this.ship.shipNum;
+      case 'X': return this.ship.shipNum;
+      default: return this.ship.val;
     }
   },
   cell() {

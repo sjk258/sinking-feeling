@@ -12,7 +12,8 @@ FlowRouter.route('/', {
 
 import './game.js';
 FlowRouter.route('/game/:id', {
+  name: 'game',
   action: function() {
     BlazeLayout.render('layout', {content: 'game'});
   }
-})
+});
