@@ -44,10 +44,6 @@ Template.game.events({
     // Get shot information (TODO: Check if shot is valid!)
     shot(game, game['current_player'], row, col);
 
-    // Update game information
-    //  - change player turn
-    //  - increment turn number
-    //  - 
     if(game['current_player'] === "creator")
     {
       game['current_player'] = "challenger";
@@ -60,6 +56,8 @@ Template.game.events({
     game['turn_number'] = game['turn_number'] + 1;
 
     update(game);
+
+    $('#selection').val("");
   }
 });
 
@@ -76,11 +74,12 @@ Template.board_cell.helpers({
   },
   symbol() {
     switch (this.ship.val) {
-      case 'E': return '\u00B7';
-      case 'M': return '~';
-      case 'S': return this.ship.shipNum;
-      case 'X': return this.ship.shipNum;
-      default: return this.ship.val;
+      case 'H': return "../graphics/Hit.png";
+      case 'E': return "../graphics/Water.png";
+      case 'M': return "../graphics/Miss.png";
+      case 'S': return "../graphics/Ship.png";
+      case 'X': return "../graphics/Ship.png";
+      default: return "../graphics/Water.png"; 
     }
   },
   cell() {
