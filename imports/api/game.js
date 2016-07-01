@@ -173,7 +173,7 @@ export function addOwnShips(board, ships, mark) {
 }
 
 // only exported for testing, don't call this
-export function addShots(board, shots, ships, mark) {
+export function addShots(board, shots, ships) {
   shots.forEach(function(shot){
     if(spaceIsOnShip(shot, ships))
     {
