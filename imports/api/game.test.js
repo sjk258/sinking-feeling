@@ -1,6 +1,8 @@
 import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { _ } from 'meteor/underscore';
 import * as Game from './game.js';
+import * as Board from './board.js';
 import {checkBoard} from './board.test.js';
 import {Games} from './games.js';
 import {ship_types} from './board.js';
@@ -13,7 +15,7 @@ describe('game', function() {
   describe('create', function(){
     beforeEach(function(){
       Meteor.call('test.resetDatabase');
-    })
+    });
     it('basic setup', function(){
       assert.isObject(Game.create());
     });
@@ -40,7 +42,6 @@ describe('game', function() {
     it('created time', function(){
       var game = Game.create();
       var now = new Date();
-      console.log(now);
 
       assert.equal(now.getDate(), game.created_at.getDate());
       assert.equal(now.getMonth(), game.created_at.getMonth());
@@ -56,7 +57,7 @@ describe('game', function() {
     });
     it('in database', function(){
       var test_creator = "TEST_CREATOR";
-      var id = "test_id"
+      var id = "test_id";
       var game = Game.create(test_creator, id);
 
       var result = Games.findOne({_id: id});
@@ -66,7 +67,7 @@ describe('game', function() {
     });
     it('in database anonymous id', function(){
       var test_creator = "TEST_CREATOR";
-      var game = Game.create(test_creator);
+      Game.create(test_creator);
 
       var result = Games.findOne({"creator.user": test_creator});
 
@@ -120,27 +121,27 @@ describe('game', function() {
 
   describe('overlap', function(){
     it('single space', function(){
-      expected = true;
-      positions = {cruiser: { row: 0, col: 0, vertical: true}};
-      test_type = "submarine";
-      test_row = 2;
-      test_col = 0;
-      test_vertical = true;
+      const expected = true;
+      const positions = {cruiser: { row: 0, col: 0, vertical: true}};
+      const test_type = "submarine";
+      const test_row = 2;
+      const test_col = 0;
+      const test_vertical = true;
 
-      result = Game.overlap(test_type, test_row, test_col, test_vertical,
+      const result = Game.overlap(test_type, test_row, test_col, test_vertical,
          positions);
 
       assert.equal(expected, result);
     });
     it('nothing', function(){
-      expected = false;
-      positions = {cruiser: { row: 0, col: 0, vertical: true}};
-      test_type = "submarine";
-      test_row = 3;
-      test_col = 0;
-      test_vertical = true;
+      const expected = false;
+      const positions = {cruiser: { row: 0, col: 0, vertical: true}};
+      const test_type = "submarine";
+      const test_row = 3;
+      const test_col = 0;
+      const test_vertical = true;
 
-      result = Game.overlap(test_type, test_row, test_col, test_vertical,
+      const result = Game.overlap(test_type, test_row, test_col, test_vertical,
          positions);
 
       assert.equal(expected, result);
@@ -201,11 +202,10 @@ describe('game', function() {
       }).to.throw('Unrecognised ship type');
     });
     it('ship overlaps another', function(){
-      positions = {}
+      const positions = {};
       Game.placeShip("carrier", 0, 0, true, positions);
       Game.placeShip("battleship", 0, 1, true, positions);
 
-      debugger
       assert.throw(function(){
         Game.placeShip("battleship", 0, 0, true, positions);
       }, "Ships Overlapping");
@@ -213,11 +213,40 @@ describe('game', function() {
       assert.equal(0, positions.carrier.col); // Still there
     });
     it('move overlaps same', function(){
-      positions = {}
+      const positions = {};
       Game.placeShip("carrier", 0, 0, true, positions);
       Game.placeShip("carrier", 1, 0, true, positions);
 
       assert.equal(1, Object.keys(positions).length); // Still there
+    });
+  });
+
+  describe('randomizeShips', function() {
+    it('should change the positions of the ships', function () {
+      const ships1 = Game.initShips();
+      const ships2 = {};
+      Board.ship_types.forEach(type => {
+        ships2[type] = _.clone(ships1[type]);
+      });
+      Game.randomizeShips(ships1);
+      assert(_.some(Board.ship_types, type => {
+        return ships1[type].row != ships2[type].row ||
+          ships1[type].col != ships2[type].col ||
+          ships1[type].vertical != ships2[type].vertical;
+      }));
+    });
+  });
+
+  describe('initShips', function() {
+    it('should return an object with all defined ship types', function() {
+      const ships = Game.initShips();
+      assert.sameMembers(Object.keys(ships), Board.ship_types);
+    });
+    it('should provide each ship with keys row, col, and vertical', function() {
+      const ships = Game.initShips();
+      Board.ship_types.forEach(type => {
+        assert.sameMembers(Object.keys(ships[type]), ['row', 'col', 'vertical']);
+      });
     });
   });
 

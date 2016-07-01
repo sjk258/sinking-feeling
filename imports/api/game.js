@@ -1,5 +1,6 @@
 import * as Board from './board.js';
 import {Games} from './games.js';
+import {_} from 'meteor/underscore';
 
 // only exported for testing, don't call this
 export function spacesAreSame(space1, space2){
@@ -75,22 +76,39 @@ export function placeShip(ship_type, row, col, vertical, positions) {
   positions[ship_type].vertical = vertical;
 }
 
-export function randomShips(game){
-  //TODO: This is only random in that I randomly selected the upper-left
-  // corner to place the ships at.
-  // https://xkcd.com/221/
+export function randomizeShips(ships) {
+  const makePossibilities = function (length) {
+    let i, j;
+    const result = [];
+    for (i = 0; i < 10; i++) {
+      for (j = 0; j < 10 - length; j++) {
+        result.push([i, j, false]);
+        result.push([j, i, true]);
+      }
+    }
+    return result;
+  };
+  Board.ship_types.forEach(type => {
+    const possibs = _.shuffle(makePossibilities(Board.ship_lengths[type]));
+    _.some(possibs, possib => {
+      try {
+        placeShip(type, possib[0], possib[1], possib[2], ships);
+        return true;
+      } catch(e) {
+        return false;
+      }
+    });
+  });
+}
 
-  placeShip("carrier", 0, 0, true, game.creator.ships);
-  placeShip("battleship", 0, 1, true, game.creator.ships);
-  placeShip("cruiser", 0, 2, true, game.creator.ships);
-  placeShip("submarine", 0, 3, true, game.creator.ships);
-  placeShip("destroyer", 0, 4, true, game.creator.ships);
-
-  placeShip("carrier", 0, 0, true, game.challenger.ships);
-  placeShip("battleship", 0, 1, true, game.challenger.ships);
-  placeShip("cruiser", 0, 2, true, game.challenger.ships);
-  placeShip("submarine", 0, 3, true, game.challenger.ships);
-  placeShip("destroyer", 0, 4, true, game.challenger.ships);
+export function initShips() {
+  const ships = {};
+  placeShip("carrier", 0, 0, true, ships);
+  placeShip("battleship", 0, 1, true, ships);
+  placeShip("cruiser", 0, 2, true, ships);
+  placeShip("submarine", 0, 3, true, ships);
+  placeShip("destroyer", 0, 4, true, ships);
+  return ships;
 }
 
 export function create(creator, id=null){
@@ -99,11 +117,12 @@ export function create(creator, id=null){
     turn_number: 0,
     creator_ready: false,
     challenger_ready: false,
-    creator: {user: creator, ships: {}, shots: []},
-    challenger: {ships: {}, shots: []},
+    creator: {user: creator, ships: initShips(), shots: []},
+    challenger: {ships: initShips(), shots: []},
   };
 
-  randomShips(game);
+  randomizeShips(game.creator.ships);
+  randomizeShips(game.challenger.ships);
 
   if(id){
     game._id = id;
@@ -129,14 +148,19 @@ export function shot(game, player, row, col){
 }
 
 // only exported for testing, don't call this
-export function addOwnShips(board, ships){
-  for(var ship in ships)
-  {
-    var row = ships[ship].row;
-    var col = ships[ship].col;
+export function addOwnShips(board, ships, mark) {
+  for(let j = 0; j < Board.ship_types.length; j++) {
+    const ship = Board.ship_types[j];
+    if(!(ship in ships)) continue;
+    let row = ships[ship].row;
+    let col = ships[ship].col;
     for(let i = 0; i < Board.ship_lengths[ship]; i++)
     {
-      board[row][col].val = 'S';
+      board[row][col].shipNum = j;
+      if(mark)
+      {
+        board[row][col].val = 'S';
+      }
       if(ships[ship].vertical)
       {
         row++;
@@ -150,7 +174,7 @@ export function addOwnShips(board, ships){
 }
 
 // only exported for testing, don't call this
-export function addShots(board, shots, ships){
+export function addShots(board, shots, ships) {
   shots.forEach(function(shot){
     if(spaceIsOnShip(shot, ships))
     {
@@ -179,13 +203,14 @@ export function oppositeUser(user){
 
 export function getOwnBoard(game, user){
   var board = Board.makeEmptyBoard();
-  addOwnShips(board, game[user].ships);
+  addOwnShips(board, game[user].ships, true);
   addShots(board, game[oppositeUser(user)].shots, game[user].ships);
   return board;
 }
 
 export function getAttackBoard(game, user){
   var board = Board.makeEmptyBoard();
+  addOwnShips(board, game[oppositeUser(user)].ships, false);
   addShots(board, game[user].shots, game[oppositeUser(user)].ships);
   return board;
 }
