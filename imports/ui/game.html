@@ -78,7 +78,7 @@
   <tr>
     <th>{{row}}</th>
     {{#each data}}
-      {{> board_cell row=../row col=@index val=this.val}}
+      {{> board_cell row=../row col=@index ship=this}}
     {{/each}}
   </tr>
 </template>
