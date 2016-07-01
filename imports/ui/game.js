@@ -22,11 +22,11 @@ Template.game.helpers({
   },
   ownBoard() {
     const game = getGame();
-    return getOwnBoard(game, game['current_player']);
+    return getOwnBoard(game, game.current_player);
   },
   attackBoard() {
     const game = getGame();
-    return getAttackBoard(game, game['current_player']);
+    return getAttackBoard(game, game.current_player);
   }
 });
 
@@ -44,7 +44,7 @@ Template.game.events({
 
     var searchParam = row + '.' + col + '.val';
 
-    if (game['current_player'] === "creator")
+    if (game.current_player === "creator")
     {
       console.log("owner turn taken");
 
@@ -62,8 +62,8 @@ Template.game.events({
 
     var dynamicQuery = {};
     dynamicQuery[searchParam] = result;
-    dynamicQuery['turn_number'] = game['turn_number'] + 1;
-    dynamicQuery['current_player'] = nextPlayer;
+    dynamicQuery.turn_number = game.turn_number + 1;
+    dynamicQuery.current_player = nextPlayer;
 
     console.log(dynamicQuery);
 

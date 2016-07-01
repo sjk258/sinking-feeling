@@ -16,4 +16,4 @@ FlowRouter.route('/game/:id', {
   action: function() {
     BlazeLayout.render('layout', {content: 'game'});
   }
-})
+});
