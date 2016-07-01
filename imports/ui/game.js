@@ -36,28 +36,32 @@ Template.game.events({
 
     const game = getGame();
     const selection = event.target.elements.selection.value;
-    const row = parseInt(selection.slice(1, 2));
-    const col = convertToIndex(selection.slice(0, 1));
 
-    console.log(game['current_player'] + " taking shot.\nAttempting to hit position: " + selection);
-
-    // Get shot information (TODO: Check if shot is valid!)
-    shot(game, game['current_player'], row, col);
-
-    if(game['current_player'] === "creator")
+    if (selection.length === 2)
     {
-      game['current_player'] = "challenger";
+      const row = parseInt(selection.slice(1, 2));
+      const col = convertToIndex(selection.slice(0, 1));
+
+      console.log(game['current_player'] + " taking shot.\nAttempting to hit position: " + selection);
+
+      // Get shot information (TODO: Check if shot is valid!)
+      shot(game, game['current_player'], row, col);
+
+      if(game['current_player'] === "creator")
+      {
+        game['current_player'] = "challenger";
+      }
+      else
+      {
+        game['current_player'] = "creator";
+      }
+
+      game['turn_number'] = game['turn_number'] + 1;
+
+      update(game);
+
+      $('#selection').val("");
     }
-    else
-    {
-      game['current_player'] = "creator";
-    }
-
-    game['turn_number'] = game['turn_number'] + 1;
-
-    update(game);
-
-    $('#selection').val("");
   }
 });
 
@@ -66,7 +70,13 @@ Template.board_cell.helpers({
     switch (this.ship.val) {
       case 'H': return 'hit';
       case 'M': return 'miss';
-      case 'S': return 'ship';
+      case 'S_Top': 
+      case 'S_Bottom':
+      case 'S_Right':
+      case 'S_Left':
+      case 'S_Vertical':
+      case 'S_Horizontal':
+        return 'ship';
       case 'X': return 'sunk';
       case 'E': return 'empty';
       default: return '';
@@ -75,10 +85,15 @@ Template.board_cell.helpers({
   symbol() {
     switch (this.ship.val) {
       case 'H': return "../graphics/Hit.png";
-      case 'E': return "../graphics/Water.png";
+      case 'E': return "../graphics/Water.jpg";
       case 'M': return "../graphics/Miss.png";
-      case 'S': return "../graphics/Ship.png";
-      case 'X': return "../graphics/Ship.png";
+      case 'S_Top': return "../graphics/Ship_T.png";
+      case 'S_Bottom': return "../graphics/Ship_B.png";
+      case 'S_Right': return "../graphics/Ship_R.png";
+      case 'S_Left': return "../graphics/Ship_L.png";
+      case 'S_Vertical': return "../graphics/Ship_V.png";
+      case 'S_Horizontal': return "../graphics/Ship_H.png";
+      case 'X': return "../graphics/Sunk.png";
       default: return "../graphics/Water.png"; 
     }
   },

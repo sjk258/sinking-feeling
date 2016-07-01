@@ -297,11 +297,11 @@ describe('game', function() {
     });
     it('only single ship', function(){
       const exp = [
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
+        ["S_Top","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -325,7 +325,8 @@ describe('game', function() {
     });
     it('only single ship horizontal', function(){
       const exp = [
-        "SSSSSEEEEE",
+        ["S_Left","S_Horizontal","S_Horizontal","S_Horizontal",
+        "S_Right","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -353,11 +354,11 @@ describe('game', function() {
     });
     it('only multiple ships', function(){
       const exp = [
-        "SSSSSEEEEE",
-        "SSSSSEEEEE",
-        "SSSSEEEEEE",
-        "SSEEEEEEEE",
-        "SEEEEEEEEE",
+        ["S_Top","S_Top","S_Top","S_Top","S_Top","E","E","E","E","E"],
+        ["S_Vertical","S_Vertical","S_Vertical","S_Vertical","S_Bottom","E","E","E","E","E"],
+        ["S_Vertical","S_Vertical","S_Bottom","S_Bottom","E","E","E","E","E","E"],
+        ["S_Vertical","S_Bottom","E","E","E","E","E","E","E","E"],
+        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -385,10 +386,10 @@ describe('game', function() {
     it('with shots', function(){
       const exp = [
         "HEEEEEEEEE",
-        "SMEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
+        ["S_Vertical","M","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",

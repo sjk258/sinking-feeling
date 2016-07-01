@@ -161,16 +161,45 @@ export function addOwnShips(board, ships, mark) {
     for(let i = 0; i < Board.ship_lengths[ship]; i++)
     {
       board[row][col].shipNum = j;
-      if(mark)
-      {
-        board[row][col].val = 'S';
-      }
+
       if(ships[ship].vertical)
       {
+        if(mark && i === 0)
+        {
+          // Ship at top
+          board[row][col].val = 'S_Top';
+        }
+        else if(mark && i === (Board.ship_lengths[ship] - 1))
+        {
+          // Ship at bottom
+          board[row][col].val = 'S_Bottom';
+        }
+        else if(mark)
+        {
+          // Mid-piece of vertical ship
+          board[row][col].val = 'S_Vertical';
+        }
+
         row++;
       }
       else
       {
+        if(mark && i === 0)
+        {
+          // Ship at top
+          board[row][col].val = 'S_Left';
+        }
+        else if(mark && i === (Board.ship_lengths[ship] - 1))
+        {
+          // Ship at bottom
+          board[row][col].val = 'S_Right';
+        }
+        else if(mark)
+        {
+          // Mid-piece of vertical ship
+          board[row][col].val = 'S_Horizontal';
+        }
+
         col++;
       }
     }
