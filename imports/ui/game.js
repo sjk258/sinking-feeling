@@ -84,17 +84,17 @@ Template.board_cell.helpers({
   },
   symbol() {
     switch (this.ship.val) {
-      case 'H': return "../graphics/Hit.png";
-      case 'E': return "../graphics/Water.png";
-      case 'M': return "../graphics/Miss.png";
-      case 'S_Top': return "../graphics/Ship_T.png";
-      case 'S_Bottom': return "../graphics/Ship_B.png";
-      case 'S_Right': return "../graphics/Ship_R.png";
-      case 'S_Left': return "../graphics/Ship_L.png";
-      case 'S_Vertical': return "../graphics/Ship_V.png";
-      case 'S_Horizontal': return "../graphics/Ship_H.png";
-      case 'X': return "../graphics/Sunk.png";
-      default: return "../graphics/Water.png"; 
+      case 'H':            return "../graphics/Hit.svg";  
+      case 'E':            return "../graphics/Water.svg";  
+      case 'M':            return "../graphics/Miss.svg";  
+      case 'S_Top':        return "../graphics/ShipTop.svg";  
+      case 'S_Bottom':     return "../graphics/ShipBottom.svg";  
+      case 'S_Right':      return "../graphics/ShipRight.svg";  
+      case 'S_Left':       return "../graphics/ShipLeft.svg";  
+      case 'S_Vertical':   return "../graphics/ShipVertical.svg";  
+      case 'S_Horizontal': return "../graphics/ShipHorizontal.svg";  
+      case 'X':            return "../graphics/Sunk.svg";  
+      default:             return "../graphics/Water.svg";  
     }
   },
   cell() {
