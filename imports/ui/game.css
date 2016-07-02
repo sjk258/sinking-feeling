@@ -37,3 +37,9 @@ table.board .cell:hover {
   background-color: orange;
   border: 1px solid orange;
 }
+
+table.board td img {
+  width:32px;
+  height:32px;
+  display:block;
+}
