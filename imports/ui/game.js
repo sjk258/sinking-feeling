@@ -85,7 +85,7 @@ Template.board_cell.helpers({
   symbol() {
     switch (this.ship.val) {
       case 'H': return "../graphics/Hit.png";
-      case 'E': return "../graphics/Water.jpg";
+      case 'E': return "../graphics/Water.png";
       case 'M': return "../graphics/Miss.png";
       case 'S_Top': return "../graphics/Ship_T.png";
       case 'S_Bottom': return "../graphics/Ship_B.png";
