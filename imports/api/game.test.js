@@ -183,6 +183,110 @@ describe('game', function() {
     });
   });
 
+  describe('fire', function() {
+    it('works as expected for creator in two-player', function() {
+      const game = {
+        creator: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        current_player: 'creator',
+        turn_number: 0,
+      };
+
+      Game.fire(game, 0, 0);
+
+      assert.deepEqual(game.creator.shots, [{row: 0, col: 0}]);
+      assert.deepEqual(game.challenger.shots, []);
+      assert.equal(game.turn_number, 1);
+      assert.equal(game.current_player, 'challenger');
+    });
+    it('works as expected for challenger in two-player', function() {
+      const game = {
+        creator: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        current_player: 'challenger',
+        turn_number: 0,
+      };
+
+      Game.fire(game, 0, 0);
+
+      assert.deepEqual(game.challenger.shots, [{row: 0, col: 0}]);
+      assert.deepEqual(game.creator.shots, []);
+      assert.equal(game.turn_number, 1);
+      assert.equal(game.current_player, 'creator');
+    });
+    it('works as expected for creator versus AI', function() {
+      const game = {
+        creator: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        current_player: 'creator',
+        turn_number: 0,
+        computer_id: 'sue',
+        computer_state: {},
+      };
+
+      Game.fire(game, 1, 1);
+
+      assert.deepEqual(game.creator.shots, [{row: 1, col: 1}]);
+      assert.deepEqual(game.challenger.shots, [{row: 0, col: 0}]);
+      assert.equal(game.turn_number, 2);
+      assert.equal(game.current_player, 'creator');
+    });
+  });
+
   describe('overlap', function(){
     it('single space', function(){
       const expected = true;

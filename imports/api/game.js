@@ -167,6 +167,19 @@ export function player_shot(game, player, row, col) {
   game[player].shots.push(shot);
 }
 
+export function fire(game, row, col) {
+  let player = game.current_player;
+  player_shot(game, player, row, col);
+
+  if ('computer_id' in game) {
+    computer_shot(game);
+    game.turn_number += 2;
+  } else {
+    game.current_player = oppositeUser(player);
+    game.turn_number += 1;
+  }
+}
+
 // only exported for testing, don't call this
 export function addOwnShips(board, ships, mark) {
   for(let j = 0; j < Board.ship_types.length; j++) {
