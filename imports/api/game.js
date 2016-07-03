@@ -119,6 +119,12 @@ export function create(creator, id=null){
     challenger_ready: false,
     creator: {user: creator, ships: initShips(), shots: []},
     challenger: {ships: initShips(), shots: []},
+    computer_id: 'sue',
+    // TODO: active immediately starts the game. the initial state should
+    // change as we implement more features. The time_started date also should
+    // be set wherever we first change state to active.
+    state: 'active',
+    time_started: new Date(),
   };
 
   randomizeShips(game.creator.ships);
