@@ -138,11 +138,11 @@ export function create(creator, id=null){
   return game;
 }
 
-export function update(game){
+export function update(game) {
   Games.update( {_id: game['_id']}, game);
 }
 
-export function shot(game, player, row, col){
+export function player_shot(game, player, row, col) {
   if (typeof game[player] == 'undefined')
   {
     game[player] = {};

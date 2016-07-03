@@ -102,13 +102,13 @@ describe('game', function() {
       assert.equal(result['turn_number'], turnNumber + 1);
     });
   });
-  describe('shot', function() {
+  describe('player_shot', function() {
     it('added to array', function () {
       var row = 7;
       var col = 8;
       const game = {creator: {shots: [{row: 0, col: 0}]}};
 
-      Game.shot(game, "creator", row, col);
+      Game.player_shot(game, "creator", row, col);
 
       assert.equal(2, game.creator.shots.length);
       assert.equal(row, game.creator.shots[1].row);
@@ -121,7 +121,7 @@ describe('game', function() {
       const game = {};
       game[player] = {shots: [{row: 0, col: 0}]};
 
-      Game.shot(game, player, row, col);
+      Game.player_shot(game, player, row, col);
 
       assert.equal(2, game[player].shots.length);
       assert.equal(row, game[player].shots[1].row);
@@ -133,7 +133,7 @@ describe('game', function() {
       var player = "creator";
       const game = {};
 
-      Game.shot(game, player, row, col);
+      Game.player_shot(game, player, row, col);
 
       assert.equal(1, game[player].shots.length);
     });
