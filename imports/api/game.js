@@ -140,7 +140,7 @@ export function create(creator, id=null){
 }
 
 export function update(game) {
-  Games.update( {_id: game['_id']}, game);
+  Games.update( {_id: game._id}, game);
 }
 
 export function computer_shot(game) {
@@ -149,7 +149,7 @@ export function computer_shot(game) {
   if ('computer_state' in game) state = game.computer_state;
   const board = getAttackBoard(game, 'challenger');
   const shot = ai.makeMove(board, state);
-  game['challenger'].shots.push(shot);
+  game.challenger.shots.push(shot);
 }
 
 export function player_shot(game, player, row, col) {

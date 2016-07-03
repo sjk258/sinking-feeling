@@ -42,7 +42,7 @@ Template.game.events({
       const row = parseInt(selection.slice(1, 2));
       const col = convertToIndex(selection.slice(0, 1));
 
-      console.log(game['current_player'] + " taking shot.\nAttempting to hit position: " + selection);
+      console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
 
       // Get shot information (TODO: Check if shot is valid!)
       fire(game, row, col);

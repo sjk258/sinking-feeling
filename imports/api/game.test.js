@@ -88,18 +88,18 @@ describe('game', function() {
     });
     it('update basic game', function(){
       var game = Game.create();
-      var gameID = game['_id'];
-      var turnNumber = game['turn_number'];
+      var gameID = game._id;
+      var turnNumber = game.turn_number;
 
-      assert.equal(game['turn_number'], turnNumber);
+      assert.equal(game.turn_number, turnNumber);
 
-      game['turn_number'] = game['turn_number'] + 1;
+      game.turn_number = game.turn_number + 1;
 
       Game.update(game);
 
-      var result = Games.findOne({"_id": gameID});
+      var result = Games.findOne({_id: gameID});
 
-      assert.equal(result['turn_number'], turnNumber + 1);
+      assert.equal(result.turn_number, turnNumber + 1);
     });
   });
 
