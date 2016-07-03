@@ -102,6 +102,50 @@ describe('game', function() {
       assert.equal(result['turn_number'], turnNumber + 1);
     });
   });
+
+  describe('computer_shot', function() {
+    it('first shot', function() {
+      const game = {
+        creator: {
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {shots: []},
+        computer_state: {},
+        computer_id: 'sue',
+      };
+      Game.computer_shot(game);
+      assert.equal(1, game.challenger.shots.length);
+      assert.equal(0, game.challenger.shots[0].row);
+      assert.equal(0, game.challenger.shots[0].col);
+    });
+    it('second shot', function() {
+      const game = {
+        creator: {
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {shots: [{row: 0, col: 0}]},
+        computer_state: {},
+        computer_id: 'sue',
+      };
+      Game.computer_shot(game);
+      assert.equal(2, game.challenger.shots.length);
+      assert.equal(0, game.challenger.shots[0].row);
+      assert.equal(0, game.challenger.shots[0].col);
+    });
+  });
+
   describe('player_shot', function() {
     it('added to array', function () {
       var row = 7;

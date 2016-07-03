@@ -1,4 +1,5 @@
 import * as Board from './board.js';
+import * as AI from './ai.js';
 import {Games} from './games.js';
 import {_} from 'meteor/underscore';
 
@@ -140,6 +141,15 @@ export function create(creator, id=null){
 
 export function update(game) {
   Games.update( {_id: game['_id']}, game);
+}
+
+export function computer_shot(game) {
+  const ai = AI.getPlayer(game.computer_id);
+  let state = {};
+  if ('computer_state' in game) state = game.computer_state;
+  const board = getAttackBoard(game, 'challenger');
+  const shot = ai.makeMove(board, state);
+  game['challenger'].shots.push(shot);
 }
 
 export function player_shot(game, player, row, col) {
