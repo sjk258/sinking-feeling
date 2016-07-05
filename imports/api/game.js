@@ -1,4 +1,5 @@
 import * as Board from './board.js';
+import * as AI from './ai.js';
 import {Games} from './games.js';
 import {_} from 'meteor/underscore';
 
@@ -119,6 +120,12 @@ export function create(creator, id=null){
     challenger_ready: false,
     creator: {user: creator, ships: initShips(), shots: []},
     challenger: {ships: initShips(), shots: []},
+    computer_id: 'sue',
+    // TODO: active immediately starts the game. the initial state should
+    // change as we implement more features. The time_started date also should
+    // be set wherever we first change state to active.
+    state: 'active',
+    time_started: new Date(),
   };
 
   randomizeShips(game.creator.ships);
@@ -132,11 +139,20 @@ export function create(creator, id=null){
   return game;
 }
 
-export function update(game){
-  Games.update( {_id: game['_id']}, game);
+export function update(game) {
+  Games.update( {_id: game._id}, game);
 }
 
-export function shot(game, player, row, col){
+export function computer_shot(game) {
+  const ai = AI.getPlayer(game.computer_id);
+  let state = {};
+  if ('computer_state' in game) state = game.computer_state;
+  const board = getAttackBoard(game, 'challenger');
+  const shot = ai.makeMove(board, state);
+  game.challenger.shots.push(shot);
+}
+
+export function player_shot(game, player, row, col) {
   if (typeof game[player] == 'undefined')
   {
     game[player] = {};
@@ -149,6 +165,19 @@ export function shot(game, player, row, col){
 
   var shot = {row: row, col: col};
   game[player].shots.push(shot);
+}
+
+export function fire(game, row, col) {
+  let player = game.current_player;
+  player_shot(game, player, row, col);
+
+  if ('computer_id' in game) {
+    computer_shot(game);
+    game.turn_number += 2;
+  } else {
+    game.current_player = oppositeUser(player);
+    game.turn_number += 1;
+  }
 }
 
 // only exported for testing, don't call this

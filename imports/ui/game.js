@@ -2,7 +2,7 @@
 /* globals FlowRouter */
 
 import { Games } from '../api/games.js';
-import { getOwnBoard, getAttackBoard, shot, update } from '../api/game.js';
+import { getOwnBoard, getAttackBoard, fire, update } from '../api/game.js';
 import { $ } from 'meteor/jquery';
 
 import './game.html';
@@ -42,22 +42,10 @@ Template.game.events({
       const row = parseInt(selection.slice(1, 2));
       const col = convertToIndex(selection.slice(0, 1));
 
-      console.log(game['current_player'] + " taking shot.\nAttempting to hit position: " + selection);
+      console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
 
       // Get shot information (TODO: Check if shot is valid!)
-      shot(game, game['current_player'], row, col);
-
-      if(game['current_player'] === "creator")
-      {
-        game['current_player'] = "challenger";
-      }
-      else
-      {
-        game['current_player'] = "creator";
-      }
-
-      game['turn_number'] = game['turn_number'] + 1;
-
+      fire(game, row, col);
       update(game);
 
       $('#selection').val("");
