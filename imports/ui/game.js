@@ -2,7 +2,7 @@
 /* globals FlowRouter */
 
 import { Games } from '../api/games.js';
-import { getOwnBoard, getAttackBoard } from '../api/game.js';
+import { getOwnBoard, getAttackBoard, fire, update } from '../api/game.js';
 import { $ } from 'meteor/jquery';
 
 import './game.html';
@@ -35,39 +35,21 @@ Template.game.events({
     event.preventDefault();
 
     const game = getGame();
+    const selection = event.target.elements.selection.value;
 
-    var selection = event.target.elements.selection.value;
-    var nextPlayer = '';
-
-    var col = convertToIndex(selection.slice(0, 1));
-    var row = selection.slice(1, 2);
-
-    var searchParam = row + '.' + col + '.val';
-
-    if (game.current_player === "creator")
+    if (selection.length === 2)
     {
-      console.log("owner turn taken");
+      const row = parseInt(selection.slice(1, 2));
+      const col = convertToIndex(selection.slice(0, 1));
 
-      searchParam = 'owner_board.' + searchParam;
-      nextPlayer = 'challenger';
+      console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
+
+      // Get shot information (TODO: Check if shot is valid!)
+      fire(game, row, col);
+      update(game);
+
+      $('#selection').val("");
     }
-    else
-    {
-      console.log("opponent turn taken");
-      searchParam = 'opponent_board.' + searchParam;
-      nextPlayer = 'creator';
-    }
-
-    var result = event.target.elements.result.value;
-
-    var dynamicQuery = {};
-    dynamicQuery[searchParam] = result;
-    dynamicQuery.turn_number = game.turn_number + 1;
-    dynamicQuery.current_player = nextPlayer;
-
-    console.log(dynamicQuery);
-
-    Games.update( { _id: 'test' }, { $set: dynamicQuery } );
   }
 });
 
@@ -76,7 +58,13 @@ Template.board_cell.helpers({
     switch (this.ship.val) {
       case 'H': return 'hit';
       case 'M': return 'miss';
-      case 'S': return 'ship';
+      case 'S_Top': 
+      case 'S_Bottom':
+      case 'S_Right':
+      case 'S_Left':
+      case 'S_Vertical':
+      case 'S_Horizontal':
+        return 'ship';
       case 'X': return 'sunk';
       case 'E': return 'empty';
       default: return '';
@@ -84,16 +72,22 @@ Template.board_cell.helpers({
   },
   symbol() {
     switch (this.ship.val) {
-      case 'E': return '\u00B7';
-      case 'M': return '~';
-      case 'S': return this.ship.shipNum;
-      case 'X': return this.ship.shipNum;
-      default: return this.ship.val;
+      case 'H':            return "../graphics/Hit.svg";  
+      case 'E':            return "../graphics/Water.svg";  
+      case 'M':            return "../graphics/Miss.svg";  
+      case 'S_Top':        return "../graphics/ShipTop.svg";  
+      case 'S_Bottom':     return "../graphics/ShipBottom.svg";  
+      case 'S_Right':      return "../graphics/ShipRight.svg";  
+      case 'S_Left':       return "../graphics/ShipLeft.svg";  
+      case 'S_Vertical':   return "../graphics/ShipVertical.svg";  
+      case 'S_Horizontal': return "../graphics/ShipHorizontal.svg";  
+      case 'X':            return "../graphics/Sunk.svg";  
+      default:             return "../graphics/Water.svg";  
     }
   },
   cell() {
-    const row = 'ABCDEFGHIJ'[this.row];
-    return row + this.col;
+    const col = 'ABCDEFGHIJ'[this.col];
+    return col + this.row;
   },
   selected() {
     return false;

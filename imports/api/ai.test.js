@@ -52,10 +52,11 @@ describe('AI handler', function() {
           const board = Board.makeEmptyBoard();
           const state = {};
           const move = ai.makeMove(board, state);
-          assert.isArray(move);
-          assert(move.length, 2);
-          assert.isNumber(move[0]);
-          assert.isNumber(move[1]);
+          assert.isObject(move);
+          assert.property(move, 'row');
+          assert.property(move, 'col');
+          assert.isNumber(move.row);
+          assert.isNumber(move.col);
         });
         it('makeMove throws error no-moves-left after 100 moves', function() {
           const ai = AI.getPlayer(name);
@@ -63,7 +64,7 @@ describe('AI handler', function() {
           const state = {};
           const makeMove = function() {
             const move = ai.makeMove(board, state);
-            board[move[0]][move[1]].val = 'X';
+            board[move.row][move.col].val = 'X';
           };
           for(let i = 0; i < 100; i++) {
             makeMove();

@@ -82,13 +82,77 @@ describe('game', function() {
       });
     });
   });
-  describe('shot', function() {
+  describe('update', function() {
+    beforeEach(function(){
+      Meteor.call('test.resetDatabase');
+    });
+    it('update basic game', function(){
+      var game = Game.create();
+      var gameID = game._id;
+      var turnNumber = game.turn_number;
+
+      assert.equal(game.turn_number, turnNumber);
+
+      game.turn_number = game.turn_number + 1;
+
+      Game.update(game);
+
+      var result = Games.findOne({_id: gameID});
+
+      assert.equal(result.turn_number, turnNumber + 1);
+    });
+  });
+
+  describe('computer_shot', function() {
+    it('first shot', function() {
+      const game = {
+        creator: {
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {shots: []},
+        computer_state: {},
+        computer_id: 'sue',
+      };
+      Game.computer_shot(game);
+      assert.equal(1, game.challenger.shots.length);
+      assert.equal(0, game.challenger.shots[0].row);
+      assert.equal(0, game.challenger.shots[0].col);
+    });
+    it('second shot', function() {
+      const game = {
+        creator: {
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {shots: [{row: 0, col: 0}]},
+        computer_state: {},
+        computer_id: 'sue',
+      };
+      Game.computer_shot(game);
+      assert.equal(2, game.challenger.shots.length);
+      assert.equal(0, game.challenger.shots[0].row);
+      assert.equal(0, game.challenger.shots[0].col);
+    });
+  });
+
+  describe('player_shot', function() {
     it('added to array', function () {
       var row = 7;
       var col = 8;
       const game = {creator: {shots: [{row: 0, col: 0}]}};
 
-      Game.shot(game, "creator", row, col);
+      Game.player_shot(game, "creator", row, col);
 
       assert.equal(2, game.creator.shots.length);
       assert.equal(row, game.creator.shots[1].row);
@@ -101,7 +165,7 @@ describe('game', function() {
       const game = {};
       game[player] = {shots: [{row: 0, col: 0}]};
 
-      Game.shot(game, player, row, col);
+      Game.player_shot(game, player, row, col);
 
       assert.equal(2, game[player].shots.length);
       assert.equal(row, game[player].shots[1].row);
@@ -113,9 +177,113 @@ describe('game', function() {
       var player = "creator";
       const game = {};
 
-      Game.shot(game, player, row, col);
+      Game.player_shot(game, player, row, col);
 
       assert.equal(1, game[player].shots.length);
+    });
+  });
+
+  describe('fire', function() {
+    it('works as expected for creator in two-player', function() {
+      const game = {
+        creator: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        current_player: 'creator',
+        turn_number: 0,
+      };
+
+      Game.fire(game, 0, 0);
+
+      assert.deepEqual(game.creator.shots, [{row: 0, col: 0}]);
+      assert.deepEqual(game.challenger.shots, []);
+      assert.equal(game.turn_number, 1);
+      assert.equal(game.current_player, 'challenger');
+    });
+    it('works as expected for challenger in two-player', function() {
+      const game = {
+        creator: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        current_player: 'challenger',
+        turn_number: 0,
+      };
+
+      Game.fire(game, 0, 0);
+
+      assert.deepEqual(game.challenger.shots, [{row: 0, col: 0}]);
+      assert.deepEqual(game.creator.shots, []);
+      assert.equal(game.turn_number, 1);
+      assert.equal(game.current_player, 'creator');
+    });
+    it('works as expected for creator versus AI', function() {
+      const game = {
+        creator: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        challenger: {
+          shots: [],
+          ships: {
+            carrier: {row: 0, col: 0},
+            battleship: {row: 1, col: 0},
+            cruiser: {row: 2, col: 0},
+            submarine: {row: 3, col: 0},
+            destroyer: {row: 4, col: 0},
+          }
+        },
+        current_player: 'creator',
+        turn_number: 0,
+        computer_id: 'sue',
+        computer_state: {},
+      };
+
+      Game.fire(game, 1, 1);
+
+      assert.deepEqual(game.creator.shots, [{row: 1, col: 1}]);
+      assert.deepEqual(game.challenger.shots, [{row: 0, col: 0}]);
+      assert.equal(game.turn_number, 2);
+      assert.equal(game.current_player, 'creator');
     });
   });
 
@@ -277,11 +445,11 @@ describe('game', function() {
     });
     it('only single ship', function(){
       const exp = [
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
+        ["S_Top","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -305,7 +473,8 @@ describe('game', function() {
     });
     it('only single ship horizontal', function(){
       const exp = [
-        "SSSSSEEEEE",
+        ["S_Left","S_Horizontal","S_Horizontal","S_Horizontal",
+        "S_Right","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -333,11 +502,11 @@ describe('game', function() {
     });
     it('only multiple ships', function(){
       const exp = [
-        "SSSSSEEEEE",
-        "SSSSSEEEEE",
-        "SSSSEEEEEE",
-        "SSEEEEEEEE",
-        "SEEEEEEEEE",
+        ["S_Top","S_Top","S_Top","S_Top","S_Top","E","E","E","E","E"],
+        ["S_Vertical","S_Vertical","S_Vertical","S_Vertical","S_Bottom","E","E","E","E","E"],
+        ["S_Vertical","S_Vertical","S_Bottom","S_Bottom","E","E","E","E","E","E"],
+        ["S_Vertical","S_Bottom","E","E","E","E","E","E","E","E"],
+        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -365,10 +534,10 @@ describe('game', function() {
     it('with shots', function(){
       const exp = [
         "HEEEEEEEEE",
-        "SMEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
-        "SEEEEEEEEE",
+        ["S_Vertical","M","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
+        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",

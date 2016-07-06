@@ -12,7 +12,7 @@ export const name = 'sue';
  * @constant {String}
  * @default
  */
-export const full_name = 'Sequential Name';
+export const full_name = 'Sequential Sue';
 
 /**
  * Return the move that Sue would like to make next.
@@ -31,7 +31,7 @@ export function makeMove(board, state) {
   // Look for the first empty square in row-column order
   for (row = 0; row < board.length; row++) {
     for (col = 0; col < board[row].length; col++) {
-      if (board[row][col].val == "E") return [row, col];
+      if (board[row][col].val == "E") return {row: row, col: col};
     }
   }
   throw new Meteor.Error('no-moves-left', 'No more moves are possible');

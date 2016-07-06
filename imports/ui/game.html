@@ -1,55 +1,54 @@
 <template name="game">
   <h2>Game</h2>
   {{#if invalid}}
-  <p>Warning: Invalid game ID in URL.</p>
+    <p>Warning: Invalid game ID in URL.</p>
   {{else}}
 
-  {{#with game}}
-  <span class="text">Owner: {{creator.user}}</span>
-  <br />
-  <span class="text">Game State: {{state}}</span>
-  <br />
-  <span class="text">Time Created: {{created_at}}</span>
-  <br />
-  <span class="text">Time Started: {{time_started}}</span>
-  <br />
-  <span class="text">Computer ID: {{computer_id}}</span>
-  <br />
-  <br />
-  <span class="text" style="font-size:22">Turn {{turn_number}}</span>
-  <br />
-  {{/with}}
+    {{#with game}}
+      <span class="text">Owner: {{creator.user}}</span>
+      <br />
+      <span class="text">Game State: {{state}}</span>
+      <br />
+      <span class="text">Time Created: {{created_at}}</span>
+      <br />
+      <span class="text">Time Started: {{time_started}}</span>
+      <br />
+      <span class="text">Computer ID: {{computer_id}}</span>
+      <br />
+      <br />
+      <span class="text" style="font-size:22">Turn {{turn_number}}</span>
+      <br />
+    {{/with}}
 
-
-  <br />
-  {{#with game}}
-  <span><strong>Attack Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
-  {{/with}}
-  <br />
-  {{> board board=attackBoard}}
-  <br />
-  <br />
-  {{#with game}}
-  <span><strong>User's Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
-  {{/with}}
-  <br />
-  {{> board board=ownBoard}}
-
-  <br />
-  <br />
-
-  {{#with game}}
-  <span>Whose turn is it? {{current_player}}</span>
-  {{/with}}
-  <form>
-    <span>Selection (A0 for example...)</span>
-    <input type="text" name="selection" id="selection" />
     <br />
-    <span>Result (E, M, H)</span>
-    <input type="text" name="result" />
+
+    {{#with game}}
+      <span><strong>Attack Board</strong> {{#if opponent_ready}}{{else}}(not ready){{/if}}</span>
+    {{/with}}
+
     <br />
-    <input type="submit" value="Submit" />
-  </form>
+    {{> board board=attackBoard}}
+    <br />
+    <br />
+
+    {{#with game}}
+      <span><strong>User's Board</strong> {{#if owner_ready}}{{else}}(not ready){{/if}}</span>
+    {{/with}}
+
+    <br />
+    {{> board board=ownBoard}}
+
+    <br />
+    <br />
+
+    {{#with game}}
+      <span>Whose turn is it? {{current_player}}</span>
+    {{/with}}
+    <form>
+      <span>Selection: </span>
+      <input type="text" name="selection" id="selection" disabled="true" />
+      <input type="submit" value="Fire!" />
+    </form>
   {{/if}}
 </template>
 
@@ -86,6 +85,6 @@
 <template name="board_cell">
   <td class="cell {{className}} {{#if selected}}selected{{/if}}"
   data-state="{{val}}" data-cell="{{cell}}">
-    {{symbol}}
+    <img src={{symbol}}>
   </td>
 </template>

@@ -17,7 +17,6 @@ Meteor.startup(() => {
 
   // A bit of extra stuff
   default_game.current_player = "creator";
-  default_game.creator.shots = [{row: 0, col: 0}, {row: 5, col: 5}];
 
   Games.update(default_game._id, {$set: default_game});
 

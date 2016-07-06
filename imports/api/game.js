@@ -1,4 +1,5 @@
 import * as Board from './board.js';
+import * as AI from './ai.js';
 import {Games} from './games.js';
 import {_} from 'meteor/underscore';
 
@@ -119,6 +120,12 @@ export function create(creator, id=null){
     challenger_ready: false,
     creator: {user: creator, ships: initShips(), shots: []},
     challenger: {ships: initShips(), shots: []},
+    computer_id: 'sue',
+    // TODO: active immediately starts the game. the initial state should
+    // change as we implement more features. The time_started date also should
+    // be set wherever we first change state to active.
+    state: 'active',
+    time_started: new Date(),
   };
 
   randomizeShips(game.creator.ships);
@@ -128,11 +135,24 @@ export function create(creator, id=null){
     game._id = id;
   }
 
-  Games.insert(game);
+  game._id = Games.insert(game);
   return game;
 }
 
-export function shot(game, player, row, col){
+export function update(game) {
+  Games.update( {_id: game._id}, game);
+}
+
+export function computer_shot(game) {
+  const ai = AI.getPlayer(game.computer_id);
+  let state = {};
+  if ('computer_state' in game) state = game.computer_state;
+  const board = getAttackBoard(game, 'challenger');
+  const shot = ai.makeMove(board, state);
+  game.challenger.shots.push(shot);
+}
+
+export function player_shot(game, player, row, col) {
   if (typeof game[player] == 'undefined')
   {
     game[player] = {};
@@ -147,6 +167,19 @@ export function shot(game, player, row, col){
   game[player].shots.push(shot);
 }
 
+export function fire(game, row, col) {
+  let player = game.current_player;
+  player_shot(game, player, row, col);
+
+  if ('computer_id' in game) {
+    computer_shot(game);
+    game.turn_number += 2;
+  } else {
+    game.current_player = oppositeUser(player);
+    game.turn_number += 1;
+  }
+}
+
 // only exported for testing, don't call this
 export function addOwnShips(board, ships, mark) {
   for(let j = 0; j < Board.ship_types.length; j++) {
@@ -157,16 +190,45 @@ export function addOwnShips(board, ships, mark) {
     for(let i = 0; i < Board.ship_lengths[ship]; i++)
     {
       board[row][col].shipNum = j;
-      if(mark)
-      {
-        board[row][col].val = 'S';
-      }
+
       if(ships[ship].vertical)
       {
+        if(mark && i === 0)
+        {
+          // Ship at top
+          board[row][col].val = 'S_Top';
+        }
+        else if(mark && i === (Board.ship_lengths[ship] - 1))
+        {
+          // Ship at bottom
+          board[row][col].val = 'S_Bottom';
+        }
+        else if(mark)
+        {
+          // Mid-piece of vertical ship
+          board[row][col].val = 'S_Vertical';
+        }
+
         row++;
       }
       else
       {
+        if(mark && i === 0)
+        {
+          // Ship at top
+          board[row][col].val = 'S_Left';
+        }
+        else if(mark && i === (Board.ship_lengths[ship] - 1))
+        {
+          // Ship at bottom
+          board[row][col].val = 'S_Right';
+        }
+        else if(mark)
+        {
+          // Mid-piece of vertical ship
+          board[row][col].val = 'S_Horizontal';
+        }
+
         col++;
       }
     }
