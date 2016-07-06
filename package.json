@@ -4,6 +4,7 @@
   "scripts": {
     "start": "meteor run",
     "lint": "jshint .",
+    "pretest": "meteor npm run lint",
     "test": "meteor test --once --driver-package dispatch:mocha-phantomjs",
     "test-watch": "meteor test --driver-package practicalmeteor:mocha --port 8082"
   },
