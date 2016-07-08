@@ -26,3 +26,4 @@ xolvio:cleaner
 dispatch:mocha-phantomjs
 kadira:flow-router
 kadira:blaze-layout
+less
