@@ -6,7 +6,7 @@ import { getOwnBoard, getAttackBoard, fire, update } from '../api/game.js';
 import { $ } from 'meteor/jquery';
 
 import './game.html';
-import './game.css';
+import './game.less';
 
 function getGame() {
   const gameID = FlowRouter.getParam('id');
