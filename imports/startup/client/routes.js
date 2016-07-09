@@ -1,16 +1,17 @@
 /** Configuration for JSHint to recognize automatic globals: */
 /* globals FlowRouter, BlazeLayout */
 
-import './layout.html';
+import '/imports/ui/layout.html';
 
-import './home.js';
+import '/imports/ui/home.js';
 FlowRouter.route('/', {
+  name: 'home',
   action: function() {
     BlazeLayout.render('layout', {content: 'home'});
   }
 });
 
-import './game.js';
+import '/imports/ui/game.js';
 FlowRouter.route('/game/:id', {
   name: 'game',
   action: function() {

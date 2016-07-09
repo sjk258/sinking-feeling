@@ -1,2 +1,2 @@
-import '../imports/ui/routes.js';
+import '/imports/startup/client';
 import 'bootstrap/dist/css/bootstrap.css';
