@@ -3,7 +3,7 @@ import { assert } from 'meteor/practicalmeteor:chai';
 import * as Board from '../board.js';
 import * as AI from './sue.js';
 
-describe('Sequential Sue AI', function() {
+describe('api/ai/sue.js', function() {
   describe('constant name', function() {
     it('should be "sue"', function() {
       assert(AI.name, 'sue');

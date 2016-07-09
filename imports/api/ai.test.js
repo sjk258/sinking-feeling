@@ -4,7 +4,7 @@ import { _ } from 'meteor/underscore';
 import * as Board from './board.js';
 import * as AI from './ai.js';
 
-describe('AI handler', function() {
+describe('api/ai.js', function() {
   describe('method getNames', function() {
     it('returns an array', function() {
       const names = AI.getNames();

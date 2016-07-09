@@ -11,7 +11,7 @@ Meteor.methods({
   'test.resetDatabase': () => resetDatabase(),
 });
 
-describe('game', function() {
+describe('api/game.js', function() {
   describe('create', function(){
     beforeEach(function(){
       Meteor.call('test.resetDatabase');

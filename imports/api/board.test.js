@@ -10,7 +10,7 @@ export function checkBoard(expected, board) {
   }
 }
 
-describe('board', function() {
+describe('api/board.js', function() {
   describe('makeBoard', function() {
     it('returns an array of size 10', function () {
       const board = Board.makeEmptyBoard();
@@ -209,5 +209,4 @@ describe('board', function() {
       });
     });
   });
-
 });
