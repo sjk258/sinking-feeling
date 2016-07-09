@@ -18,3 +18,11 @@ FlowRouter.route('/game/:id', {
     BlazeLayout.render('layout', {content: 'game'});
   }
 });
+
+import '/imports/ui/rules.js';
+FlowRouter.route('/rules', {
+  name: 'rules',
+  action: function() {
+    BlazeLayout.render('layout', {content: 'rules'});
+  }
+});
