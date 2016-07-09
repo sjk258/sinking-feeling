@@ -181,7 +181,7 @@ export function fire(game, row, col) {
 }
 
 // only exported for testing, don't call this
-export function addOwnShips(board, ships, mark) {
+export function addShips(board, ships, mark) {
   for(let j = 0; j < Board.ship_types.length; j++) {
     const ship = Board.ship_types[j];
     if(!(ship in ships)) continue;
@@ -265,14 +265,14 @@ export function oppositeUser(user){
 
 export function getOwnBoard(game, user){
   var board = Board.makeEmptyBoard();
-  addOwnShips(board, game[user].ships, true);
+  addShips(board, game[user].ships, true);
   addShots(board, game[oppositeUser(user)].shots, game[user].ships);
   return board;
 }
 
 export function getAttackBoard(game, user){
   var board = Board.makeEmptyBoard();
-  addOwnShips(board, game[oppositeUser(user)].ships, false);
+  addShips(board, game[oppositeUser(user)].ships, false);
   addShots(board, game[user].shots, game[oppositeUser(user)].ships);
   return board;
 }
