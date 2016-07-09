@@ -39,7 +39,7 @@ Template.game.events({
 
     if (selection.length === 2)
     {
-      const row = parseInt(selection.slice(1, 2));
+      const row = parseInt(selection.slice(1, 2), 10);
       const col = convertToIndex(selection.slice(0, 1));
 
       console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
