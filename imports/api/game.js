@@ -1,10 +1,11 @@
-import * as Board from './board.js';
 import * as AI from './ai.js';
+import * as Board from './board.js';
+import * as Ship from './ship.js';
 import {Games} from './games.js';
 import {_} from 'meteor/underscore';
 
 export function overlap(ship, row, col, vertical, ships) {
-  for(let i = 0; i < Board.ship_lengths[ship]; i++) {
+  for(let i = 0; i < Ship.lengths[ship]; i++) {
     var ship_space = { row: row, col: col };
     if(vertical){
       ship_space.row += i;
@@ -38,7 +39,7 @@ export function placeShip(ship_type, row, col, vertical, positions) {
   if (typeof positions[ship_type] == 'undefined') {
     positions[ship_type] = {};
   }
-  if(Board.ship_types.indexOf(ship_type) < 0) {
+  if(Ship.types.indexOf(ship_type) < 0) {
     throw 'Unrecognised ship type';
   }
 
@@ -59,8 +60,8 @@ export function randomizeShips(ships) {
     }
     return result;
   };
-  Board.ship_types.forEach(type => {
-    const possibs = _.shuffle(makePossibilities(Board.ship_lengths[type]));
+  Ship.types.forEach(type => {
+    const possibs = _.shuffle(makePossibilities(Ship.lengths[type]));
     _.some(possibs, possib => {
       try {
         placeShip(type, possib[0], possib[1], possib[2], ships);

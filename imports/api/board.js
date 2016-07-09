@@ -3,9 +3,7 @@
  */
 
 import { _ } from 'meteor/underscore';
-
-export const ship_types = ["carrier", "battleship", "cruiser", "submarine", "destroyer"];
-export const ship_lengths = { carrier: 5, battleship: 4, cruiser: 3, submarine: 3, destroyer: 2 };
+import * as Ship from './ship.js';
 
 /**
  * makeBoard()
@@ -16,7 +14,7 @@ export function makeEmptyBoard() {
     return _.times(10, function(n) {
        return {val: 'E'};
     });
-    });
+  });
 }
 
 /**
@@ -35,12 +33,12 @@ export function setRange(board, row, col, rowCount, colCount, val) {
 
 // only exported for testing, don't call this
 export function addShips(board, ships, mark) {
-  for(let j = 0; j < ship_types.length; j++) {
-    const ship = ship_types[j];
+  for(let j = 0; j < Ship.types.length; j++) {
+    const ship = Ship.types[j];
     if(!(ship in ships)) continue;
     let row = ships[ship].row;
     let col = ships[ship].col;
-    for(let i = 0; i < ship_lengths[ship]; i++)
+    for(let i = 0; i < Ship.lengths[ship]; i++)
     {
       board[row][col].shipNum = j;
 
@@ -51,7 +49,7 @@ export function addShips(board, ships, mark) {
           // Ship at top
           board[row][col].val = 'S_Top';
         }
-        else if(mark && i === (ship_lengths[ship] - 1))
+        else if(mark && i === (Ship.lengths[ship] - 1))
         {
           // Ship at bottom
           board[row][col].val = 'S_Bottom';
@@ -71,7 +69,7 @@ export function addShips(board, ships, mark) {
           // Ship at top
           board[row][col].val = 'S_Left';
         }
-        else if(mark && i === (ship_lengths[ship] - 1))
+        else if(mark && i === (Ship.lengths[ship] - 1))
         {
           // Ship at bottom
           board[row][col].val = 'S_Right';
@@ -106,7 +104,7 @@ export function addShots(board, shots, ships) {
 export function spaceIsOnShip(space, ships){
   for(var ship in ships)
   {
-    for(let i = 0; i < ship_lengths[ship]; i++) {
+    for(let i = 0; i < Ship.lengths[ship]; i++) {
       var ship_space = { row: ships[ship].row, col: ships[ship].col };
       if(ships[ship].vertical){
         ship_space.row += i;
