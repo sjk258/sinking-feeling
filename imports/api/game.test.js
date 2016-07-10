@@ -164,7 +164,7 @@ describe('api/game.js', function() {
       const shots = [{row: 1, col: 1}, shot];
 
       assert.isFalse(Game.checkShotUnique(shot, shots));
-    })
+    });
   });
 
   describe('player shot', function() {
