@@ -103,7 +103,7 @@ describe('api/game.js', function() {
     });
   });
 
-  describe('computer_shot', function() {
+  describe('computer shot', function() {
     it('first shot', function() {
       const game = {
         creator: {
@@ -119,7 +119,7 @@ describe('api/game.js', function() {
         computer_state: {},
         computer_id: 'sue',
       };
-      Game.computer_shot(game);
+      Game.computerShot(game);
       assert.equal(1, game.challenger.shots.length);
       assert.equal(0, game.challenger.shots[0].row);
       assert.equal(0, game.challenger.shots[0].col);
@@ -139,20 +139,20 @@ describe('api/game.js', function() {
         computer_state: {},
         computer_id: 'sue',
       };
-      Game.computer_shot(game);
+      Game.computerShot(game);
       assert.equal(2, game.challenger.shots.length);
       assert.equal(0, game.challenger.shots[0].row);
       assert.equal(0, game.challenger.shots[0].col);
     });
   });
 
-  describe('player_shot', function() {
+  describe('player shot', function() {
     it('added to array', function () {
       var row = 7;
       var col = 8;
       const game = {creator: {shots: [{row: 0, col: 0}]}};
 
-      Game.player_shot(game, "creator", row, col);
+      Game.playerShot(game, "creator", row, col);
 
       assert.equal(2, game.creator.shots.length);
       assert.equal(row, game.creator.shots[1].row);
@@ -165,7 +165,7 @@ describe('api/game.js', function() {
       const game = {};
       game[player] = {shots: [{row: 0, col: 0}]};
 
-      Game.player_shot(game, player, row, col);
+      Game.playerShot(game, player, row, col);
 
       assert.equal(2, game[player].shots.length);
       assert.equal(row, game[player].shots[1].row);
@@ -177,7 +177,7 @@ describe('api/game.js', function() {
       var player = "creator";
       const game = {};
 
-      Game.player_shot(game, player, row, col);
+      Game.playerShot(game, player, row, col);
 
       assert.equal(1, game[player].shots.length);
     });
