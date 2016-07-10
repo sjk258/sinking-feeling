@@ -1,40 +1,11 @@
-import * as Board from './board.js';
 import * as AI from './ai.js';
+import * as Board from './board.js';
+import * as Ship from './ship.js';
 import {Games} from './games.js';
 import {_} from 'meteor/underscore';
 
-// only exported for testing, don't call this
-export function spacesAreSame(space1, space2){
-  if((space1.row == space2.row) && (space1.col == space2.col))
-  {
-    return true;
-  }
-  return false;
-}
-
-// only exported for testing, don't call this
-export function spaceIsOnShip(space, ships){
-  for(var ship in ships)
-  {
-    for(let i = 0; i < Board.ship_lengths[ship]; i++) {
-      var ship_space = { row: ships[ship].row, col: ships[ship].col };
-      if(ships[ship].vertical){
-        ship_space.row += i;
-      }
-      else{
-        ship_space.col += i;
-      }
-      if(spacesAreSame(space, ship_space))
-      {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
 export function overlap(ship, row, col, vertical, ships) {
-  for(let i = 0; i < Board.ship_lengths[ship]; i++) {
+  for(let i = 0; i < Ship.lengths[ship]; i++) {
     var ship_space = { row: row, col: col };
     if(vertical){
       ship_space.row += i;
@@ -42,7 +13,7 @@ export function overlap(ship, row, col, vertical, ships) {
     else{
       ship_space.col += i;
     }
-    if(spaceIsOnShip(ship_space, ships))
+    if(Board.spaceIsOnShip(ship_space, ships))
     {
       return true;
     }
@@ -68,7 +39,7 @@ export function placeShip(ship_type, row, col, vertical, positions) {
   if (typeof positions[ship_type] == 'undefined') {
     positions[ship_type] = {};
   }
-  if(Board.ship_types.indexOf(ship_type) < 0) {
+  if(Ship.types.indexOf(ship_type) < 0) {
     throw 'Unrecognised ship type';
   }
 
@@ -89,8 +60,8 @@ export function randomizeShips(ships) {
     }
     return result;
   };
-  Board.ship_types.forEach(type => {
-    const possibs = _.shuffle(makePossibilities(Board.ship_lengths[type]));
+  Ship.types.forEach(type => {
+    const possibs = _.shuffle(makePossibilities(Ship.lengths[type]));
     _.some(possibs, possib => {
       try {
         placeShip(type, possib[0], possib[1], possib[2], ships);
@@ -180,74 +151,6 @@ export function fire(game, row, col) {
   }
 }
 
-// only exported for testing, don't call this
-export function addOwnShips(board, ships, mark) {
-  for(let j = 0; j < Board.ship_types.length; j++) {
-    const ship = Board.ship_types[j];
-    if(!(ship in ships)) continue;
-    let row = ships[ship].row;
-    let col = ships[ship].col;
-    for(let i = 0; i < Board.ship_lengths[ship]; i++)
-    {
-      board[row][col].shipNum = j;
-
-      if(ships[ship].vertical)
-      {
-        if(mark && i === 0)
-        {
-          // Ship at top
-          board[row][col].val = 'S_Top';
-        }
-        else if(mark && i === (Board.ship_lengths[ship] - 1))
-        {
-          // Ship at bottom
-          board[row][col].val = 'S_Bottom';
-        }
-        else if(mark)
-        {
-          // Mid-piece of vertical ship
-          board[row][col].val = 'S_Vertical';
-        }
-
-        row++;
-      }
-      else
-      {
-        if(mark && i === 0)
-        {
-          // Ship at top
-          board[row][col].val = 'S_Left';
-        }
-        else if(mark && i === (Board.ship_lengths[ship] - 1))
-        {
-          // Ship at bottom
-          board[row][col].val = 'S_Right';
-        }
-        else if(mark)
-        {
-          // Mid-piece of vertical ship
-          board[row][col].val = 'S_Horizontal';
-        }
-
-        col++;
-      }
-    }
-  }
-}
-
-// only exported for testing, don't call this
-export function addShots(board, shots, ships) {
-  shots.forEach(function(shot){
-    if(spaceIsOnShip(shot, ships))
-    {
-      board[shot.row][shot.col].val = 'H';
-    }
-    else
-    {
-      board[shot.row][shot.col].val = 'M';
-    }
-  });
-}
 
 // only exported for testing, don't call this
 export function oppositeUser(user){
@@ -265,14 +168,14 @@ export function oppositeUser(user){
 
 export function getOwnBoard(game, user){
   var board = Board.makeEmptyBoard();
-  addOwnShips(board, game[user].ships, true);
-  addShots(board, game[oppositeUser(user)].shots, game[user].ships);
+  Board.addShips(board, game[user].ships, true);
+  Board.addShots(board, game[oppositeUser(user)].shots, game[user].ships);
   return board;
 }
 
 export function getAttackBoard(game, user){
   var board = Board.makeEmptyBoard();
-  addOwnShips(board, game[oppositeUser(user)].ships, false);
-  addShots(board, game[user].shots, game[oppositeUser(user)].ships);
+  Board.addShips(board, game[oppositeUser(user)].ships, false);
+  Board.addShots(board, game[user].shots, game[oppositeUser(user)].ships);
   return board;
 }

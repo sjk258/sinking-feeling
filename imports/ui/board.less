@@ -1,0 +1,54 @@
+@cell-size: 32px;
+
+table {
+  .board {
+    font-family: monospace;
+    cursor: default;
+    border-spacing: 0px;
+    border-collapse: collapse;
+
+    th {
+      .cellformat;
+      font-weight: bold;
+      font-size: 10;
+    }
+
+    td {
+      .cellformat;
+      font-weight: normal;
+
+      img {
+        width: @cell-size;
+        height: @cell-size;
+        display: block;
+      }
+    }
+    
+    .miss {
+      color: blue;
+    }
+
+    .hit, .sunk {
+      color: red;
+    }
+
+    .cell {
+      border: 1px solid black;
+      position: relative;
+    }
+
+    .cell:hover {
+      background-color: orange;
+      border: 1px solid orange;
+      position: relative;
+      z-index: 100;
+    }
+  }
+}
+
+.cellformat {
+  width: @cell-size;
+  height: @cell-size;
+  text-align: center;
+  padding: 2;
+}

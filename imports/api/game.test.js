@@ -1,17 +1,17 @@
 import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { _ } from 'meteor/underscore';
-import * as Game from './game.js';
+import * as Ship from './ship.js';
 import * as Board from './board.js';
+import * as Game from './game.js';
 import {checkBoard} from './board.test.js';
 import {Games} from './games.js';
-import {ship_types} from './board.js';
 
 Meteor.methods({
   'test.resetDatabase': () => resetDatabase(),
 });
 
-describe('game', function() {
+describe('api/game.js', function() {
   describe('create', function(){
     beforeEach(function(){
       Meteor.call('test.resetDatabase');
@@ -76,7 +76,7 @@ describe('game', function() {
     it('ships loaded', function(){
       var game = Game.create();
 
-      ship_types.forEach(function(type){
+      Ship.types.forEach(function(type){
         assert.isDefined(game.creator.ships[type]);
         assert.isDefined(game.challenger.ships[type]);
       });
@@ -393,11 +393,11 @@ describe('game', function() {
     it('should change the positions of the ships', function () {
       const ships1 = Game.initShips();
       const ships2 = {};
-      Board.ship_types.forEach(type => {
+      Ship.types.forEach(type => {
         ships2[type] = _.clone(ships1[type]);
       });
       Game.randomizeShips(ships1);
-      assert(_.some(Board.ship_types, type => {
+      assert(_.some(Ship.types, type => {
         return ships1[type].row != ships2[type].row ||
           ships1[type].col != ships2[type].col ||
           ships1[type].vertical != ships2[type].vertical;
@@ -408,11 +408,11 @@ describe('game', function() {
   describe('initShips', function() {
     it('should return an object with all defined ship types', function() {
       const ships = Game.initShips();
-      assert.sameMembers(Object.keys(ships), Board.ship_types);
+      assert.sameMembers(Object.keys(ships), Ship.types);
     });
     it('should provide each ship with keys row, col, and vertical', function() {
       const ships = Game.initShips();
-      Board.ship_types.forEach(type => {
+      Ship.types.forEach(type => {
         assert.sameMembers(Object.keys(ships[type]), ['row', 'col', 'vertical']);
       });
     });
@@ -560,86 +560,7 @@ describe('game', function() {
       checkBoard(exp, board);
     });
   });
-  describe('shot to ship', function(){
-    it('spaces are the same', function(){
-      var space1 = {row: 1, col: 2};
-      var space2 = {row: 1, col: 2};
 
-      assert.equal(true, Game.spacesAreSame(space1, space2));
-
-      space1.row = 3;
-      assert.equal(false, Game.spacesAreSame(space1, space2));
-
-      space1.row = 1;
-      space1.col = 3;
-      assert.equal(false, Game.spacesAreSame(space1, space2));
-
-      space1.row = 3;
-      space1.col = 3;
-      assert.equal(false, Game.spacesAreSame(space1, space2));
-
-      space1.row = 2;
-      space1.col = 1;
-      assert.equal(false, Game.spacesAreSame(space1, space2));
-    });
-    it('shot to carrier vertical', function(){
-      var ships = { carrier: { row: 0, col: 0, vertical: true } };
-      var shot = { row: 0, col: 0 };
-
-      assert.equal(true, Game.spaceIsOnShip(shot, ships));
-
-      shot.row = 1;
-      assert.equal(true, Game.spaceIsOnShip(shot, ships));
-
-      shot.row = 4;
-      assert.equal(true, Game.spaceIsOnShip(shot, ships));
-
-      shot.row = 5;
-      assert.equal(false, Game.spaceIsOnShip(shot, ships));
-
-      shot.row = 0;
-      shot.col = 1;
-      assert.equal(false, Game.spaceIsOnShip(shot, ships));
-    });
-    it('shot to destroyer horizontal', function(){
-      var ships = { destroyer: { row: 0, col: 0, vertical: false } };
-      var shot = { row: 0, col: 0 };
-
-      assert.equal(true, Game.spaceIsOnShip(shot, ships));
-
-      shot.row = 1;
-      assert.equal(false, Game.spaceIsOnShip(shot, ships));
-
-      shot.row = 0;
-      shot.col = 1;
-      assert.equal(true, Game.spaceIsOnShip(shot, ships));
-
-      shot.col = 2;
-      assert.equal(false, Game.spaceIsOnShip(shot, ships));
-    });
-    it('multiple ships', function(){
-      var ships = {
-        carrier: { row: 0, col: 0, vertical: true },
-        cruiser: { row: 0, col: 1, vertical: true },
-        destroyer: { row: 0, col: 2, vertical: false }
-      };
-      var success_shots = [
-        {row: 0, col: 0}, {row: 1, col: 0}, {row: 4, col: 0}, {row: 0, col: 1},
-        {row: 2, col: 1}, {row: 0, col: 2}, {row: 0, col: 3}
-      ];
-      var fail_shots = [
-        {row: 5, col: 0}, {row: 3, col: 1}, {row: 1, col: 2}, {row: 1, col: 3},
-        {row: 0, col: 4}
-      ];
-
-      success_shots.forEach( function(shot){
-        assert.equal(true, Game.spaceIsOnShip(shot, ships));
-      });
-      fail_shots.forEach( function(shot){
-        assert.equal(false, Game.spaceIsOnShip(shot, ships));
-      });
-    });
-  });
   describe('opposite user', function(){
     it('creator', function(){
       var user = 'creator';
