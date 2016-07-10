@@ -148,6 +148,11 @@ export function playerShot(game, player, row, col) {
   }
 
   var shot = {row: row, col: col};
+  if(!checkShotUnique(shot, game[player].shots))
+  {
+    throw "Shot Exists";
+  }
+
   game[player].shots.push(shot);
 }
 

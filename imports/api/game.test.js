@@ -166,7 +166,7 @@ describe('api/game.js', function() {
       assert.isFalse(Game.checkShotUnique(shot, shots));
     })
   });
-  
+
   describe('player shot', function() {
     it('added to array', function () {
       var row = 7;
@@ -201,6 +201,15 @@ describe('api/game.js', function() {
       Game.playerShot(game, player, row, col);
 
       assert.equal(1, game[player].shots.length);
+    });
+    it('shot exists', function() {
+      const row = 1;
+      const col = 1;
+      const game = {creator: {shots: [{row: row, col: col}]}};
+
+      assert.throw(function() {
+        Game.playerShot(game, "creator", row, col);
+      }, "Shot Exists");
     });
   });
 
