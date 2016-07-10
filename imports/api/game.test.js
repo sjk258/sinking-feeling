@@ -146,6 +146,27 @@ describe('api/game.js', function() {
     });
   });
 
+  describe('check shot doesnt exit', function() {
+    it('first shot', function(){
+      const shot = {row: 0, col: 0};
+      const shots = [];
+
+      assert.isTrue(Game.checkShotUnique(shot, shots));
+    });
+    it('second shot exists', function() {
+      const shot = {row: 0, col: 0};
+      const shots = [shot];
+
+      assert.isFalse(Game.checkShotUnique(shot, shots));
+    });
+    it('multiple shots exists', function() {
+      const shot = {row: 0, col: 0};
+      const shots = [{row: 1, col: 1}, shot];
+
+      assert.isFalse(Game.checkShotUnique(shot, shots));
+    })
+  });
+  
   describe('player shot', function() {
     it('added to array', function () {
       var row = 7;

@@ -123,6 +123,19 @@ export function computerShot(game) {
   game.challenger.shots.push(shot);
 }
 
+export function checkShotUnique(shot, previous_shots)
+{
+  for(i = 0; i < previous_shots.length; i++)
+  {
+    if((shot.row == previous_shots[i].row) &&
+      (shot.col == previous_shots[i].col))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function playerShot(game, player, row, col) {
   if (typeof game[player] == 'undefined')
   {
