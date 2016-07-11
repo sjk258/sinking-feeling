@@ -9,7 +9,6 @@
     "test-watch": "meteor test --driver-package practicalmeteor:mocha --port 8082"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.2",
     "meteor-node-stubs": "~0.2.0"
   },
   "devDependencies": {

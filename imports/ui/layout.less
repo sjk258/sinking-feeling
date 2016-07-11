@@ -1,0 +1,37 @@
+@footer-height: 60px;
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: @footer-height;
+}
+
+html body {
+  background-color: #BBDDFF;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: @footer-height;
+  background-color: #f5f5f5;
+}
+
+#__blaze-root > .container {
+  padding: 60px 16px;
+  background-color: white;
+}
+
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+  text-align:center;
+}
