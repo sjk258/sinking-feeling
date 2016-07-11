@@ -114,7 +114,7 @@ export function update(game) {
   Games.update( {_id: game._id}, game);
 }
 
-export function computer_shot(game) {
+export function computerShot(game) {
   const ai = AI.getPlayer(game.computer_id);
   let state = {};
   if ('computer_state' in game) state = game.computer_state;
@@ -123,7 +123,20 @@ export function computer_shot(game) {
   game.challenger.shots.push(shot);
 }
 
-export function player_shot(game, player, row, col) {
+export function checkShotUnique(shot, previous_shots)
+{
+  for(i = 0; i < previous_shots.length; i++)
+  {
+    if((shot.row == previous_shots[i].row) &&
+      (shot.col == previous_shots[i].col))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function playerShot(game, player, row, col) {
   if (typeof game[player] == 'undefined')
   {
     game[player] = {};
@@ -135,15 +148,20 @@ export function player_shot(game, player, row, col) {
   }
 
   var shot = {row: row, col: col};
+  if(!checkShotUnique(shot, game[player].shots))
+  {
+    throw "Shot Exists";
+  }
+
   game[player].shots.push(shot);
 }
 
 export function fire(game, row, col) {
   let player = game.current_player;
-  player_shot(game, player, row, col);
+  playerShot(game, player, row, col);
 
   if ('computer_id' in game) {
-    computer_shot(game);
+    computerShot(game);
     game.turn_number += 2;
   } else {
     game.current_player = oppositeUser(player);
