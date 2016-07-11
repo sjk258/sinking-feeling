@@ -1,18 +1,12 @@
 <template name="layout">
-<div class="spacer"></div>
-  <div class="far-background">
-    <div class="app-space">
-      
-      <header><h1 align="center">Sinking Feeling</h1></header>
-      <main>
-        {{>Template.dynamic template=content}}
-      </main>
-      </div>
-      <div class="bottom-float">
-      <footer>
-        <div>Team 5 Project for SWENG 500</div>
-      </footer>
-    </div>
+  <div class="container">
+    {{>Template.dynamic template=content}}
   </div>
-
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">
+        Team 5 Project for SWENG 500
+      </p>
+    </div>
+  </footer>
 </template>
