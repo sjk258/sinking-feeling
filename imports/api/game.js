@@ -125,7 +125,7 @@ export function computerShot(game) {
 
 export function checkShotUnique(shot, previous_shots)
 {
-  for(i = 0; i < previous_shots.length; i++)
+  for(let i = 0; i < previous_shots.length; i++)
   {
     if((shot.row == previous_shots[i].row) &&
       (shot.col == previous_shots[i].col))

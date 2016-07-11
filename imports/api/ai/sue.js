@@ -25,7 +25,11 @@ export const full_name = 'Sequential Sue';
  *
  * @throws {Meteor.error} No more moves are possible
  */
+/* jshint -W098 */
+// Disable reporting of unused variables, since we need to accept state but it
+// is unused here.
 export function makeMove(board, state) {
+/* jshint +W098 */
   let row = 0;
   let col = 0;
   // Look for the first empty square in row-column order
