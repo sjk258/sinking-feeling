@@ -92,6 +92,7 @@ export function create(creator, id=null){
     creator: {user: creator, ships: initShips(), shots: []},
     challenger: {ships: initShips(), shots: []},
     computer_id: 'sue',
+    challenger_name: AI.getPlayer('sue').full_name,
     // TODO: active immediately starts the game. the initial state should
     // change as we implement more features. The time_started date also should
     // be set wherever we first change state to active.
