@@ -30,3 +30,5 @@ less
 twbs:bootstrap
 accounts-ui
 accounts-password
+useraccounts:bootstrap
+useraccounts:flow-routing
