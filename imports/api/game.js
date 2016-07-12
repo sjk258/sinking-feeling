@@ -114,18 +114,23 @@ export function update(game) {
   Games.update( {_id: game._id}, game);
 }
 
+export function saveShot(shot, shots) {
+  shot.time = new Date();
+  shots.push(shot);
+}
+
 export function computerShot(game) {
   const ai = AI.getPlayer(game.computer_id);
   let state = {};
   if ('computer_state' in game) state = game.computer_state;
   const board = getAttackBoard(game, 'challenger');
   const shot = ai.makeMove(board, state);
-  game.challenger.shots.push(shot);
+  saveShot(shot, game.challenger.shots);
 }
 
 export function checkShotUnique(shot, previous_shots)
 {
-  for(let i = 0; i < previous_shots.length; i++)
+  for(i = 0; i < previous_shots.length; i++)
   {
     if((shot.row == previous_shots[i].row) &&
       (shot.col == previous_shots[i].col))
@@ -153,7 +158,7 @@ export function playerShot(game, player, row, col) {
     throw "Shot Exists";
   }
 
-  game[player].shots.push(shot);
+  saveShot(shot, game[player].shots);
 }
 
 export function fire(game, row, col) {

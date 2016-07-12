@@ -2,6 +2,7 @@ import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { _ } from 'meteor/underscore';
 import * as Ship from './ship.js';
+import * as Board from './board.js';
 import * as Game from './game.js';
 import {checkBoard} from './board.test.js';
 import {Games} from './games.js';
@@ -102,6 +103,41 @@ describe('api/game.js', function() {
     });
   });
 
+  describe('save a shot', function() {
+    it('shot added to array', function() {
+      const shots = [];
+      const shot = {row: 0, col: 0};
+
+      Game.saveShot(shot, shots);
+
+      assert.equal(shots[0].row, shot.row);
+      assert.equal(shots[0].col, shot.col);
+    });
+    it('shot in correct array location', function() {
+      const shots = [];
+      const shot1 = {row: 0, col: 0};
+      const shot2 = {row: 1, col: 1};
+
+      Game.saveShot(shot1, shots);
+      Game.saveShot(shot2, shots);
+
+      assert.equal(shots[0].row, shot1.row);
+      assert.equal(shots[0].col, shot1.col);
+      assert.equal(shots[1].row, shot2.row);
+      assert.equal(shots[1].col, shot2.col);
+    });
+    it('time in shot', function() {
+      const shots = [];
+      const shot = {row: 0, col: 0};
+      const allowed_time = 100; // milliseconds
+
+      var now = new Date();
+      Game.saveShot(shot, shots);
+
+      assert.isBelow(Math.abs(now - shots[0].time), allowed_time);
+    });
+  });
+
   describe('computer shot', function() {
     it('first shot', function() {
       const game = {
@@ -142,6 +178,14 @@ describe('api/game.js', function() {
       assert.equal(2, game.challenger.shots.length);
       assert.equal(0, game.challenger.shots[0].row);
       assert.equal(0, game.challenger.shots[0].col);
+    });
+    it('includes the time', function () {
+      const game = {creator: {ships:{}}, challenger: {shots: []},
+        computer_id: 'sue'};
+
+      Game.computerShot(game);
+
+      assert.typeOf(game.challenger.shots[0].time, 'Date');
     });
   });
 
@@ -210,6 +254,13 @@ describe('api/game.js', function() {
         Game.playerShot(game, "creator", row, col);
       }, "Shot Exists");
     });
+    it('includes the time', function () {
+      const game = {creator: {shots: []}};
+
+      Game.playerShot(game, "creator", 0, 0);
+
+      assert.typeOf(game.creator.shots[0].time, 'Date');
+    });
   });
 
   describe('fire', function() {
@@ -241,8 +292,9 @@ describe('api/game.js', function() {
 
       Game.fire(game, 0, 0);
 
-      assert.deepEqual(game.creator.shots, [{row: 0, col: 0}]);
-      assert.deepEqual(game.challenger.shots, []);
+      assert.equal(game.creator.shots[0].row, 0);
+      assert.equal(game.creator.shots[0].col, 0);
+      assert.lengthOf(game.challenger.shots, 0);
       assert.equal(game.turn_number, 1);
       assert.equal(game.current_player, 'challenger');
     });
@@ -274,8 +326,9 @@ describe('api/game.js', function() {
 
       Game.fire(game, 0, 0);
 
-      assert.deepEqual(game.challenger.shots, [{row: 0, col: 0}]);
-      assert.deepEqual(game.creator.shots, []);
+      assert.equal(game.challenger.shots[0].row, 0);
+      assert.equal(game.challenger.shots[0].col, 0);
+      assert.lengthOf(game.creator.shots, 0);
       assert.equal(game.turn_number, 1);
       assert.equal(game.current_player, 'creator');
     });
@@ -309,8 +362,10 @@ describe('api/game.js', function() {
 
       Game.fire(game, 1, 1);
 
-      assert.deepEqual(game.creator.shots, [{row: 1, col: 1}]);
-      assert.deepEqual(game.challenger.shots, [{row: 0, col: 0}]);
+      assert.equal(game.creator.shots[0].row, 1);
+      assert.equal(game.creator.shots[0].col, 1);
+      assert.equal(game.challenger.shots[0].row, 0);
+      assert.equal(game.challenger.shots[0].col, 0);
       assert.equal(game.turn_number, 2);
       assert.equal(game.current_player, 'creator');
     });
