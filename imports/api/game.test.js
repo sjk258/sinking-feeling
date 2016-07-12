@@ -2,7 +2,6 @@ import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { _ } from 'meteor/underscore';
 import * as Ship from './ship.js';
-import * as Board from './board.js';
 import * as Game from './game.js';
 import {checkBoard} from './board.test.js';
 import {Games} from './games.js';

@@ -13,7 +13,7 @@ Template.home.helpers({
 });
 
 Template.home.events({
-  'click #createGame'(event) {
+  'click #createGame'() {
     const game = Game.create('test');
     game.current_player = "creator";
     Games.update(game._id, {$set: game});

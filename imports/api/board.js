@@ -10,8 +10,8 @@ import * as Ship from './ship.js';
  * Returns a game board initialized with all cells empty.
  */
 export function makeEmptyBoard() {
-  return _.times(10, function(n) {
-    return _.times(10, function(n) {
+  return _.times(10, function() {
+    return _.times(10, function() {
        return {val: 'E'};
     });
   });
