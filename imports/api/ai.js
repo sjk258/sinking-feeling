@@ -8,10 +8,12 @@
 
 // Import all of the AI players
 import * as AI_Sue from './ai/sue.js';
+import * as AI_Ralph from './ai/ralph.js';
 
 // Manually map each AI player with its name
 const ai_players = {
   'sue': AI_Sue,
+  'ralph': AI_Ralph,
 };
 
 /**
