@@ -506,8 +506,8 @@ describe('api/game.js', function() {
     });
   });
 
-  describe('users board', function(){
-    it('empty board', function(){
+  describe('getOwnBoard', function() {
+    it('should work with empty board', function() {
       const exp = [
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -531,13 +531,13 @@ describe('api/game.js', function() {
 
       checkBoard(exp, board);
     });
-    it('only single ship', function(){
+    it('should work with a single vertical ship', function() {
       const exp = [
-        ["S_Top","E","E","E","E","E","E","E","E","E"],
-        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
-        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
-        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
-        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
+        "SEEEEEEEEE",
+        "SEEEEEEEEE",
+        "SEEEEEEEEE",
+        "SEEEEEEEEE",
+        "SEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -558,11 +558,15 @@ describe('api/game.js', function() {
       var board = Game.getOwnBoard(game, user);
 
       checkBoard(exp, board);
+      assert.equal(board[0][0].ship, 'Top');
+      assert.equal(board[1][0].ship, 'Vertical');
+      assert.equal(board[2][0].ship, 'Vertical');
+      assert.equal(board[3][0].ship, 'Vertical');
+      assert.equal(board[4][0].ship, 'Bottom');
     });
-    it('only single ship horizontal', function(){
+    it('should work with a single horizontal ship', function() {
       const exp = [
-        ["S_Left","S_Horizontal","S_Horizontal","S_Horizontal",
-        "S_Right","E","E","E","E","E"],
+        "SSSSSEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -587,14 +591,19 @@ describe('api/game.js', function() {
       var board = Game.getOwnBoard(game, user);
 
       checkBoard(exp, board);
+      assert.equal(board[0][0].ship, 'Left');
+      assert.equal(board[0][1].ship, 'Horizontal');
+      assert.equal(board[0][2].ship, 'Horizontal');
+      assert.equal(board[0][3].ship, 'Horizontal');
+      assert.equal(board[0][4].ship, 'Right');
     });
-    it('only multiple ships', function(){
+    it('should work with multiple ships', function() {
       const exp = [
-        ["S_Top","S_Top","S_Top","S_Top","S_Top","E","E","E","E","E"],
-        ["S_Vertical","S_Vertical","S_Vertical","S_Vertical","S_Bottom","E","E","E","E","E"],
-        ["S_Vertical","S_Vertical","S_Bottom","S_Bottom","E","E","E","E","E","E"],
-        ["S_Vertical","S_Bottom","E","E","E","E","E","E","E","E"],
-        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
+        "SSSSSEEEEE",
+        "SSSSSEEEEE",
+        "SSSSEEEEEE",
+        "SSEEEEEEEE",
+        "SEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -618,14 +627,31 @@ describe('api/game.js', function() {
       var board = Game.getOwnBoard(game, user);
 
       checkBoard(exp, board);
+      assert.equal(board[0][0].ship, 'Top');
+      assert.equal(board[0][1].ship, 'Top');
+      assert.equal(board[0][2].ship, 'Top');
+      assert.equal(board[0][3].ship, 'Top');
+      assert.equal(board[0][4].ship, 'Top');
+      assert.equal(board[1][0].ship, 'Vertical');
+      assert.equal(board[1][1].ship, 'Vertical');
+      assert.equal(board[1][2].ship, 'Vertical');
+      assert.equal(board[1][3].ship, 'Vertical');
+      assert.equal(board[1][4].ship, 'Bottom');
+      assert.equal(board[2][0].ship, 'Vertical');
+      assert.equal(board[2][1].ship, 'Vertical');
+      assert.equal(board[2][2].ship, 'Bottom');
+      assert.equal(board[2][3].ship, 'Bottom');
+      assert.equal(board[3][0].ship, 'Vertical');
+      assert.equal(board[3][1].ship, 'Bottom');
+      assert.equal(board[4][0].ship, 'Bottom');
     });
-    it('with shots', function(){
+    it('should work when shots are present', function(){
       const exp = [
         "HEEEEEEEEE",
-        ["S_Vertical","M","E","E","E","E","E","E","E","E"],
-        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
-        ["S_Vertical","E","E","E","E","E","E","E","E","E"],
-        ["S_Bottom","E","E","E","E","E","E","E","E","E"],
+        "SMEEEEEEEE",
+        "SEEEEEEEEE",
+        "SEEEEEEEEE",
+        "SEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
         "EEEEEEEEEE",
@@ -646,6 +672,11 @@ describe('api/game.js', function() {
       var board = Game.getOwnBoard(game, user);
 
       checkBoard(exp, board);
+      assert.equal(board[0][0].ship, 'Top');
+      assert.equal(board[1][0].ship, 'Vertical');
+      assert.equal(board[2][0].ship, 'Vertical');
+      assert.equal(board[3][0].ship, 'Vertical');
+      assert.equal(board[4][0].ship, 'Bottom');
     });
   });
 

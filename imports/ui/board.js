@@ -7,34 +7,31 @@ import './board.less';
 
 Template.board_cell.helpers({
   className() {
-    switch (this.ship.val) {
+    switch (this.ship.state) {
       case 'H': return 'hit';
       case 'M': return 'miss';
-      case 'S_Top': 
-      case 'S_Bottom':
-      case 'S_Right':
-      case 'S_Left':
-      case 'S_Vertical':
-      case 'S_Horizontal':
-        return 'ship';
+      case 'S': return 'ship';
       case 'X': return 'sunk';
       case 'E': return 'empty';
       default: return '';
     }
   },
   symbol() {
-    switch (this.ship.val) {
-      case 'H':            return "../graphics/Hit.svg";  
-      case 'E':            return "../graphics/Water.svg";  
-      case 'M':            return "../graphics/Miss.svg";  
-      case 'S_Top':        return "../graphics/ShipTop.svg";  
-      case 'S_Bottom':     return "../graphics/ShipBottom.svg";  
-      case 'S_Right':      return "../graphics/ShipRight.svg";  
-      case 'S_Left':       return "../graphics/ShipLeft.svg";  
-      case 'S_Vertical':   return "../graphics/ShipVertical.svg";  
-      case 'S_Horizontal': return "../graphics/ShipHorizontal.svg";  
-      case 'X':            return "../graphics/Sunk.svg";  
-      default:             return "../graphics/Water.svg";  
+    switch (this.ship.state) {
+      case 'H':            return "../graphics/Hit.svg";
+      case 'E':            return "../graphics/Water.svg";
+      case 'M':            return "../graphics/Miss.svg";
+      case 'S':
+        switch (this.ship.ship) {
+          case 'Top':        return "../graphics/ShipTop.svg";
+          case 'Bottom':     return "../graphics/ShipBottom.svg";
+          case 'Right':      return "../graphics/ShipRight.svg";
+          case 'Left':       return "../graphics/ShipLeft.svg";
+          case 'Vertical':   return "../graphics/ShipVertical.svg";
+          case 'Horizontal': return "../graphics/ShipHorizontal.svg";
+        }
+      case 'X':            return "../graphics/Sunk.svg";
+      default:             return "../graphics/Water.svg";
     }
   },
   cell() {

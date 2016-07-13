@@ -12,21 +12,21 @@ import * as Ship from './ship.js';
 export function makeEmptyBoard() {
   return _.times(10, function() {
     return _.times(10, function() {
-       return {val: 'E'};
+       return {state: 'E'};
     });
   });
 }
 
 /**
- * setRange(board, row, col, rowCount, colCount, val)
- * Updates a game board to set a rectangular region's cell values to the given
- * value.
+ * setRange(board, row, col, rowCount, colCount, field, val)
+ * Updates a game board to set a rectangular region's cell's specified field to
+ * have the given value.
  */
-export function setRange(board, row, col, rowCount, colCount, val) {
+export function setRange(board, row, col, rowCount, colCount, field, value) {
   let r, c;
   for(r = row; r < row + rowCount; r++) {
     for(c = col; c < col + colCount; c++) {
-      board[r][c].val = val;
+      board[r][c][field] = value;
     }
   }
 }
@@ -40,44 +40,38 @@ export function addShips(board, ships, mark) {
     let col = ships[ship].col;
     for(let i = 0; i < Ship.lengths[ship]; i++)
     {
-      board[row][col].shipNum = j;
-
-      if(ships[ship].vertical)
-      {
-        if(mark && i === 0)
+      if(mark) {
+        board[row][col].state = 'S';
+      }
+      if(ships[ship].vertical) {
+        if(i === 0)
         {
-          // Ship at top
-          board[row][col].val = 'S_Top';
+          board[row][col].ship = 'Top';
         }
-        else if(mark && i === (Ship.lengths[ship] - 1))
+        else if(i === (Ship.lengths[ship] - 1))
         {
-          // Ship at bottom
-          board[row][col].val = 'S_Bottom';
+          board[row][col].ship = 'Bottom';
         }
-        else if(mark)
+        else
         {
-          // Mid-piece of vertical ship
-          board[row][col].val = 'S_Vertical';
+          board[row][col].ship = 'Vertical';
         }
 
         row++;
       }
       else
       {
-        if(mark && i === 0)
+        if(i === 0)
         {
-          // Ship at top
-          board[row][col].val = 'S_Left';
+          board[row][col].ship = 'Left';
         }
         else if(mark && i === (Ship.lengths[ship] - 1))
         {
-          // Ship at bottom
-          board[row][col].val = 'S_Right';
+          board[row][col].ship = 'Right';
         }
         else if(mark)
         {
-          // Mid-piece of vertical ship
-          board[row][col].val = 'S_Horizontal';
+          board[row][col].ship = 'Horizontal';
         }
 
         col++;
@@ -91,11 +85,11 @@ export function addShots(board, shots, ships) {
   shots.forEach(function(shot){
     if(spaceIsOnShip(shot, ships))
     {
-      board[shot.row][shot.col].val = 'H';
+      board[shot.row][shot.col].state = 'H';
     }
     else
     {
-      board[shot.row][shot.col].val = 'M';
+      board[shot.row][shot.col].state = 'M';
     }
   });
 }

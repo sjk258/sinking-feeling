@@ -21,7 +21,7 @@ export function makeMove(board, state) {
   for(let square of squares) {
     const row = square[0];
     const col = square[1];
-    if (board[row][col].val == "E") return {row: row, col: col};
+    if (board[row][col].state == "E") return {row: row, col: col};
   }
 
   throw new Meteor.Error('no-moves-left', 'No more moves are possible');
