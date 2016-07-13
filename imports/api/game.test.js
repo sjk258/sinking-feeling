@@ -12,7 +12,7 @@ Meteor.methods({
 });
 
 describe('api/game.js', function() {
-  describe('create', function(){
+  describe('create', function() {
     beforeEach(function(){
       Meteor.call('test.resetDatabase');
     });
@@ -56,16 +56,6 @@ describe('api/game.js', function() {
       assert.equal(creator, game.creator.user);
     });
     it('in database', function(){
-      var test_creator = "TEST_CREATOR";
-      var id = "test_id";
-      var game = Game.create(test_creator, id);
-
-      var result = Games.findOne({_id: id});
-
-      assert.equal(game._id, result._id);
-      assert.equal(test_creator, result.creator.user);
-    });
-    it('in database anonymous id', function(){
       var test_creator = "TEST_CREATOR";
       Game.create(test_creator);
 

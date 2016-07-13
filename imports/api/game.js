@@ -83,7 +83,7 @@ export function initShips() {
   return ships;
 }
 
-export function create(creator, id=null){
+export function create(creator) {
   var game = {
     created_at: new Date(),
     turn_number: 0,
@@ -105,10 +105,6 @@ export function create(creator, id=null){
 
   randomizeShips(game.creator.ships);
   randomizeShips(game.challenger.ships);
-
-  if(id){
-    game._id = id;
-  }
 
   game._id = Games.insert(game);
   return game;
