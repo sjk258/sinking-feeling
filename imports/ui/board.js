@@ -35,6 +35,12 @@ Template.board_cell.helpers({
       default:             return "../graphics/Water.svg";
     }
   },
+  clickable() {
+    if(this.game.state === 'active') {
+      if(!this.own) return 'clickable';
+    }
+    return '';
+  },
   cell() {
     const col = 'ABCDEFGHIJ'[this.col];
     return col + this.row;
@@ -45,7 +51,7 @@ Template.board_cell.helpers({
 });
 
 Template.board_cell.events({
-  "click .cell"(event) {
+  "click .clickable.cell"(event) {
     const target = event.currentTarget;
     $('#selection').val(target.dataset.cell);
   }

@@ -12,7 +12,7 @@
       <br />
       <br />
 
-      {{> game_boards ownBoard=ownBoard attackBoard=attackBoard}}
+      {{> game_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
 
       <br />
       <br />
@@ -66,10 +66,10 @@
     </tr>
     <tr>
       <td align="center">
-        {{> board board=ownBoard.squares}}
+        {{> board board=ownBoard.squares game=game own=true}}
       </td>
       <td align="center">
-        {{> board board=attackBoard.squares}}
+        {{> board board=attackBoard.squares game=game own=false}}
       </td>
     </tr>
     <tr>

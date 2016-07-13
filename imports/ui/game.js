@@ -81,6 +81,17 @@ Template.game_meta_data.helpers({
   },
 });
 
+Template.game_boards.helpers({
+  ownPlayer() {
+    const game = getGame();
+    return getPlayer(game);
+  },
+  otherPlayer() {
+    const game = getGame();
+    return Game.oppositeUser(getPlayer(game));
+  },
+});
+
 function convertToIndex(val) {
   return 'ABCDEFGHIJ'.indexOf(val);
 }
