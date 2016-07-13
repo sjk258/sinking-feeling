@@ -34,48 +34,32 @@ export function setRange(board, row, col, rowCount, colCount, field, value) {
 // only exported for testing, don't call this
 export function addShips(board, ships, mark) {
   for(let j = 0; j < Ship.types.length; j++) {
-    const ship = Ship.types[j];
-    if(!(ship in ships)) continue;
-    let row = ships[ship].row;
-    let col = ships[ship].col;
-    for(let i = 0; i < Ship.lengths[ship]; i++)
-    {
+    const type = Ship.types[j];
+    if(!(type in ships)) continue;
+
+    const ship = ships[type];
+    const row = ship.row;
+    const col = ship.col;
+    const len = Ship.lengths[type];
+
+    if(ship.vertical) {
       if(mark) {
-        board[row][col].state = 'S';
+        setRange(board, row, col, len, 1, 'state', 'S');
       }
-      if(ships[ship].vertical) {
-        if(i === 0)
-        {
-          board[row][col].ship = 'Top';
-        }
-        else if(i === (Ship.lengths[ship] - 1))
-        {
-          board[row][col].ship = 'Bottom';
-        }
-        else
-        {
-          board[row][col].ship = 'Vertical';
-        }
-
-        row++;
+      board[row][col].ship = 'Top';
+      if(len > 2) {
+        setRange(board, row+1, col, len-2, 1, 'ship', 'Vertical');
       }
-      else
-      {
-        if(i === 0)
-        {
-          board[row][col].ship = 'Left';
-        }
-        else if(mark && i === (Ship.lengths[ship] - 1))
-        {
-          board[row][col].ship = 'Right';
-        }
-        else if(mark)
-        {
-          board[row][col].ship = 'Horizontal';
-        }
-
-        col++;
+      board[row+len-1][col].ship = 'Bottom';
+    } else {
+      if(mark) {
+        setRange(board, row, col, 1, len, 'state', 'S');
       }
+      board[row][col].ship = 'Left';
+      if(len > 2) {
+        setRange(board, row, col+1, 1, len-2, 'ship', 'Horizontal');
+      }
+      board[row][col+len-1].ship = 'Right';
     }
   }
 }
