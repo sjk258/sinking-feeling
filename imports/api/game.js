@@ -86,34 +86,41 @@ export function initShips() {
 export function create(creator) {
   var game = {
     created_at: new Date(),
-    turn_number: 0,
-    creator_ready: false,
-    challenger_ready: false,
     creator: {
       id: creator._id,
       name: creator.username,
       ships: initShips(),
-      shots: [],
+      ready: false,
     },
     challenger: {
-      // Will have 'ai' if AI, 'id' if human. Both have 'name'.
-      ai: 'sue',
-      name: AI.getPlayer('sue').full_name,
       ships: initShips(),
-      shots: [],
+      ready: false,
     },
-    // TODO: active immediately starts the game. the initial state should
-    // change as we implement more features. The time_started date also should
-    // be set wherever we first change state to active.
-    state: 'active',
-    // TODO: eventually current_player should get removed. it should get added
-    // when the game goes into the active state.
-    current_player: 'creator',
-    time_started: new Date(),
+    // TODO: setup moves immediately into game setup. This should change to
+    // 'created' eventually to indicate that the game is created but not fully
+    // initialized (i.e., it will require the caller to send it into waiting,
+    // pending, or setup depending on what the user wants).
+    state: 'setup',
   };
 
   randomizeShips(game.creator.ships);
   randomizeShips(game.challenger.ships);
+
+  // TODO: This hard-codes the opponent as an AI. When AI selection is
+  // implemented, this three assignments should get moved out.
+  game.challenger.ai = 'sue';
+  game.challenger.name = AI.getPlayer('sue').full_name;
+  game.challenger.ready = true;
+
+  // TODO: This changes setup to active and should go away when we implement
+  // ship placement in the UI.
+  game.creator.ready = true;
+  game.challenger.ready = true;
+  checkState(game);
+
+  // It is intentional that both of the above TODO blocks have a
+  // game.challenger.ready = true in them, as both are paths where it would get
+  // set.
 
   game._id = Games.insert(game);
   return game;
@@ -122,26 +129,60 @@ export function create(creator) {
 /* The following functions are intended to handle state changes and associated
  * changes in game data. */
 
+export function checkStateCreated(game) {
+  // Fool JShint into thinking we're using the parameter.
+  game = game;
+}
+
 export function checkStateWaiting(game) {
+  // Fool JShint into thinking we're using the parameter.
+  game = game;
 }
 
 export function checkStatePending(game) {
+  // Fool JShint into thinking we're using the parameter.
+  game = game;
 }
 
 export function checkStateDeclined(game) {
+  // Fool JShint into thinking we're using the parameter.
+  game = game;
 }
 
 export function checkStateSetup(game) {
+  if(!game.creator.ready) return;
+  if(!game.challenger.ready) return;
+
+  delete game.creator.ready;
+  game.creator.shots = [];
+
+  delete game.challenger.ready;
+  game.challenger.shots = [];
+
+  game.state = 'active';
+
+  if(!('first_player' in game)) {
+    game.first_player = 'creator';
+  }
+  game.current_player = game.first_player;
+
+  game.turn_number = 0;
+  game.time_started = new Date();
 }
 
 export function checkStateActive(game) {
+  // Fool JShint into thinking we're using the parameter.
+  game = game;
 }
 
 export function checkStateEnded(game) {
+  // Fool JShint into thinking we're using the parameter.
+  game = game;
 }
 
 export function checkState(game) {
   const states = {
+    created: checkStateCreated,
     waiting: checkStateWaiting,
     pending: checkStatePending,
     declined: checkStateDeclined,

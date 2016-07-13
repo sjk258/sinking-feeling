@@ -14,36 +14,24 @@ Meteor.methods({
 describe('api/game.js', function() {
   describe('create', function() {
     let user = {};
-    beforeEach(function(){
+    beforeEach(function() {
       Meteor.call('test.resetDatabase');
       user = {_id: 'test', username: 'Test User'};
     });
-    it('basic setup', function(){
+    it('should return an object', function() {
       assert.isObject(Game.create(user));
     });
-    it('turn data', function(){
-      var game = Game.create(user);
+    it('should setup players correctly', function() {
+      const game = Game.create(user);
 
-      assert.equal(0, game.turn_number);
-    });
-    it('ready data', function(){
-      var game = Game.create(user);
-
-      assert.equal(false, game.creator_ready);
-      assert.equal(false, game.challenger_ready);
-    });
-    it('player data', function(){
-      var game = Game.create(user);
-
-      ["creator", "challenger"].forEach(function(player){
+      ["creator", "challenger"].forEach(function(player) {
         assert.isObject(game[player]);
         assert.isObject(game[player].ships);
-        assert.isArray(game[player].shots);
       });
     });
-    it('created time', function(){
-      var game = Game.create(user);
-      var now = new Date();
+    it('should set created_at properly', function() {
+      const game = Game.create(user);
+      const now = new Date();
 
       assert.equal(now.getDate(), game.created_at.getDate());
       assert.equal(now.getMonth(), game.created_at.getMonth());
@@ -51,21 +39,21 @@ describe('api/game.js', function() {
       assert.equal(now.getHours(), game.created_at.getHours());
       assert.equal(now.getMinutes(), game.created_at.getMinutes());
     });
-    it('set creator', function(){
-      var game = Game.create(user);
+    it('should initialize creator', function() {
+      const game = Game.create(user);
 
       assert.equal(user._id, game.creator.id);
       assert.equal(user.username, game.creator.name);
     });
-    it('in database', function(){
+    it('should get saved to the database', function(){
       Game.create(user);
 
-      var result = Games.findOne({"creator.id": user._id});
+      const result = Games.findOne({"creator.id": user._id});
 
       assert.equal(user.username, result.creator.name);
     });
-    it('ships loaded', function(){
-      var game = Game.create(user);
+    it('should populate ships for both players', function(){
+      const game = Game.create(user);
 
       Ship.types.forEach(function(type){
         assert.isDefined(game.creator.ships[type]);
@@ -79,20 +67,23 @@ describe('api/game.js', function() {
       Meteor.call('test.resetDatabase');
       user = {_id: 'test', username: 'Test User'};
     });
-    it('update basic game', function(){
-      var game = Game.create(user);
-      var gameID = game._id;
-      var turnNumber = game.turn_number;
+    it('should update as expected', function(){
+      const game = Game.create(user);
+      const gameID = game._id;
 
-      assert.equal(game.turn_number, turnNumber);
+      assert.notProperty(game, 'theanswer');
 
-      game.turn_number = game.turn_number + 1;
-
+      game.theanswer = 42;
       Game.update(game);
 
-      var result = Games.findOne({_id: gameID});
+      const result = Games.findOne({_id: gameID});
+      assert.propertyVal(result, 'theanswer', 42);
+    });
+  });
 
-      assert.equal(result.turn_number, turnNumber + 1);
+  describe('checkStateCreated', function() {
+    it('should not fail', function() {
+      Game.checkStateCreated({});
     });
   });
 
@@ -115,8 +106,135 @@ describe('api/game.js', function() {
   });
 
   describe('checkStateSetup', function() {
-    it('should not fail', function() {
-      Game.checkStateSetup({});
+    context('when neither player is ready', function() {
+      it('should change nothing', function() {
+        const exp = {
+          state: 'waiting',
+          creator: {
+            ready: false,
+          },
+          challenger: {
+            ready: false,
+          },
+        };
+        const game = {
+          state: 'waiting',
+          creator: {
+            ready: false,
+          },
+          challenger: {
+            ready: false,
+          },
+        };
+        Game.checkStateSetup(game);
+        assert.deepEqual(exp, game);
+      });
+    });
+    context('when one player is ready', function() {
+      it('should change nothing when creator ready', function() {
+        const exp = {
+          state: 'waiting',
+          creator: {
+            ready: true,
+          },
+          challenger: {
+            ready: false,
+          },
+        };
+        const game = {
+          state: 'waiting',
+          creator: {
+            ready: true,
+          },
+          challenger: {
+            ready: false,
+          },
+        };
+        Game.checkStateSetup(game);
+        assert.deepEqual(exp, game);
+      });
+      it('should change nothing when challenger ready', function() {
+        const exp = {
+          state: 'waiting',
+          creator: {
+            ready: false,
+          },
+          challenger: {
+            ready: true,
+          },
+        };
+        const game = {
+          state: 'waiting',
+          creator: {
+            ready: false,
+          },
+          challenger: {
+            ready: true,
+          },
+        };
+        Game.checkStateSetup(game);
+        assert.deepEqual(exp, game);
+      });
+    });
+    context('when both players are ready', function() {
+      let game = {};
+      beforeEach(function() {
+        game = {
+          state: 'waiting',
+          creator: {
+            ready: true,
+          },
+          challenger: {
+            ready: true,
+          },
+        };
+      });
+      it('should change state to active', function() {
+        Game.checkStateSetup(game);
+        assert.equal(game.state, 'active');
+      });
+      it('should remove creator.ready', function() {
+        Game.checkStateSetup(game);
+        assert.notProperty(game.creator, 'ready');
+      });
+      it('should remove challenger.ready', function() {
+        Game.checkStateSetup(game);
+        assert.notProperty(game.challenger, 'ready');
+      });
+      it('should add creator.shots', function() {
+        Game.checkStateSetup(game);
+        assert.property(game.creator, 'shots');
+        assert.isArray(game.creator.shots);
+        assert.lengthOf(game.creator.shots, 0);
+      });
+      it('should add challenger.shots', function() {
+        Game.checkStateSetup(game);
+        assert.property(game.challenger, 'shots');
+        assert.isArray(game.challenger.shots);
+        assert.lengthOf(game.challenger.shots, 0);
+      });
+      it('should populate first_player as creator if missing', function() {
+        Game.checkStateSetup(game);
+        assert.propertyVal(game, 'first_player', 'creator');
+      });
+      it('should not change first_player if present', function() {
+        game.first_player = 'challenger';
+        Game.checkStateSetup(game);
+        assert.propertyVal(game, 'first_player', 'challenger');
+      });
+      it('should set current_player to first_player', function() {
+        game.first_player = 'challenger';
+        Game.checkStateSetup(game);
+        assert.propertyVal(game, 'current_player', 'challenger');
+      });
+      it('should add time_started', function() {
+        Game.checkStateSetup(game);
+        assert.property(game, 'time_started');
+      });
+      it('should add turn_number as 0', function() {
+        Game.checkStateSetup(game);
+        assert.propertyVal(game, 'turn_number', 0);
+      });
     });
   });
 
