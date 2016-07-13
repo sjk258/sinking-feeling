@@ -239,8 +239,115 @@ describe('api/game.js', function() {
   });
 
   describe('checkStateActive', function() {
-    it('should not fail', function() {
-      Game.checkStateActive({});
+    context('when there are no sunk ships', function() {
+      it('should change nothing', function() {
+        const exp = {
+          state: 'active',
+          current_player: 'creator',
+          creator: {
+            ships: Game.initShips(),
+            shots: [],
+          },
+          challenger: {
+            ships: Game.initShips(),
+            shots: [],
+          },
+        };
+        const game = JSON.parse(JSON.stringify(exp));
+        Game.checkStateActive(game);
+        assert.deepEqual(exp, game);
+      });
+    });
+    context('when some but not all ships are sunk', function() {
+      it('should change nothing', function() {
+        const exp = {
+          state: 'active',
+          current_player: 'creator',
+          creator: {
+            ships: Game.initShips(),
+            shots: [
+              {row: 0, col: 0},
+              {row: 1, col: 0},
+              {row: 2, col: 0},
+              {row: 3, col: 0},
+              {row: 4, col: 0},
+            ],
+          },
+          challenger: {
+            ships: Game.initShips(),
+            shots: [
+              {row: 0, col: 0},
+              {row: 1, col: 0},
+              {row: 2, col: 0},
+              {row: 3, col: 0},
+              {row: 4, col: 0},
+            ],
+          },
+        };
+        const game = JSON.parse(JSON.stringify(exp));
+        Game.checkStateActive(game);
+        assert.deepEqual(exp, game);
+      });
+    });
+    const winners = ['creator', 'challenger'];
+    winners.forEach(function(winner) {
+      context('when '+winner+' has won', function() {
+        let game = {};
+        beforeEach(function() {
+          game = {
+            state: 'active',
+            current_player: 'creator',
+            creator: {
+              ships: Game.initShips(),
+              shots: [
+                {row: 0, col: 0},
+                {row: 0, col: 1},
+                {row: 0, col: 2},
+                {row: 0, col: 3},
+                {row: 0, col: 4},
+                {row: 1, col: 0},
+                {row: 1, col: 1},
+                {row: 1, col: 2},
+                {row: 1, col: 3},
+                {row: 1, col: 4},
+                {row: 2, col: 0},
+                {row: 2, col: 1},
+                {row: 2, col: 2},
+                {row: 2, col: 3},
+                {row: 3, col: 0},
+                {row: 3, col: 1},
+                {row: 4, col: 0},
+              ],
+            },
+            challenger: {
+              ships: Game.initShips(),
+              shots: [],
+            },
+          };
+
+          if(winner == 'challenger') {
+            const temp = game.challenger;
+            game.challenger = game.creator;
+            game.creator = temp;
+          }
+        });
+        it('should change state to ended', function() {
+          Game.checkStateActive(game);
+          assert.equal(game.state, 'ended');
+        });
+        it('should remove current_player', function() {
+          Game.checkStateActive(game);
+          assert.notProperty(game, 'current_player');
+        });
+        it('should add winner', function() {
+          Game.checkStateActive(game);
+          assert.propertyVal(game, 'winner', winner);
+        });
+        it('should add time_finished', function() {
+          Game.checkStateActive(game);
+          assert.property(game, 'time_finished');
+        });
+      });
     });
   });
 

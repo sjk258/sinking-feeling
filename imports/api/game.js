@@ -171,8 +171,23 @@ export function checkStateSetup(game) {
 }
 
 export function checkStateActive(game) {
-  // Fool JShint into thinking we're using the parameter.
-  game = game;
+  const creator = getAttackBoard(game, 'creator').sunk;
+  const challenger = getAttackBoard(game, 'challenger').sunk;
+
+  let winner = false;
+  if(creator.length == 5) {
+    winner = 'creator';
+  } else if(challenger.length == 5) {
+    winner = 'challenger';
+  }
+
+  if(!winner) return;
+
+  game.state = 'ended';
+  game.winner = winner;
+  game.time_finished = new Date();
+
+  delete game.current_player;
 }
 
 export function checkStateEnded(game) {
