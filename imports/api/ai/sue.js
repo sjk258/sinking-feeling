@@ -18,7 +18,7 @@ export const full_name = 'Sequential Sue';
  * Return the move that Sue would like to make next.
  *
  * @param {Object[][]} board - Two-dimensional array representing the board.
- * @param {string} board[][].val - State value for a board square.
+ * @param {string} board[][].state - State value for a board square.
  * @param {Object} state - Opaque internal state maintained by AI.
  *
  * @returns {number[]} Two-element array representing [row,col] of move.
@@ -35,7 +35,7 @@ export function makeMove(board, state) {
   // Look for the first empty square in row-column order
   for (row = 0; row < board.length; row++) {
     for (col = 0; col < board[row].length; col++) {
-      if (board[row][col].val == "E") return {row: row, col: col};
+      if (board[row][col].state === "E") return {row: row, col: col};
     }
   }
   throw new Meteor.Error('no-moves-left', 'No more moves are possible');

@@ -64,7 +64,7 @@ describe('api/ai.js', function() {
           const state = {};
           const makeMove = function() {
             const move = ai.makeMove(board, state);
-            board[move.row][move.col].val = 'X';
+            board[move.row][move.col].state = 'X';
           };
           for(let i = 0; i < 100; i++) {
             makeMove();

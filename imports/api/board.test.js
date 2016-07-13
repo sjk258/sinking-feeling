@@ -5,7 +5,7 @@ export function checkBoard(expected, board) {
   let r, c;
   for(r = 0; r < 10; r++) {
     for(c = 0; c < 10; c++) {
-      assert.equal(expected[r][c], board[r][c].val, "row: " + r.toString() + " col: " + c.toString());
+      assert.equal(expected[r][c], board[r][c].state, "row: " + r.toString() + " col: " + c.toString());
     }
   }
 }
@@ -31,7 +31,7 @@ describe('api/board.js', function() {
       for(let row of board) {
         assert.isArray(row);
         for(let cell of row) {
-          assert.propertyVal(cell, 'val', 'E');
+          assert.propertyVal(cell, 'state', 'E');
         }
       }
     });
@@ -40,7 +40,7 @@ describe('api/board.js', function() {
   describe('setRange', function() {
     function testBoard(expected, x, y, len, width, value) {
       const board = Board.makeEmptyBoard();
-      Board.setRange(board, x, y, len, width, value);
+      Board.setRange(board, x, y, len, width, 'state', value);
       checkBoard(expected, board);
     }
 

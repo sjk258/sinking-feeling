@@ -37,7 +37,7 @@ export function getNames() {
  * @see {@link AIPlayer}
  *
  * @param {Object[][]} board - Two-dimensional array representing the board.
- * @param {string} board[][].val - State value for a board square.
+ * @param {string} board[][].state - State value for a board square.
  * @param {Object} state - Opaque internal state maintained by AI.
  *
  * @returns {number[]} Two-element array representing [row,col] of move.
