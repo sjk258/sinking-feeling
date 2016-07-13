@@ -12,5 +12,9 @@
 </template>
 
 <template name="home_game">
-  <li><a href="/game/{{_id}}">{{_id}}</a> (<a href="#" class="deleteGame">delete</a>)</li>
+  <li>
+    <a href="/game/{{_id}}">{{_id}}</a>
+    created by {{creator.name}}
+    (<a href="#" class="deleteGame">delete</a>)
+  </li>
 </template>
