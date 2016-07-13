@@ -2,7 +2,7 @@
 /* globals FlowRouter */
 
 import { Games } from '../api/games.js';
-import { getOwnBoard, getAttackBoard, fire, update } from '../api/game.js';
+import * as Game from '../api/game.js';
 import { $ } from 'meteor/jquery';
 
 import './game.html';
@@ -23,11 +23,11 @@ Template.game.helpers({
   },
   ownBoard() {
     const game = getGame();
-    return getOwnBoard(game, game.current_player);
+    return Game.getOwnBoard(game, game.current_player);
   },
   attackBoard() {
     const game = getGame();
-    return getAttackBoard(game, game.current_player);
+    return Game.getAttackBoard(game, game.current_player);
   }
 });
 
@@ -46,8 +46,9 @@ Template.game.events({
       console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
 
       // Get shot information (TODO: Check if shot is valid!)
-      fire(game, row, col);
-      update(game);
+      Game.fire(game, row, col);
+      Game.checkState(game);
+      Game.update(game);
 
       $('#selection').val("");
     }

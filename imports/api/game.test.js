@@ -96,6 +96,42 @@ describe('api/game.js', function() {
     });
   });
 
+  describe('checkStateWaiting', function() {
+    it('should not fail', function() {
+      Game.checkStateWaiting({});
+    });
+  });
+
+  describe('checkStatePending', function() {
+    it('should not fail', function() {
+      Game.checkStatePending({});
+    });
+  });
+
+  describe('checkStateDeclined', function() {
+    it('should not fail', function() {
+      Game.checkStateDeclined({});
+    });
+  });
+
+  describe('checkStateSetup', function() {
+    it('should not fail', function() {
+      Game.checkStateSetup({});
+    });
+  });
+
+  describe('checkStateActive', function() {
+    it('should not fail', function() {
+      Game.checkStateActive({});
+    });
+  });
+
+  describe('checkStateEnded', function() {
+    it('should not fail', function() {
+      Game.checkStateEnded({});
+    });
+  });
+
   describe('save a shot', function() {
     it('shot added to array', function() {
       const shots = [];

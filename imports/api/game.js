@@ -119,6 +119,44 @@ export function create(creator) {
   return game;
 }
 
+/* The following functions are intended to handle state changes and associated
+ * changes in game data. */
+
+export function checkStateWaiting(game) {
+}
+
+export function checkStatePending(game) {
+}
+
+export function checkStateDeclined(game) {
+}
+
+export function checkStateSetup(game) {
+}
+
+export function checkStateActive(game) {
+}
+
+export function checkStateEnded(game) {
+}
+
+export function checkState(game) {
+  const states = {
+    waiting: checkStateWaiting,
+    pending: checkStatePending,
+    declined: checkStateDeclined,
+    setup: checkStateSetup,
+    active: checkStateActive,
+    ended: checkStateEnded,
+  };
+
+  if(game.state in states) {
+    states[game.state](game);
+  } else {
+    throw Meteor.Error('invalid-state', 'The game has an invalid state');
+  }
+}
+
 export function update(game) {
   Games.update( {_id: game._id}, game);
 }
