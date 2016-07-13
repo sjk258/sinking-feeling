@@ -6,7 +6,9 @@
       {{> home_game}}
     {{/each}}
   </ul>
+  {{#if currentUser}}
   <p><button id="createGame" type="submit">Create Game</button></p>
+  {{/if}}
 </template>
 
 <template name="home_game">
