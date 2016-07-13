@@ -21,6 +21,7 @@ Template.board_cell.helpers({
       case 'H':            return "../graphics/Hit.svg";
       case 'E':            return "../graphics/Water.svg";
       case 'M':            return "../graphics/Miss.svg";
+      case 'X':            return "../graphics/Sunk.svg";
       case 'S':
         switch (this.ship.ship) {
           case 'Top':        return "../graphics/ShipTop.svg";
@@ -30,7 +31,7 @@ Template.board_cell.helpers({
           case 'Vertical':   return "../graphics/ShipVertical.svg";
           case 'Horizontal': return "../graphics/ShipHorizontal.svg";
         }
-      case 'X':            return "../graphics/Sunk.svg";
+        /* fall through */
       default:             return "../graphics/Water.svg";
     }
   },
