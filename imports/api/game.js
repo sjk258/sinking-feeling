@@ -132,7 +132,7 @@ export function computerShot(game) {
   const ai = AI.getPlayer(game.challenger.ai);
   let state = {};
   if ('computer_state' in game) state = game.computer_state;
-  const board = getAttackBoard(game, 'challenger');
+  const board = getAttackBoard(game, 'challenger').squares;
   const shot = ai.makeMove(board, state);
   saveShot(shot, game.challenger.shots);
 }
@@ -198,16 +198,18 @@ export function oppositeUser(user){
   return opposite_user;
 }
 
-export function getOwnBoard(game, user){
-  var board = Board.makeEmptyBoard();
+export function getOwnBoard(game, user) {
+  const board = Board.makeEmptyBoard();
   Board.addShips(board, game[user].ships, true);
   Board.addShots(board, game[oppositeUser(user)].shots, game[user].ships);
-  return board;
+  const sunk = Board.checkSunk(board, game[user].ships);
+  return {squares: board, sunk: sunk};
 }
 
-export function getAttackBoard(game, user){
-  var board = Board.makeEmptyBoard();
+export function getAttackBoard(game, user) {
+  const board = Board.makeEmptyBoard();
   Board.addShips(board, game[oppositeUser(user)].ships, false);
   Board.addShots(board, game[user].shots, game[oppositeUser(user)].ships);
-  return board;
+  const sunk = Board.checkSunk(board, game[oppositeUser(user)].ships);
+  return {squares: board, sunk: sunk};
 }

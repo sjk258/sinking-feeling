@@ -31,7 +31,6 @@ export function setRange(board, row, col, rowCount, colCount, field, value) {
   }
 }
 
-// only exported for testing, don't call this
 export function addShips(board, ships, mark) {
   for(let j = 0; j < Ship.types.length; j++) {
     const type = Ship.types[j];
@@ -64,7 +63,6 @@ export function addShips(board, ships, mark) {
   }
 }
 
-// only exported for testing, don't call this
 export function addShots(board, shots, ships) {
   shots.forEach(function(shot){
     if(spaceIsOnShip(shot, ships))
@@ -76,6 +74,56 @@ export function addShots(board, shots, ships) {
       board[shot.row][shot.col].state = 'M';
     }
   });
+}
+
+/**
+ * Checks each ship to see if all squares are marked as sunk. If so, the ship
+ * gets marked as sunk.
+ *
+ * Also returns a list of all ships that were sunk.
+ */
+export function checkSunk(board, ships) {
+  const sunk_ships = [];
+
+  const notHit = (board, ship, offset) => {
+    if(ship.vertical) {
+      if(board[ship.row+offset][ship.col].state !== 'H') {
+        return true;
+      }
+    } else {
+      if(board[ship.row][ship.col+offset].state !== 'H') {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  for(let j = 0; j < Ship.types.length; j++) {
+    const type = Ship.types[j];
+    if(!(type in ships)) continue;
+
+    const ship = ships[type];
+    const len = Ship.lengths[type];
+
+    let sunk = true;
+    for(let i = 0; i < len; i++) {
+      if(notHit(board, ship, i)) {
+        sunk = false;
+        break;
+      }
+    }
+
+    if(sunk) {
+      sunk_ships.push(type);
+      if(ship.vertical) {
+        setRange(board, ship.row, ship.col, len, 1, 'state', 'X');
+      } else {
+        setRange(board, ship.row, ship.col, 1, len, 'state', 'X');
+      }
+    }
+  }
+
+  return sunk_ships;
 }
 
 // only exported for testing, don't call this

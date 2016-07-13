@@ -131,7 +131,7 @@ describe('api/game.js', function() {
     });
   });
 
-  describe('computer shot', function() {
+  describe('computerShot', function() {
     it('first shot', function() {
       const game = {
         creator: {
@@ -527,7 +527,7 @@ describe('api/game.js', function() {
       };
       var user = 'creator';
 
-      var board = Game.getOwnBoard(game, user);
+      var board = Game.getOwnBoard(game, user).squares;
 
       checkBoard(exp, board);
     });
@@ -555,7 +555,7 @@ describe('api/game.js', function() {
         challenger: { ships: {}, shots: []} };
       var user = 'creator';
 
-      var board = Game.getOwnBoard(game, user);
+      var board = Game.getOwnBoard(game, user).squares;
 
       checkBoard(exp, board);
       assert.equal(board[0][0].ship, 'Top');
@@ -588,7 +588,7 @@ describe('api/game.js', function() {
         challenger: { ships: {}, shots: []} };
       var user = 'creator';
 
-      var board = Game.getOwnBoard(game, user);
+      var board = Game.getOwnBoard(game, user).squares;
 
       checkBoard(exp, board);
       assert.equal(board[0][0].ship, 'Left');
@@ -624,7 +624,7 @@ describe('api/game.js', function() {
         challenger: { ships: {}, shots: []} };
       var user = 'creator';
 
-      var board = Game.getOwnBoard(game, user);
+      var board = Game.getOwnBoard(game, user).squares;
 
       checkBoard(exp, board);
       assert.equal(board[0][0].ship, 'Top');
@@ -669,7 +669,7 @@ describe('api/game.js', function() {
       };
       var user = 'creator';
 
-      var board = Game.getOwnBoard(game, user);
+      var board = Game.getOwnBoard(game, user).squares;
 
       checkBoard(exp, board);
       assert.equal(board[0][0].ship, 'Top');
@@ -698,7 +698,7 @@ describe('api/game.js', function() {
       assert.equal(expected, result);
     });
   });
-  describe('attack', function(){
+  describe('getAttackBoard', function(){
     it('empty board', function(){
       const exp = [
         "EEEEEEEEEE",
@@ -719,7 +719,7 @@ describe('api/game.js', function() {
       };
       var user = 'creator';
 
-      var board = Game.getAttackBoard(game, user);
+      var board = Game.getAttackBoard(game, user).squares;
 
       checkBoard(exp, board);
     });
@@ -745,7 +745,7 @@ describe('api/game.js', function() {
         challenger: { ships: {}, shots: []} };
       var user = 'creator';
 
-      var board = Game.getAttackBoard(game, user);
+      var board = Game.getAttackBoard(game, user).squares;
 
       checkBoard(exp, board);
     });
@@ -775,7 +775,7 @@ describe('api/game.js', function() {
       };
       var user = 'creator';
 
-      var board = Game.getAttackBoard(game, user);
+      var board = Game.getAttackBoard(game, user).squares;
 
       checkBoard(exp, board);
     });
