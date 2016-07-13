@@ -14,7 +14,10 @@ Template.home.helpers({
 
 Template.home.events({
   'click #createGame'() {
-    const game = Game.create('test');
+    const user = Meteor.user();
+    if(!user) throw Meteor.error('not-logged-in');
+
+    const game = Game.create(user);
     game.current_player = "creator";
     Games.update(game._id, {$set: game});
     FlowRouter.go('game', { id: game._id });

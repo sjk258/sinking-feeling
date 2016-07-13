@@ -83,29 +83,37 @@ export function initShips() {
   return ships;
 }
 
-export function create(creator, id=null){
+export function create(creator) {
   var game = {
     created_at: new Date(),
     turn_number: 0,
     creator_ready: false,
     challenger_ready: false,
-    creator: {user: creator, ships: initShips(), shots: []},
-    challenger: {ships: initShips(), shots: []},
-    computer_id: 'sue',
-    challenger_name: AI.getPlayer('sue').full_name,
+    creator: {
+      id: creator._id,
+      name: creator.username,
+      ships: initShips(),
+      shots: [],
+    },
+    challenger: {
+      // Will have 'ai' if AI, 'id' if human. Both have 'name'.
+      ai: 'sue',
+      name: AI.getPlayer('sue').full_name,
+      ships: initShips(),
+      shots: [],
+    },
     // TODO: active immediately starts the game. the initial state should
     // change as we implement more features. The time_started date also should
     // be set wherever we first change state to active.
     state: 'active',
+    // TODO: eventually current_player should get removed. it should get added
+    // when the game goes into the active state.
+    current_player: 'creator',
     time_started: new Date(),
   };
 
   randomizeShips(game.creator.ships);
   randomizeShips(game.challenger.ships);
-
-  if(id){
-    game._id = id;
-  }
 
   game._id = Games.insert(game);
   return game;
@@ -121,7 +129,7 @@ export function saveShot(shot, shots) {
 }
 
 export function computerShot(game) {
-  const ai = AI.getPlayer(game.computer_id);
+  const ai = AI.getPlayer(game.challenger.ai);
   let state = {};
   if ('computer_state' in game) state = game.computer_state;
   const board = getAttackBoard(game, 'challenger');
@@ -166,7 +174,7 @@ export function fire(game, row, col) {
   let player = game.current_player;
   playerShot(game, player, row, col);
 
-  if ('computer_id' in game) {
+  if ('ai' in game.challenger) {
     computerShot(game);
     game.turn_number += 2;
   } else {
