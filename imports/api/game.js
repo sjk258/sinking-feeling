@@ -97,6 +97,9 @@ export function create(creator, id=null){
     // change as we implement more features. The time_started date also should
     // be set wherever we first change state to active.
     state: 'active',
+    // TODO: eventually current_player should get removed. it should get added
+    // when the game goes into the active state.
+    current_player: 'creator',
     time_started: new Date(),
   };
 
