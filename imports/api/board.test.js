@@ -106,6 +106,103 @@ describe('api/board.js', function() {
     });
   });
 
+  describe('checkSunk', function() {
+    let ships = {};
+    beforeEach(function() {
+      ships = {
+        carrier: { row: 0, col: 0, vertical: true },
+        battleship: { row: 0, col: 1, vertical: true },
+        cruiser: { row: 0, col: 2, vertical: true },
+        submarine: { row: 0, col: 3, vertical: true },
+        destroyer: { row: 0, col: 4, horizontal: true }
+      };
+    });
+    it('should do nothing when the board is empty', function() {
+      const exp = [
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+      ];
+      const board = Board.makeEmptyBoard();
+      const sunk = Board.checkSunk(board, ships);
+
+      assert.sameMembers([], sunk);
+      checkBoard(exp, board);
+    });
+    it('should do nothing when the board has only misses', function() {
+      const exp = [
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEM",
+        "EEEEEEEEEE",
+        "MEEEEEEEEE",
+      ];
+      const board = Board.makeEmptyBoard();
+      board[7][9].state = 'M';
+      board[9][0].state = 'M';
+      const sunk = Board.checkSunk(board, ships);
+
+      assert.sameMembers([], sunk);
+      checkBoard(exp, board);
+    });
+    it('should do nothing when the board has hits without sinking', function() {
+      const exp = [
+        "EHHEEEEEEE",
+        "HEEEEEEEEE",
+        "HEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+      ];
+      const board = Board.makeEmptyBoard();
+      board[0][1].state = 'H';
+      board[0][2].state = 'H';
+      board[1][0].state = 'H';
+      board[2][0].state = 'H';
+      const sunk = Board.checkSunk(board, ships);
+
+      assert.sameMembers([], sunk);
+      checkBoard(exp, board);
+    });
+    it('should detect sunk ships', function() {
+      const exp = [
+        "EEXEXXEEEE",
+        "EEXEEEEEEE",
+        "EEXEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+        "EEEEEEEEEE",
+      ];
+      const board = Board.makeEmptyBoard();
+      Board.setRange(board, 0, 2, 3, 1, 'state', 'H');
+      Board.setRange(board, 0, 4, 1, 2, 'state', 'H');
+      const sunk = Board.checkSunk(board, ships);
+
+      assert.sameMembers(['cruiser', 'destroyer'], sunk);
+      checkBoard(exp, board);
+    });
+  });
+
   describe('spacesAreSame', function() {
     it('returns true when row and col are same', function() {
       const space1 = {row: 1, col: 2};

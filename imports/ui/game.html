@@ -66,13 +66,34 @@
     </tr>
     <tr>
       <td align="center">
-        {{> board board=ownBoard}}
+        {{> board board=ownBoard.squares}}
       </td>
       <td align="center">
-        {{> board board=attackBoard}}
+        {{> board board=attackBoard.squares}}
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        {{> sunk_ships sunk=ownBoard.sunk}}
+      </td>
+      <td align="center">
+        {{> sunk_ships sunk=attackBoard.sunk}}
       </td>
     </tr>
   </table>
+</template>
+
+<template name="sunk_ships">
+  Ships sunk:
+  <ul class="sunkships">
+  {{#if sunk}}
+    {{#each sunk}}
+      <li>{{this}}</li>
+    {{/each}}
+  {{else}}
+    <li>None yet!</li>
+  {{/if}}
+  </ul>
 </template>
 
 <template name="game_actions">
