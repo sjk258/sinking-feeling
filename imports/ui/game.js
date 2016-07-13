@@ -14,6 +14,19 @@ function getGame() {
   return Games.findOne({_id: gameID});
 }
 
+function getPlayer(game) {
+  const user = Meteor.user();
+  if(user._id === game.creator.id) {
+    return 'creator';
+  }
+  if(user._id === game.challenger.id) {
+    return 'challenger';
+  }
+  // TODO: Must be a guest, default to creator for now. Do we even want guests
+  // to view the board?
+  return 'creator';
+}
+
 Template.game.helpers({
   invalid() {
     return !getGame();
@@ -23,12 +36,12 @@ Template.game.helpers({
   },
   ownBoard() {
     const game = getGame();
-    return Game.getOwnBoard(game, game.current_player);
+    return Game.getOwnBoard(game, getPlayer(game));
   },
   attackBoard() {
     const game = getGame();
-    return Game.getAttackBoard(game, game.current_player);
-  }
+    return Game.getAttackBoard(game, getPlayer(game));
+  },
 });
 
 Template.game.events({
@@ -53,6 +66,19 @@ Template.game.events({
       $('#selection').val("");
     }
   }
+});
+
+Template.game_meta_data.helpers({
+  ownName() {
+    const game = getGame();
+    const player = getPlayer(game);
+    return game[player].name;
+  },
+  opponentName() {
+    const game = getGame();
+    const player = Game.oppositeUser(getPlayer(game));
+    return game[player].name;
+  },
 });
 
 function convertToIndex(val) {
