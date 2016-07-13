@@ -143,9 +143,11 @@ describe('api/game.js', function() {
             destroyer: {row: 4, col: 0},
           }
         },
-        challenger: {shots: []},
+        challenger: {
+          ai: 'sue',
+          shots: [],
+        },
         computer_state: {},
-        computer_id: 'sue',
       };
       Game.computerShot(game);
       assert.equal(1, game.challenger.shots.length);
@@ -163,9 +165,11 @@ describe('api/game.js', function() {
             destroyer: {row: 4, col: 0},
           }
         },
-        challenger: {shots: [{row: 0, col: 0}]},
+        challenger: {
+          ai: 'sue',
+          shots: [{row: 0, col: 0}],
+        },
         computer_state: {},
-        computer_id: 'sue',
       };
       Game.computerShot(game);
       assert.equal(2, game.challenger.shots.length);
@@ -173,8 +177,15 @@ describe('api/game.js', function() {
       assert.equal(0, game.challenger.shots[0].col);
     });
     it('includes the time', function () {
-      const game = {creator: {ships:{}}, challenger: {shots: []},
-        computer_id: 'sue'};
+      const game = {
+        creator: {
+          ships: {},
+        },
+        challenger: {
+          ai: 'sue',
+          shots: [],
+        },
+      };
 
       Game.computerShot(game);
 
@@ -338,6 +349,7 @@ describe('api/game.js', function() {
           }
         },
         challenger: {
+          ai: 'sue',
           shots: [],
           ships: {
             carrier: {row: 0, col: 0},
@@ -349,7 +361,6 @@ describe('api/game.js', function() {
         },
         current_player: 'creator',
         turn_number: 0,
-        computer_id: 'sue',
         computer_state: {},
       };
 

@@ -96,11 +96,12 @@ export function create(creator) {
       shots: [],
     },
     challenger: {
+      // Will have 'ai' if AI, 'id' if human. Both have 'name'.
+      ai: 'sue',
+      name: AI.getPlayer('sue').full_name,
       ships: initShips(),
       shots: [],
     },
-    computer_id: 'sue',
-    challenger_name: AI.getPlayer('sue').full_name,
     // TODO: active immediately starts the game. the initial state should
     // change as we implement more features. The time_started date also should
     // be set wherever we first change state to active.
@@ -128,7 +129,7 @@ export function saveShot(shot, shots) {
 }
 
 export function computerShot(game) {
-  const ai = AI.getPlayer(game.computer_id);
+  const ai = AI.getPlayer(game.challenger.ai);
   let state = {};
   if ('computer_state' in game) state = game.computer_state;
   const board = getAttackBoard(game, 'challenger');
@@ -173,7 +174,7 @@ export function fire(game, row, col) {
   let player = game.current_player;
   playerShot(game, player, row, col);
 
-  if ('computer_id' in game) {
+  if ('ai' in game.challenger) {
     computerShot(game);
     game.turn_number += 2;
   } else {
