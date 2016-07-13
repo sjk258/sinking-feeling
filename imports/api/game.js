@@ -89,8 +89,16 @@ export function create(creator) {
     turn_number: 0,
     creator_ready: false,
     challenger_ready: false,
-    creator: {user: creator, ships: initShips(), shots: []},
-    challenger: {ships: initShips(), shots: []},
+    creator: {
+      id: creator._id,
+      name: creator.username,
+      ships: initShips(),
+      shots: [],
+    },
+    challenger: {
+      ships: initShips(),
+      shots: [],
+    },
     computer_id: 'sue',
     challenger_name: AI.getPlayer('sue').full_name,
     // TODO: active immediately starts the game. the initial state should

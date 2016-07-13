@@ -13,25 +13,27 @@ Meteor.methods({
 
 describe('api/game.js', function() {
   describe('create', function() {
+    let user = {};
     beforeEach(function(){
       Meteor.call('test.resetDatabase');
+      user = {_id: 'test', username: 'Test User'};
     });
     it('basic setup', function(){
-      assert.isObject(Game.create());
+      assert.isObject(Game.create(user));
     });
     it('turn data', function(){
-      var game = Game.create();
+      var game = Game.create(user);
 
       assert.equal(0, game.turn_number);
     });
     it('ready data', function(){
-      var game = Game.create();
+      var game = Game.create(user);
 
       assert.equal(false, game.creator_ready);
       assert.equal(false, game.challenger_ready);
     });
     it('player data', function(){
-      var game = Game.create();
+      var game = Game.create(user);
 
       ["creator", "challenger"].forEach(function(player){
         assert.isObject(game[player]);
@@ -40,7 +42,7 @@ describe('api/game.js', function() {
       });
     });
     it('created time', function(){
-      var game = Game.create();
+      var game = Game.create(user);
       var now = new Date();
 
       assert.equal(now.getDate(), game.created_at.getDate());
@@ -50,21 +52,20 @@ describe('api/game.js', function() {
       assert.equal(now.getMinutes(), game.created_at.getMinutes());
     });
     it('set creator', function(){
-      var creator = "test";
-      var game = Game.create(creator);
+      var game = Game.create(user);
 
-      assert.equal(creator, game.creator.user);
+      assert.equal(user._id, game.creator.id);
+      assert.equal(user.username, game.creator.name);
     });
     it('in database', function(){
-      var test_creator = "TEST_CREATOR";
-      Game.create(test_creator);
+      Game.create(user);
 
-      var result = Games.findOne({"creator.user": test_creator});
+      var result = Games.findOne({"creator.id": user._id});
 
-      assert.equal(test_creator, result.creator.user);
+      assert.equal(user.username, result.creator.name);
     });
     it('ships loaded', function(){
-      var game = Game.create();
+      var game = Game.create(user);
 
       Ship.types.forEach(function(type){
         assert.isDefined(game.creator.ships[type]);
@@ -73,11 +74,13 @@ describe('api/game.js', function() {
     });
   });
   describe('update', function() {
+    let user = {};
     beforeEach(function(){
       Meteor.call('test.resetDatabase');
+      user = {_id: 'test', username: 'Test User'};
     });
     it('update basic game', function(){
-      var game = Game.create();
+      var game = Game.create(user);
       var gameID = game._id;
       var turnNumber = game.turn_number;
 
