@@ -250,6 +250,7 @@ export function computerShot(game) {
   const board = getAttackBoard(game, 'challenger').squares;
   const shot = ai.makeMove(board, state);
   saveShot(shot, game.challenger.shots);
+  game.computer_state = state;
 }
 
 export function checkShotUnique(shot, previous_shots)
