@@ -197,12 +197,33 @@ export function checkStateEnded(game) {
 
 export function checkState(game) {
   const states = {
+    // created = Game has been created but not fully initialized yet. Should go
+    // to waiting, pending, declined, or setup next.
     created: checkStateCreated,
+
+    // waiting - Game listed in the waiting room. Waiting for another player to
+    // join. Should go to setup next.
     waiting: checkStateWaiting,
+
+    // pending - Creator has invited someone and is waiting for them to accept
+    // or decline (i.e., the invite is pending). Should go to declined or setup
+    // next.
     pending: checkStatePending,
+
+    // declined - Creator invited someone but they declined. This is a terminal
+    // state.
     declined: checkStateDeclined,
+
+    // setup - Game is in setup phase, which means players can move their ships
+    // around. Should go to active next.
     setup: checkStateSetup,
+
+    // active - The game is on! Players may fire at one another. Should go to
+    // ended next.
     active: checkStateActive,
+
+    // ended - The game has concluded, either because a player sunk all ships
+    // or because a player forfeit. This is a terminal state.
     ended: checkStateEnded,
   };
 
