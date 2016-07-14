@@ -1,20 +1,54 @@
 <template name="home">
-  <p>This is the home page.</p>
-  <p>Here are the games that are currently defined:</p>
-  <ul>
-    {{#each games}}
-      {{> home_game}}
-    {{/each}}
-  </ul>
-  {{#if currentUser}}
-  <p><button id="createGame" type="submit">Create Game</button></p>
-  {{/if}}
+  <div style="align:center;">
+    <span class="home-page-title">Home</span>
+  </div>
+
+  <div>
+    <ul class="list-group">
+      {{#each games}}
+        {{> home_game}}
+      {{/each}}
+    </ul>
+  </div>
+
+  <div>
+    {{#if currentUser}}
+      <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game</button>
+    {{else}}
+      <button class="btn btn-primary btn-md disabled">Create Game</button>
+    {{/if}}
+  </div>
 </template>
 
 <template name="home_game">
-  <li>
-    <a href="/game/{{_id}}">{{_id}}</a>
-    created by {{creator.name}}
-    (<a href="#" class="deleteGame">delete</a>)
-  </li>
+  <a href="/game/{{_id}}" class="list-group-item">
+    <div class="list-item">
+      <table style="width:100%;table-layout:fixed;">
+        <tbody>
+        <tr>
+          <td>
+            <span class="game-title">{{_id}}</span>
+            {{#with gameState _id}}
+              <span class="label {{label_style}}">{{state}}</span>
+            {{/with}}
+            <span class="badge">{{turn_number}}</span>
+          </td>
+          <td rowspan="2" width="60px" align="center">
+          
+          </td>
+          <td rowspan="2" width="20px" align="center">
+            <a href="#" class="deleteGame">
+              <span class="glyphicon glyphicon-remove"></span>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="game-players">{{creator.name}} vs. {{challenger.name}}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </a>
 </template>
