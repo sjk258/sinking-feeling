@@ -1,5 +1,5 @@
 /** Configuration for JSHint to recognize automatic globals: */
-/* globals FlowRouter moment */
+/* globals FlowRouter, moment */
 
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
