@@ -29,6 +29,21 @@ export function checkMove(board, state, move) {
   }
 }
 
+export function initState(state) {
+  if(!('mode' in state)) {
+    state.mode = 'hunt';
+  }
+  if(!('targets' in state)) {
+    state.targets = [];
+  }
+}
+
+export function checkState(state) {
+  if(state.targets.length === 0) {
+    state.mode = 'hunt';
+  }
+}
+
 export function hunt(board, state) {
   const move = Ralph.makeMove(board, {});
   checkMove(board, state, move);
@@ -46,15 +61,8 @@ export function target(board, state) {
 }
 
 export function makeMove(board, state) {
-  if(!('mode' in state)) {
-    state.mode = 'hunt';
-  }
-  if(!('targets' in state)) {
-    state.targets = [];
-  }
-  if(state.targets.length === 0) {
-    state.mode = 'hunt';
-  }
+  initState(state);
+  checkState(state);
 
   if(state.mode === 'hunt') {
     return hunt(board, state);
