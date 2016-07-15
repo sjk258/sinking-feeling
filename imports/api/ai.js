@@ -12,6 +12,7 @@ import * as AI_Ralph from './ai/ralph.js';
 import * as AI_Jack from './ai/jack.js';
 import * as AI_Paul from './ai/paul.js';
 import * as AI_Pat from './ai/pat.js';
+import * as AI_Felicity from './ai/felicity.js';
 
 // Manually map each AI player with its name
 const ai_players = {
@@ -20,6 +21,7 @@ const ai_players = {
   'jack': AI_Jack,
   'paul': AI_Paul,
   'pat': AI_Pat,
+  'felicity': AI_Felicity,
 };
 
 export const default_name = 'sue';
