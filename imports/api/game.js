@@ -111,11 +111,14 @@ export function create(creator) {
   game.challenger.ai = 'sue';
   game.challenger.name = AI.getPlayer('sue').full_name;
   game.challenger.ready = true;
+  game.challenger.ready_at = new Date();
 
   // TODO: This changes setup to active and should go away when we implement
   // ship placement in the UI.
   game.creator.ready = true;
+  game.creator.ready_at = new Date();
   game.challenger.ready = true;
+  game.creator.ready_at = new Date();
   checkState(game);
 
   // It is intentional that both of the above TODO blocks have a
