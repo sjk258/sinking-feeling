@@ -26,11 +26,14 @@ export function firstValidMove(board, moves) {
   return move;
 }
 
+export function allMoves() {
+  return shuffleIntToMoves(_.range(0,100));
+}
+
 /* jshint -W098 */
 // Disable reporting of unused variables, since we need to accept state but it
 // is unused here.
 export function makeMove(board, state) {
 /* jshint +W098 */
-  let moves = shuffleIntToMoves(_.range(0, 100));
-  return firstValidMove(board, moves);
+  return firstValidMove(board, allMoves());
 }
