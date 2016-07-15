@@ -11,21 +11,26 @@ export function checkParity(move, shift) {
   return (move.row + move.col + shift) % 2 === 0;
 }
 
-export function hunt(board, state) {
-  const moves = _.filter(Ralph.allMoves(), (m) => checkParity(m, state.shift));
-  let move;
+export function firstValidMove(board, moves, state) {
   try {
-    move = Ralph.firstValidMove(board, moves);
+    return Ralph.firstValidMove(board, moves);
   } catch(err) {
     if(err.error === 'no-moves-left') {
       // This should only happen with 1-length ships. But it also fulfills the
       // expectation that eventually all squares will be targeted.
       state.ai = 'ralph';
-      move = Ralph.makeMove(board, state);
+      return Ralph.makeMove(board, state);
     } else {
       throw err;
     }
   }
+}
+
+export function hunt(board, state) {
+  const moves = _.filter(
+    Ralph.allMoves(),
+    (m) => checkParity(m, state.shift));
+  const move = firstValidMove(board, moves, state);
   Jack.checkMove(board, state, move);
   return move;
 }
