@@ -44,12 +44,12 @@ Template.game.helpers({
   },
 });
 
-Template.game.events({
-  'submit form'(event) {
+Template.game_actions.events({
+  'click .fireShot'(event) {
     event.preventDefault();
 
     const game = getGame();
-    const selection = event.target.elements.selection.value;
+    const selection = $('#selection').val();
 
     if (selection.length === 2)
     {
@@ -66,6 +66,21 @@ Template.game.events({
       $('#selection').val("");
     }
   }
+});
+
+Template.game_actions.helpers({
+  active() {
+    const game = getGame();
+    return game.state === 'active';
+  },
+  ended() {
+    const game = getGame();
+    return game.state === 'ended';
+  },
+  winner() {
+    const game = getGame();
+    return game[game.winner].name;
+  },
 });
 
 Template.game_meta_data.helpers({
