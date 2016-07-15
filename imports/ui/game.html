@@ -18,6 +18,7 @@
       <br />
 
       {{> game_actions}}
+      {{> game_meta_foot game=game}}
     {{/with}}
   {{/if}}
 </template>
@@ -83,8 +84,26 @@
   {{#if ended}}
   <div class="row text-center">
     <div class="col-sm-12">
-      <p>Game over! The winner is: {{winner}}!</p>
     </div>
   </div>
   {{/if}}
+</template>
+
+<template name="game_meta_foot">
+  <div class="row text-center">
+    <div class="col-sm-12">
+      {{#if game.time_finished}}
+      <p>Game over! The winner is: {{winner}}!</p>
+      {{/if}}
+      <div class="small">
+        <p>Game created: {{dateFormat game.created_at}}</p>
+        {{#if game.time_started}}
+        <p>Game started: {{dateFormat game.time_started}}</p>
+        {{/if}}
+        {{#if game.time_finished}}
+        <p>Game ended: {{dateFormat game.time_finished}}</p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
 </template>
