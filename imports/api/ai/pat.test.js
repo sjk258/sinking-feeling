@@ -56,4 +56,4 @@ describe('api/ai/pat.js', function() {
       assert.equal(val, 16);
     });
   });
-})
+});

@@ -32,7 +32,7 @@ describe('api/ai/felicity.js', function() {
 
   describe('checkDirPriority', function() {
     it('should return 0 if closed in', function() {
-      const lookup = (i) => ("C");
+      const lookup = () => ("C");
       const priority = AI.checkDirPriority(2, lookup, 5, 5);
       assert.equal(priority, 0);
     });
