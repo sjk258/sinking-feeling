@@ -7,8 +7,8 @@ import * as Jack from './jack.js';
 export const name = 'paul';
 export const full_name = 'Parity Paul';
 
-export function checkParity(move, shift) {
-  return (move.row + move.col + shift) % 2 === 0;
+export function checkParity(move, shift, mod=2) {
+  return (move.row + move.col + shift) % mod === 0;
 }
 
 export function firstValidMove(board, moves, state) {
