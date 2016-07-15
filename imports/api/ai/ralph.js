@@ -10,6 +10,11 @@ export function intToMove(val) {
   return {row: Math.floor(val/10), col: (val%10)};
 }
 
+/* Converts a list of integers into a shuffled list of moves */
+export function shuffleIntToMoves(vals) {
+  return _.shuffle(_.map(vals, intToMove));
+}
+
 /* Returns the first valid move, or undefined if none found */
 export function firstValidMove(board, moves) {
   const move = _.find(moves, (move) => {
@@ -26,6 +31,6 @@ export function firstValidMove(board, moves) {
 // is unused here.
 export function makeMove(board, state) {
 /* jshint +W098 */
-  let moves = _.shuffle(_.map(_.range(0, 100), intToMove));
+  let moves = shuffleIntToMoves(_.range(0, 100));
   return firstValidMove(board, moves);
 }
