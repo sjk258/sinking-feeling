@@ -17,8 +17,9 @@ export function shuffleIntToMoves(vals) {
 
 /* Returns the first valid move, or undefined if none found */
 export function firstValidMove(board, moves) {
+  const squares = board.squares;
   const move = _.find(moves, (move) => {
-    return board[move.row][move.col].state === "E";
+    return squares[move.row][move.col].state === "E";
   });
   if(move === undefined) {
     throw new Meteor.Error('no-moves-left', 'No more moves are possible');

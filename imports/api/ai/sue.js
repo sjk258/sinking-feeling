@@ -30,12 +30,13 @@ export const full_name = 'Sequential Sue';
 // is unused here.
 export function makeMove(board, state) {
 /* jshint +W098 */
+  const squares = board.squares;
   let row = 0;
   let col = 0;
   // Look for the first empty square in row-column order
-  for (row = 0; row < board.length; row++) {
-    for (col = 0; col < board[row].length; col++) {
-      if (board[row][col].state === "E") return {row: row, col: col};
+  for (row = 0; row < squares.length; row++) {
+    for (col = 0; col < squares[row].length; col++) {
+      if (squares[row][col].state === "E") return {row: row, col: col};
     }
   }
   throw new Meteor.Error('no-moves-left', 'No more moves are possible');

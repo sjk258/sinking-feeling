@@ -86,19 +86,19 @@ describe('api/ai/ralph.js', function() {
   describe('firstValidMove', function() {
     it('should return the first valid move', function() {
       const moves = [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}];
-      const board = [[{state: "E"}, {state: "E"}, {state: "E"}]];
+      const board = {squares: [[{state: "E"}, {state: "E"}, {state: "E"}]]};
       const move = AI.firstValidMove(board, moves);
       assert.deepEqual(move, {row: 0, col: 0});
     });
     it('should skip invalid moves', function() {
       const moves = [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}];
-      const board = [[{state: "X"}, {state: "X"}, {state: "E"}]];
+      const board = {squares: [[{state: "X"}, {state: "X"}, {state: "E"}]]};
       const move = AI.firstValidMove(board, moves);
       assert.deepEqual(move, {row: 0, col: 2});
     });
     it('should throw Meteor.Error("no-moves-left") if all moves are invalid', function() {
       const moves = [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}];
-      const board = [[{state: "X"}, {state: "X"}, {state: "X"}]];
+      const board = {squares: [[{state: "X"}, {state: "X"}, {state: "X"}]]};
       const action = () => { AI.firstValidMove(board, moves); };
       assert.throws(action, Meteor.Error, 'no-moves-left');
     });

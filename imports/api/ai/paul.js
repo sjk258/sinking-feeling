@@ -31,7 +31,7 @@ export function hunt(board, state) {
     Ralph.allMoves(),
     (m) => checkParity(m, state.shift));
   const move = firstValidMove(board, moves, state);
-  Jack.checkMove(board, state, move);
+  Jack.checkMove(board.squares, state, move);
   return move;
 }
 
