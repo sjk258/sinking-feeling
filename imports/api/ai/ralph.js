@@ -3,25 +3,22 @@ import {_} from 'meteor/underscore';
 export const name = 'ralph';
 export const full_name = 'Random Ralph';
 
+/* Converts an integer in the range 0 to 99 to a move: {row: <val>, col: <val>}
+ * Each integer uniquely identifies a move
+ */
+export function intToMove(val) {
+  return {row: Math.floor(val/10), col: (val%10)};
+}
+
 /* jshint -W098 */
 // Disable reporting of unused variables, since we need to accept state but it
 // is unused here.
 export function makeMove(board, state) {
 /* jshint +W098 */
+  let moves = _.shuffle(_.map(_.range(0, 100), intToMove));
 
-  let row, col;
-  let squares = [];
-  for (row = 0; row < 10; row++) {
-    for (col = 0; col < 10; col++) {
-      squares.push([row, col]);
-    }
-  }
-  squares = _.shuffle(squares);
-
-  for(let square of squares) {
-    const row = square[0];
-    const col = square[1];
-    if (board[row][col].state == "E") return {row: row, col: col};
+  for(let move of moves) {
+    if (board[move.row][move.col].state === "E") return move;
   }
 
   throw new Meteor.Error('no-moves-left', 'No more moves are possible');

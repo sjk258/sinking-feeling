@@ -69,7 +69,7 @@ describe('api/ai.js', function() {
           for(let i = 0; i < 100; i++) {
             makeMove();
           }
-          assert.throws(makeMove, Meteor.error, 'no-moves-left');
+          assert.throws(makeMove, Meteor.Error, 'no-moves-left');
         });
         if(name != 'invalid-name') {
           it('treats name without case sensitivity', function() {
