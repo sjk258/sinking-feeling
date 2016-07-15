@@ -1,5 +1,5 @@
 /** Configuration for JSHint to recognize automatic globals: */
-/* globals FlowRouter */
+/* globals FlowRouter, moment */
 
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
@@ -77,10 +77,6 @@ Template.game_actions.helpers({
     const game = getGame();
     return game.state === 'ended';
   },
-  winner() {
-    const game = getGame();
-    return game[game.winner].name;
-  },
 });
 
 Template.game_meta_data.helpers({
@@ -104,6 +100,15 @@ Template.game_boards.helpers({
   otherPlayer() {
     const game = getGame();
     return Game.oppositeUser(getPlayer(game));
+  },
+});
+
+Template.game_meta_foot.helpers({
+  dateFormat(ts) {
+    return moment(ts).format("dddd, MMMM M, YYYY [at] h:kk A [UTC]Z");
+  },
+  winner() {
+    return this.game[this.game.winner].name;
   },
 });
 
