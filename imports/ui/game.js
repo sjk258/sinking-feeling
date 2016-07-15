@@ -16,14 +16,15 @@ function getGame() {
 
 function getPlayer(game) {
   const user = Meteor.user();
+  if(!user) return 'creator';
+
   if(user._id === game.creator.id) {
     return 'creator';
   }
   if(user._id === game.challenger.id) {
     return 'challenger';
   }
-  // TODO: Must be a guest, default to creator for now. Do we even want guests
-  // to view the board?
+
   return 'creator';
 }
 
