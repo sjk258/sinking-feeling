@@ -49,7 +49,10 @@ describe('api/ai.js', function() {
         });
         it('makeMove returns a valid move on an empty board', function() {
           const ai = AI.getPlayer(name);
-          const board = Board.makeEmptyBoard();
+          const board = {
+            squares: Board.makeEmptyBoard(),
+            sunk: [],
+          };
           const state = {};
           const move = ai.makeMove(board, state);
           assert.isObject(move);
@@ -60,16 +63,19 @@ describe('api/ai.js', function() {
         });
         it('makeMove throws error no-moves-left after 100 moves', function() {
           const ai = AI.getPlayer(name);
-          const board = Board.makeEmptyBoard();
+          const board = {
+            squares: Board.makeEmptyBoard(),
+            sunk: [],
+          };
           const state = {};
           const makeMove = function() {
             const move = ai.makeMove(board, state);
-            board[move.row][move.col].state = 'X';
+            board.squares[move.row][move.col].state = 'X';
           };
           for(let i = 0; i < 100; i++) {
             makeMove();
           }
-          assert.throws(makeMove, Meteor.error, 'no-moves-left');
+          assert.throws(makeMove, Meteor.Error, 'no-moves-left');
         });
         if(name != 'invalid-name') {
           it('treats name without case sensitivity', function() {

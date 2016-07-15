@@ -250,7 +250,7 @@ export function computerShot(game) {
   const ai = AI.getPlayer(game.challenger.ai);
   let state = {};
   if ('computer_state' in game) state = game.computer_state;
-  const board = getAttackBoard(game, 'challenger').squares;
+  const board = getAttackBoard(game, 'challenger');
   const shot = ai.makeMove(board, state);
   saveShot(shot, game.challenger.shots);
   game.computer_state = state;
