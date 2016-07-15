@@ -97,18 +97,27 @@
 </template>
 
 <template name="game_actions">
-  <form>
-    <table align="center">
-      <tr>
-        <td align="center">
-          <input type="text" name="selection" id="selection" disabled="true" size="5" />
-        </td>
-      </tr>
-      <tr>
-        <td align="center">
-          <input type="submit" value="Fire!" />
-        </td>
-      </tr>
-    </table>
-  </form>
+  {{#if active}}
+  <table align="center">
+    <tr>
+      <td align="center">
+        <input type="text" name="selection" id="selection" disabled="true" size="5" />
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <button class="fireShot">Fire!</button>
+      </td>
+    </tr>
+  </table>
+  {{/if}}
+  {{#if ended}}
+  <table align="center">
+    <tr>
+      <td align="center">
+        Game over! The winner is: {{winner}}!
+      </td>
+    </tr>
+  </table>
+  {{/if}}
 </template>
