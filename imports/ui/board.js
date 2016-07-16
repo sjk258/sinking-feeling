@@ -3,9 +3,16 @@
 import { $ } from 'meteor/jquery';
 
 import * as Game from '/imports/api/game.js';
+import * as Board from '/imports/api/board.js';
 
 import './board.html';
 import './board.less';
+
+Template.board_row.helpers({
+  rowName(row) {
+    return 'ABCDEFGHIJ'[row];
+  },
+});
 
 Template.board_cell.helpers({
   classes() {
@@ -20,8 +27,7 @@ Template.board_cell.helpers({
     return list;
   },
   cell() {
-    const col = 'ABCDEFGHIJ'[this.col];
-    return col + this.row;
+    return Board.squareObjToName(this);
   },
 });
 

@@ -3,6 +3,7 @@
 
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
+import * as Board from '../api/board.js';
 import { $ } from 'meteor/jquery';
 
 import './game.html';
@@ -83,15 +84,11 @@ Template.game_actions.events({
 
     const selection = $('#selection').val();
 
-    if (selection.length === 2)
-    {
-      const row = parseInt(selection.slice(1, 2), 10);
-      const col = convertToIndex(selection.slice(0, 1));
-
-      console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
+    if (selection.length > 0) {
+      const move = Board.squareNameToObj(selection);
 
       // Get shot information (TODO: Check if shot is valid!)
-      Game.fire(game, row, col);
+      Game.fire(game, move.row, move.col);
       Game.checkState(game);
       Game.update(game);
 
@@ -135,7 +132,3 @@ Template.game_meta_foot.helpers({
     return this.game[this.game.winner].name;
   },
 });
-
-function convertToIndex(val) {
-  return 'ABCDEFGHIJ'.indexOf(val);
-}
