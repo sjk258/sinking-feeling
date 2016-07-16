@@ -83,12 +83,12 @@ export function initShips() {
   return ships;
 }
 
-export function create(creator) {
+export function create(user, first_player='creator') {
   var game = {
     created_at: new Date(),
     creator: {
-      id: creator._id,
-      name: creator.username,
+      id: user._id,
+      name: user.username,
       ships: initShips(),
       ready: false,
     },
@@ -96,33 +96,29 @@ export function create(creator) {
       ships: initShips(),
       ready: false,
     },
-    // TODO: setup moves immediately into game setup. This should change to
-    // 'created' eventually to indicate that the game is created but not fully
-    // initialized (i.e., it will require the caller to send it into waiting,
-    // pending, or setup depending on what the user wants).
-    state: 'setup',
+    first_player: first_player,
+    state: 'created',
   };
 
   randomizeShips(game.creator.ships);
   randomizeShips(game.challenger.ships);
 
-  // TODO: This hard-codes the opponent as an AI. When AI selection is
-  // implemented, this three assignments should get moved out.
-  game.challenger.ai = 'sue';
-  game.challenger.name = AI.getPlayer('sue').full_name;
+  game._id = Games.insert(game);
+  return game;
+}
+
+export function initVsAi(game, ai) {
+  game.challenger.ai = ai;
+  game.challenger.name = AI.getPlayer(ai).full_name;
   game.challenger.ready = true;
+  game.state = 'setup';
 
   // TODO: This changes setup to active and should go away when we implement
   // ship placement in the UI.
   game.creator.ready = true;
-  game.challenger.ready = true;
   checkState(game);
 
-  // It is intentional that both of the above TODO blocks have a
-  // game.challenger.ready = true in them, as both are paths where it would get
-  // set.
-
-  game._id = Games.insert(game);
+  update(game);
   return game;
 }
 
