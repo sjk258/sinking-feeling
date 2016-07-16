@@ -128,6 +128,21 @@ export function initToWaiting(game) {
   return game;
 }
 
+export function joinWaiting(game, user) {
+  game.challenger.id = user._id;
+  game.challenger.name = user.username;
+  game.state = 'setup';
+
+  // TODO: This changes setup to active and should go away when we implement
+  // ship placement in the UI.
+  game.creator.ready = true;
+  game.challenger.ready = true;
+  checkState(game);
+
+  update(game);
+  return game;
+}
+
 /* The following functions are intended to handle state changes and associated
  * changes in game data. */
 

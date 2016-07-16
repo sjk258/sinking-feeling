@@ -32,6 +32,11 @@ Template.game.helpers({
   game() {
     return getGame();
   },
+  showBothBoards(game) {
+    if(game.state === 'active') return true;
+    if(game.state === 'ended') return true;
+    return false;
+  },
   ownBoard() {
     const game = getGame();
     return Game.getOwnBoard(game, getPlayerOne(game));
@@ -92,16 +97,32 @@ Template.game_actions.events({
 
       $('#selection').val("");
     }
-  }
+  },
+  'click .joinGame'(event) {
+    event.preventDefault();
+
+    const game = getGame();
+    const user = Meteor.user();
+    if(!Game.userCanJoin(game, user)) {
+      throw new Meteor.Error('invalid-join', 'User cannot join game');
+    }
+
+    Game.joinWaiting(game, user);
+  },
 });
 
 Template.game_actions.helpers({
-  canFire() {
-    const game = getGame();
+  canFire(game) {
     return canFire(game);
   },
-  ended() {
-    const game = getGame();
+  waiting(game) {
+    return game.state === 'waiting';
+  },
+  canJoin(game) {
+    const user = Meteor.user();
+    return Game.userCanJoin(game, user);
+  },
+  ended(game) {
     return game.state === 'ended';
   },
 });

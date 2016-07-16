@@ -7,17 +7,17 @@
   {{else}}
 
     {{#with game}}
+      {{#if showBothBoards game}}
       {{> game_meta_data game=game}}
-   
       <br />
       <br />
-
       {{> game_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
+      {{/if}}
 
       <br />
       <br />
 
-      {{> game_actions}}
+      {{> game_actions game=game}}
       {{> game_meta_foot game=game}}
     {{/with}}
   {{/if}}
@@ -78,7 +78,7 @@
 </template>
 
 <template name="game_actions">
-  {{#if canFire}}
+  {{#if canFire game}}
   <div class="row text-center">
     <div class="col-sm-12">
       <p>
@@ -88,9 +88,13 @@
     </div>
   </div>
   {{/if}}
-  {{#if ended}}
+  {{#if waiting game}}
   <div class="row text-center">
     <div class="col-sm-12">
+      <p>{{game.creator.name}} is waiting for an opponent.</p>
+      {{#if canJoin game}}
+      <p><button class="joinGame">Join Game!</button></p>
+      {{/if}}
     </div>
   </div>
   {{/if}}
