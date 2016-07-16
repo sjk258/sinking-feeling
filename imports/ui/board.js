@@ -2,16 +2,19 @@
 
 import { $ } from 'meteor/jquery';
 
+import * as Game from '/imports/api/game.js';
+
 import './board.html';
 import './board.less';
 
 Template.board_cell.helpers({
   classes() {
+    const user = Meteor.user();
     let list = "cell-" + this.ship.state;
     if(this.ship.state === "S") {
       list += " cell-S-" + this.ship.ship;
     }
-    if(this.game.state === 'active') {
+    if(Game.userCanFire(this.game, user)) {
       if(!this.own) list += " clickable";
     }
     return list;
