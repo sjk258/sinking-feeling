@@ -6,47 +6,19 @@ import './board.html';
 import './board.less';
 
 Template.board_cell.helpers({
-  className() {
-    switch (this.ship.state) {
-      case 'H': return 'hit';
-      case 'M': return 'miss';
-      case 'S': return 'ship';
-      case 'X': return 'sunk';
-      case 'E': return 'empty';
-      default: return '';
+  classes() {
+    let list = "cell-" + this.ship.state;
+    if(this.ship.state === "S") {
+      list += " cell-S-" + this.ship.ship;
     }
-  },
-  symbol() {
-    switch (this.ship.state) {
-      case 'H':            return "../graphics/Hit.svg";
-      case 'E':            return "../graphics/Water.svg";
-      case 'M':            return "../graphics/Miss.svg";
-      case 'X':            return "../graphics/Sunk.svg";
-      case 'S':
-        switch (this.ship.ship) {
-          case 'Top':        return "../graphics/ShipTop.svg";
-          case 'Bottom':     return "../graphics/ShipBottom.svg";
-          case 'Right':      return "../graphics/ShipRight.svg";
-          case 'Left':       return "../graphics/ShipLeft.svg";
-          case 'Vertical':   return "../graphics/ShipVertical.svg";
-          case 'Horizontal': return "../graphics/ShipHorizontal.svg";
-        }
-        /* fall through */
-      default:             return "../graphics/Water.svg";
-    }
-  },
-  clickable() {
     if(this.game.state === 'active') {
-      if(!this.own) return 'clickable';
+      if(!this.own) list += " clickable";
     }
-    return '';
+    return list;
   },
   cell() {
     const col = 'ABCDEFGHIJ'[this.col];
     return col + this.row;
-  },
-  selected() {
-    return false;
   },
 });
 

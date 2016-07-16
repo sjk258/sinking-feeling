@@ -32,3 +32,4 @@ accounts-ui
 accounts-password
 useraccounts:bootstrap
 useraccounts:flow-routing
+momentjs:moment

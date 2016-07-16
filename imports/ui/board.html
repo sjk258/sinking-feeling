@@ -29,8 +29,6 @@
 </template>
 
 <template name="board_cell">
-  <td class="cell {{className}} {{clickable}} {{#if selected}}selected{{/if}}"
-  data-state="{{state}}" data-cell="{{cell}}">
-    <img src={{symbol}}>
+  <td class="cell {{classes}}" data-state="{{state}}" data-cell="{{cell}}">
   </td>
 </template>
