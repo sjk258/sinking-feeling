@@ -7,7 +7,7 @@
   {{else}}
 
     {{#with game}}
-      {{> game_meta_data}}
+      {{> game_meta_data game=game}}
    
       <br />
       <br />
@@ -32,7 +32,7 @@
     </div>
     <div class="col-sm-2">
       <h3>Turn</h3>
-      <p>{{turn_number}}</p>
+      <p>{{game.turn_number}}</p>
     </div>
     <div class="col-sm-4">
       <h3>Player 2</h3>
@@ -40,11 +40,13 @@
     </div>
     <div class="col-sm-1"></div>
   </div>
+  {{#if game.current_player}}
   <div class="row text-center game-meta-data">
     <div class="col-sm-12">
       <p>Currently {{turnName}}'s turn</p>
     </div>
   </div>
+  {{/if}}
 </template>
 
 <template name="game_boards">
