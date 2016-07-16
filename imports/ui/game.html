@@ -1,10 +1,9 @@
 <template name="game">
-  
-  <h2 class="text-center">Game</h2>
-
   {{#if invalid}}
-    <p>Warning: Invalid game ID in URL.</p>
+    {{> http404}}
   {{else}}
+
+  <h2 class="text-center">Game</h2>
 
     {{#with game}}
       {{#if showBothBoards game}}

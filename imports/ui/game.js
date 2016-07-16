@@ -8,6 +8,7 @@ import * as Board from '../api/board.js';
 import './game.html';
 import './game.less';
 import './board.js';
+import './http404.js';
 
 function getGame() {
   const gameID = FlowRouter.getParam('id');
