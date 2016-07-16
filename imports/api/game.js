@@ -294,14 +294,14 @@ export function fire(game, row, col) {
     computerShot(game);
     game.turn_number += 2;
   } else {
-    game.current_player = oppositeUser(player);
+    game.current_player = oppositePlayer(player);
     game.turn_number += 1;
   }
 }
 
 
 // only exported for testing, don't call this
-export function oppositeUser(user){
+export function oppositePlayer(user){
   var opposite_user = "";
   if(user == "creator")
   {
@@ -317,16 +317,16 @@ export function oppositeUser(user){
 export function getOwnBoard(game, user) {
   const board = Board.makeEmptyBoard();
   Board.addShips(board, game[user].ships, true);
-  Board.addShots(board, game[oppositeUser(user)].shots, game[user].ships);
+  Board.addShots(board, game[oppositePlayer(user)].shots, game[user].ships);
   const sunk = Board.checkSunk(board, game[user].ships);
   return {squares: board, sunk: sunk};
 }
 
 export function getAttackBoard(game, user) {
   const board = Board.makeEmptyBoard();
-  Board.addShips(board, game[oppositeUser(user)].ships, false);
-  Board.addShots(board, game[user].shots, game[oppositeUser(user)].ships);
-  const sunk = Board.checkSunk(board, game[oppositeUser(user)].ships);
+  Board.addShips(board, game[oppositePlayer(user)].ships, false);
+  Board.addShots(board, game[user].shots, game[oppositePlayer(user)].ships);
+  const sunk = Board.checkSunk(board, game[oppositePlayer(user)].ships);
   return {squares: board, sunk: sunk};
 }
 
