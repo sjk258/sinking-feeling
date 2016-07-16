@@ -946,7 +946,7 @@ describe('api/game.js', function() {
       var user = 'creator';
       var expected = 'challenger';
 
-      var result = Game.oppositeUser(user);
+      var result = Game.oppositePlayer(user);
 
       assert.equal(expected, result);
     });
@@ -954,7 +954,7 @@ describe('api/game.js', function() {
       var user = 'challenger';
       var expected = 'creator';
 
-      var result = Game.oppositeUser(user);
+      var result = Game.oppositePlayer(user);
 
       assert.equal(expected, result);
     });
