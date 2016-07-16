@@ -91,6 +91,10 @@ Template.game_meta_data.helpers({
     const player = Game.oppositeUser(getPlayer(game));
     return game[player].name;
   },
+  turnName() {
+    const game = getGame();
+    return game[game.current_player].name;
+  }
 });
 
 Template.game_boards.helpers({
