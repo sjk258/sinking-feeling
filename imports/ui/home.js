@@ -50,12 +50,20 @@ Template.home_game.helpers({
 Template.home.events({
   'click #createGame'() {
     const user = Meteor.user();
-    if(!user) throw Meteor.error('not-logged-in');
+    if(!user) throw new Meteor.error('not-logged-in');
 
     const game = Game.create(user);
     Game.initVsAi(game, 'sue');
     FlowRouter.go('game', { id: game._id });
-  }
+  },
+  'click #createWait'() {
+    const user = Meteor.user();
+    if(!user) throw new Meteor.error('not-logged-in');
+
+    const game = Game.create(user);
+    Game.initToWaiting(game);
+    FlowRouter.go('game', { id: game._id });
+  },
 });
 
 Template.home_game.events({
