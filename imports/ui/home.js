@@ -53,8 +53,7 @@ Template.home.events({
     if(!user) throw Meteor.error('not-logged-in');
 
     const game = Game.create(user);
-    game.current_player = "creator";
-    Games.update(game._id, {$set: game});
+    Game.initVsAi(game, 'sue');
     FlowRouter.go('game', { id: game._id });
   }
 });
