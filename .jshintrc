@@ -6,6 +6,7 @@
   "devel": true,
   "globals": {
     "Meteor": true,
+    "Session": true,
     "Template": true
   }
 }

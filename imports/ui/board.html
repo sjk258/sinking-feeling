@@ -23,12 +23,12 @@
   <tr>
     <th>{{rowName row}}</th>
     {{#each data}}
-      {{> board_cell row=../row col=@index ship=this game=../game own=../own}}
+      {{> board_cell row=../row col=@index square=this game=../game own=../own}}
     {{/each}}
   </tr>
 </template>
 
 <template name="board_cell">
-  <td class="cell {{classes}}" data-state="{{state}}" data-cell="{{cell}}">
+  <td class="cell {{classes game row col square own}}" data-state="{{state}}" data-cell="{{cell}}">
   </td>
 </template>
