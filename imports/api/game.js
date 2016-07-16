@@ -329,3 +329,25 @@ export function getAttackBoard(game, user) {
   const sunk = Board.checkSunk(board, game[oppositeUser(user)].ships);
   return {squares: board, sunk: sunk};
 }
+
+export function getUserPlayer(game, user) {
+  if(!user) return false;
+  if(user._id === game.creator.id) return 'creator';
+  if(user._id === game.challenger.id) return 'challenger';
+  return false;
+}
+
+export function userIsPlayer(game, user) {
+  if(!user) return false;
+  if(user._id === game.creator.id) return true;
+  if(user._id === game.challenger.id) return true;
+  return false;
+}
+
+export function userCanFire(game, user) {
+  if(!user) return false;
+  if(game.state !== 'active') return false;
+  if(!userIsPlayer(game, user)) return false;
+  const player = getUserPlayer(game, user);
+  return game.current_player === player;
+}
