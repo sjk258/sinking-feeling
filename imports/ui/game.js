@@ -3,7 +3,7 @@
 
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
-import { $ } from 'meteor/jquery';
+import * as Board from '../api/board.js';
 
 import './game.html';
 import './game.less';
@@ -24,6 +24,10 @@ function canFire(game) {
   const user = Meteor.user();
   return Game.userCanFire(game, user);
 }
+
+Template.game.onCreated(function() {
+  Session.set('move', null);
+});
 
 Template.game.helpers({
   invalid() {
@@ -81,22 +85,15 @@ Template.game_actions.events({
       throw new Meteor.Error('invalid-fire', 'User tried to shoot when not their turn');
     }
 
-    const selection = $('#selection').val();
+    const move = Session.get('move');
+    if(!move) return;
 
-    if (selection.length === 2)
-    {
-      const row = parseInt(selection.slice(1, 2), 10);
-      const col = convertToIndex(selection.slice(0, 1));
+    // Get shot information (TODO: Check if shot is valid!)
+    Game.fire(game, move.row, move.col);
+    Game.checkState(game);
+    Game.update(game);
 
-      console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
-
-      // Get shot information (TODO: Check if shot is valid!)
-      Game.fire(game, row, col);
-      Game.checkState(game);
-      Game.update(game);
-
-      $('#selection').val("");
-    }
+    Session.set('move', null);
   },
   'click .joinGame'(event) {
     event.preventDefault();
@@ -125,6 +122,15 @@ Template.game_actions.helpers({
   ended(game) {
     return game.state === 'ended';
   },
+  move() {
+    const move = Session.get('move');
+    if(!move) return "";
+    return Board.squareObjToName(move);
+  },
+  fireDisabled() {
+    const move = Session.get('move');
+    return move ? "" : "disabled";
+  },
 });
 
 Template.game_meta_foot.helpers({
@@ -135,7 +141,3 @@ Template.game_meta_foot.helpers({
     return this.game[this.game.winner].name;
   },
 });
-
-function convertToIndex(val) {
-  return 'ABCDEFGHIJ'.indexOf(val);
-}

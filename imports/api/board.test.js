@@ -306,4 +306,29 @@ describe('api/board.js', function() {
       });
     });
   });
+
+  describe('squareNameToObj', function() {
+    it('should work for A1', function() {
+      const obj = Board.squareNameToObj('A1');
+      assert.isObject(obj);
+      assert.propertyVal(obj, 'row', 0);
+      assert.propertyVal(obj, 'col', 0);
+    });
+    it('should work for C10', function() {
+      const obj = Board.squareNameToObj('C10');
+      assert.isObject(obj);
+      assert.propertyVal(obj, 'row', 2);
+      assert.propertyVal(obj, 'col', 9);
+    });
+  });
+  describe('squareObjToName', function() {
+    it('should work for A1', function() {
+      const name = Board.squareObjToName({row: 0, col: 0});
+      assert.equal(name, 'A1');
+    });
+    it('should work for C10', function() {
+      const name = Board.squareObjToName({row: 2, col: 9});
+      assert.equal(name, 'C10');
+    });
+  });
 });
