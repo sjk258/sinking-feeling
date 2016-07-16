@@ -14,17 +14,15 @@ function getGame() {
   return Games.findOne({_id: gameID});
 }
 
-function getPlayer(game) {
+function getPlayerOne(game) {
   const user = Meteor.user();
-  if(user._id === game.creator.id) {
-    return 'creator';
-  }
-  if(user._id === game.challenger.id) {
-    return 'challenger';
-  }
-  // TODO: Must be a guest, default to creator for now. Do we even want guests
-  // to view the board?
-  return 'creator';
+  const player = Game.getUserPlayer(game, user);
+  return player || 'creator';
+}
+
+function canFire(game) {
+  const user = Meteor.user();
+  return Game.userCanFire(game, user);
 }
 
 Template.game.helpers({
@@ -36,11 +34,11 @@ Template.game.helpers({
   },
   ownBoard() {
     const game = getGame();
-    return Game.getOwnBoard(game, getPlayer(game));
+    return Game.getOwnBoard(game, getPlayerOne(game));
   },
   attackBoard() {
     const game = getGame();
-    return Game.getAttackBoard(game, getPlayer(game));
+    return Game.getAttackBoard(game, getPlayerOne(game));
   },
 });
 
@@ -49,6 +47,10 @@ Template.game_actions.events({
     event.preventDefault();
 
     const game = getGame();
+    if(!canFire(game)) {
+      throw new Meteor.Error('invalid-fire', 'User tried to shoot when not their turn');
+    }
+
     const selection = $('#selection').val();
 
     if (selection.length === 2)
@@ -69,9 +71,9 @@ Template.game_actions.events({
 });
 
 Template.game_actions.helpers({
-  active() {
+  canFire() {
     const game = getGame();
-    return game.state === 'active';
+    return canFire(game);
   },
   ended() {
     const game = getGame();
@@ -82,24 +84,28 @@ Template.game_actions.helpers({
 Template.game_meta_data.helpers({
   ownName() {
     const game = getGame();
-    const player = getPlayer(game);
+    const player = getPlayerOne(game);
     return game[player].name;
   },
   opponentName() {
     const game = getGame();
-    const player = Game.oppositeUser(getPlayer(game));
+    const player = Game.oppositeUser(getPlayerOne(game));
     return game[player].name;
   },
+  turnName() {
+    const game = getGame();
+    return game[game.current_player].name;
+  }
 });
 
 Template.game_boards.helpers({
   ownPlayer() {
     const game = getGame();
-    return getPlayer(game);
+    return getPlayerOne(game);
   },
   otherPlayer() {
     const game = getGame();
-    return Game.oppositeUser(getPlayer(game));
+    return Game.oppositeUser(getPlayerOne(game));
   },
 });
 

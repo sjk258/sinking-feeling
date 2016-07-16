@@ -1041,4 +1041,149 @@ describe('api/game.js', function() {
       checkBoard(exp, board);
     });
   });
+
+  describe('getUserPlayer', function() {
+    it('should return creator if user is creator', function() {
+      const user = {_id: 42};
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert.equal('creator', Game.getUserPlayer(game, user));
+    });
+    it('should return challenger if user is challenger', function() {
+      const user = {_id: 1337};
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert.equal('challenger', Game.getUserPlayer(game, user));
+    });
+    it('should return false if user is not playing', function() {
+      const user = {_id: 300};
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert.isFalse(Game.getUserPlayer(game, user));
+    });
+    it('should return false if user is not defined', function() {
+      let user; /* = undefined; */
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert.isFalse(Game.getUserPlayer(game, user));
+    });
+  });
+
+  describe('userIsPlayer', function() {
+    it('should return true if user is creator', function() {
+      const user = {_id: 42};
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert(Game.userIsPlayer(game, user));
+    });
+    it('should return true if user is creator vs ai', function() {
+      const user = {_id: 42};
+      const game = {
+        creator: {id: 42},
+        challenger: {ai: 'sue'},
+      };
+      assert(Game.userIsPlayer(game, user));
+    });
+    it('should return true if user is challenger', function() {
+      const user = {_id: 1337};
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert(Game.userIsPlayer(game, user));
+    });
+    it('should return false if user not involved', function() {
+      const user = {_id: 300};
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert.isFalse(Game.userIsPlayer(game, user));
+    });
+    it('should return false if user undefined', function() {
+      let user; /* = undefined; */
+      const game = {
+        creator: {id: 42},
+        challenger: {id: 1337},
+      };
+      assert.isFalse(Game.userIsPlayer(game, user));
+    });
+
+    describe('userCanFire', function() {
+      context('when game is active', function() {
+        it("should return true if user's turn", function() {
+          const user = {_id: 42};
+          const game = {
+            state: 'active',
+            creator: {id: 42},
+            challenger: {ai: 100},
+            current_player: 'creator',
+          };
+          assert(Game.userCanFire(game, user));
+        });
+        it("should return false if not user's turn", function() {
+          const user = {_id: 42};
+          const game = {
+            state: 'active',
+            creator: {id: 42},
+            challenger: {ai: 100},
+            current_player: 'challenger',
+          };
+          assert.isFalse(Game.userCanFire(game, user));
+        });
+        it("should return false if user not in game", function() {
+          const user = {_id: 1337};
+          const game = {
+            state: 'active',
+            creator: {id: 42},
+            challenger: {ai: 100},
+            current_player: 'creator',
+          };
+          assert.isFalse(Game.userCanFire(game, user));
+        });
+      });
+      context('when game is finished', function() {
+        it("should return false if user's turn", function() {
+          const user = {_id: 42};
+          const game = {
+            state: 'finished',
+            creator: {id: 42},
+            challenger: {ai: 100},
+            current_player: 'creator',
+          };
+          assert.isFalse(Game.userCanFire(game, user));
+        });
+        it("should return false if not user's turn", function() {
+          const user = {_id: 42};
+          const game = {
+            state: 'finished',
+            creator: {id: 42},
+            challenger: {ai: 100},
+            current_player: 'challenger',
+          };
+          assert.isFalse(Game.userCanFire(game, user));
+        });
+        it("should return false if user not in game", function() {
+          const user = {_id: 1337};
+          const game = {
+            state: 'finished',
+            creator: {id: 42},
+            challenger: {ai: 100},
+            current_player: 'creator',
+          };
+          assert.isFalse(Game.userCanFire(game, user));
+        });
+      });
+    });
+  });
 });
