@@ -28,7 +28,7 @@
     <div class="col-sm-1"></div>
     <div class="col-sm-4">
       <h3>Player 1</h3>
-      <p>{{ownName}}</p>
+      <p>{{ownName game}}</p>
     </div>
     <div class="col-sm-2">
       <h3>Turn</h3>
@@ -36,14 +36,14 @@
     </div>
     <div class="col-sm-4">
       <h3>Player 2</h3>
-      <p>{{opponentName}}</p>
+      <p>{{opponentName game}}</p>
     </div>
     <div class="col-sm-1"></div>
   </div>
   {{#if game.current_player}}
   <div class="row text-center game-meta-data">
     <div class="col-sm-12">
-      <p>Currently {{turnName}}'s turn</p>
+      <p>Currently {{turnName game}}'s turn</p>
     </div>
   </div>
   {{/if}}

@@ -42,6 +42,31 @@ Template.game.helpers({
   },
 });
 
+Template.game_meta_data.helpers({
+  ownName(game) {
+    const player = getPlayerOne(game);
+    return game[player].name;
+  },
+  opponentName(game) {
+    const player = Game.oppositePlayer(getPlayerOne(game));
+    return game[player].name;
+  },
+  turnName(game) {
+    return game[game.current_player].name;
+  }
+});
+
+Template.game_boards.helpers({
+  ownPlayer() {
+    const game = getGame();
+    return getPlayerOne(game);
+  },
+  otherPlayer() {
+    const game = getGame();
+    return Game.oppositePlayer(getPlayerOne(game));
+  },
+});
+
 Template.game_actions.events({
   'click .fireShot'(event) {
     event.preventDefault();
@@ -78,34 +103,6 @@ Template.game_actions.helpers({
   ended() {
     const game = getGame();
     return game.state === 'ended';
-  },
-});
-
-Template.game_meta_data.helpers({
-  ownName() {
-    const game = getGame();
-    const player = getPlayerOne(game);
-    return game[player].name;
-  },
-  opponentName() {
-    const game = getGame();
-    const player = Game.oppositePlayer(getPlayerOne(game));
-    return game[player].name;
-  },
-  turnName() {
-    const game = getGame();
-    return game[game.current_player].name;
-  }
-});
-
-Template.game_boards.helpers({
-  ownPlayer() {
-    const game = getGame();
-    return getPlayerOne(game);
-  },
-  otherPlayer() {
-    const game = getGame();
-    return Game.oppositePlayer(getPlayerOne(game));
   },
 });
 
