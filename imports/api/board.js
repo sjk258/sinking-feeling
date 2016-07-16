@@ -130,18 +130,25 @@ export function checkSunk(board, ships) {
 export function spaceIsOnShip(space, ships){
   for(var ship in ships)
   {
-    for(let i = 0; i < Ship.lengths[ship]; i++) {
-      var ship_space = { row: ships[ship].row, col: ships[ship].col };
-      if(ships[ship].vertical){
-        ship_space.row += i;
-      }
-      else{
-        ship_space.col += i;
-      }
-      if(spacesAreSame(space, ship_space))
-      {
-        return true;
-      }
+    if(spaceIsOnAShip(space, ships[ship], Ship.lengths[ship])){
+      return true;
+    }
+  }
+  return false;
+}
+
+export function spaceIsOnAShip(space, ship, length){
+  for(let i = 0; i < length; i++) {
+    var ship_space = { row: ship.row, col: ship.col };
+    if(ship.vertical){
+      ship_space.row += i;
+    }
+    else{
+      ship_space.col += i;
+    }
+    if(spacesAreSame(space, ship_space))
+    {
+      return true;
     }
   }
   return false;
