@@ -1,11 +1,12 @@
 import { assert } from 'meteor/practicalmeteor:chai';
+import * as Game from './game.js';
 import * as Log from './log.js';
 
 describe('log', function() {
   describe('create log', function() {
     const start = new Date(2016, 01, 01, 01, 01, 01);
     function startGame(game) {
-      game.created = start;
+      game.created_at = start;
       game.state = 'setup';
       return game;
     }
@@ -25,6 +26,44 @@ describe('log', function() {
       game.challenger.ready_at = challenger_ready;
       return game;
     }
+
+    const setup_complete = new Date(2016, 01, 01, 01, 01, 04);
+    function setupShips(game) {
+      game.creator.ships = Game.initShips();
+      game.challenger.ships = Game.initShips();
+      game.time_started = setup_complete;
+      game.state = 'active';
+      game.first_player = 'creator';
+      game.creator.shots = [];
+      game.challenger.shots = [];
+      game.turn_number = 0;
+      return game;
+    }
+
+    function prepGame(game) {
+      return setupShips(challengerReady(creatorReady(startGame(game))));
+    }
+
+    const first_shot = new Date(2016, 01, 01, 01, 02, 01);
+    function firstShot(game) {
+      game.creator.shots.push({row: 9, col: 9, time: first_shot});
+      game.turn_number++;
+      return game;
+    }
+    function firstShotHit(game) {
+      game.creator.shots.push({row: 0, col: 0, time: first_shot});
+      game.turn_number++;
+      return game;
+    }
+
+    const pair = [new Date(2016, 01, 01, 01, 02, 02), new Date(2016, 01, 01, 01, 02, 03)];
+    function pairOfMisses(game) {
+      game.creator.shots.push({row: 9, col: 8, time: pair[0]})
+      game.turn_number++;
+      game.challenger.shots.push({row: 9, col: 8, time: pair[0]})
+      game.turn_number++;
+      return game;
+    };
 
     it('created game', function() {
       const game = startGame({});
@@ -75,20 +114,103 @@ describe('log', function() {
       assert.equal(value[1].event, 'challenger ready');
       assert.equal(value[2].event, 'creator ready');
     });
-    it('miss taken', function() {
+    it('game active no shots', function() {
+      var log = Log.getLog(prepGame({}));
 
+      assert.lengthOf(log, 4);
+      assert.equal(log[3].time, setup_complete);
+      assert.equal(log[3].event, 'started');
+    });
+    it('miss taken', function() {
+      var log = Log.getLog(firstShot(prepGame({})));
+
+      assert.lengthOf(log, 5);
+      assert.equal(log[4].time, first_shot);
+      assert.equal(log[4].event, 'shot');
+      assert.equal(log[4].initiator, 'creator');
+      assert.equal(log[4].result, 'miss');
     });
     it('multiple misses taken', function() {
+        var log = Log.getLog(pairOfMisses(firstShot(prepGame({}))));
 
+        assert.lengthOf(log, 7);
+        assert.equal(log[5].initiator, 'challenger');
+        assert.equal(log[6].initiator, 'creator');
     });
     it('hit taken', function() {
+      var log = Log.getLog(firstShotHit(prepGame({})));
 
+      assert.lengthOf(log, 5);
+      assert.equal(log[4].time, first_shot);
+      assert.equal(log[4].event, 'shot');
+      assert.equal(log[4].initiator, 'creator');
+      assert.equal(log[4].result, 'hit');
     });
     it('hits and misses', function(){
 
     });
     it('shots sunk', function() {
 
+    });
+  });
+  describe('player order', function() {
+    it('creator first', function() {
+      const game = {first_player: 'creator'};
+
+      const result = Log.playerOrder(game);
+
+      assert.lengthOf(result, 2);
+      assert.equal(result[0], 'creator');
+      assert.equal(result[1], 'challenger');
+    });
+    it('creator second', function() {
+      const game = {first_player: 'challenger'};
+
+      const result = Log.playerOrder(game);
+
+      assert.lengthOf(result, 2);
+      assert.equal(result[0], 'challenger');
+      assert.equal(result[1], 'creator');
+    });
+  });
+  describe('determine result', function() {
+    it('miss very short check', function() {
+      var shot = {row: 1, col: 1};
+      var status = [{length: 1, row: 0, col: 0, vertical: true, hits: 0}];
+
+      var output = Log.determineResult(shot, status);
+
+      assert.equal(output, 'miss');
+    });
+    it('hit very short check', function() {
+      var shot = {row: 0, col: 0};
+      var status = [{length: 2, row: 0, col: 0, vertical: true, hits: 0}];
+
+      var output = Log.determineResult(shot, status);
+
+      assert.equal(output, 'hit');
+    });
+    it('last hit to sink', function() {
+      var shot = {row: 0, col: 0};
+      var status = [
+        {length: 2, row: 0, col: 0, vertical: true, hits: 1},
+        {length: 2, row: 0, col: 1, vertical: true, hits: 1},
+      ];
+
+      var output = Log.determineResult(shot, status);
+
+      assert.equal(output, 'sunk');
+    });
+    it('last hit to sink all', function() {
+      var shot = {row: 0, col: 0};
+      var status = [
+        {length: 2, row: 0, col: 0, vertical: true, hits: 1},
+        {length: 2, row: 0, col: 1, vertical: true, hits: 2},
+      ];
+
+      var output = Log.determineResult(shot, status);
+
+      assert.equal(output, 'all ships sunk');
     });
   });
 });
