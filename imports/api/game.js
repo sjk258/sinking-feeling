@@ -122,6 +122,27 @@ export function initVsAi(game, ai) {
   return game;
 }
 
+export function initToWaiting(game) {
+  game.state = 'waiting';
+  update(game);
+  return game;
+}
+
+export function joinWaiting(game, user) {
+  game.challenger.id = user._id;
+  game.challenger.name = user.username;
+  game.state = 'setup';
+
+  // TODO: This changes setup to active and should go away when we implement
+  // ship placement in the UI.
+  game.creator.ready = true;
+  game.challenger.ready = true;
+  checkState(game);
+
+  update(game);
+  return game;
+}
+
 /* The following functions are intended to handle state changes and associated
  * changes in game data. */
 
@@ -131,7 +152,12 @@ export function checkStateCreated(game) {
 }
 
 export function checkStateWaiting(game) {
-  // Fool JShint into thinking we're using the parameter.
+  if(game && game.creator && 'id' in game.creator) {
+    // TODO: This skips setup and change to 'setup' when we implement ship
+    // placement in the UI.
+    game.state = 'active';
+  }
+
   game = game;
 }
 
@@ -346,4 +372,10 @@ export function userCanFire(game, user) {
   if(!userIsPlayer(game, user)) return false;
   const player = getUserPlayer(game, user);
   return game.current_player === player;
+}
+
+export function userCanJoin(game, user) {
+  if(!user) return false;
+  if(game.state !== 'waiting') return false;
+  return user._id !== game.creator.id;
 }
