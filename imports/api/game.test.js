@@ -1068,7 +1068,7 @@ describe('api/game.js', function() {
       assert.isFalse(Game.getUserPlayer(game, user));
     });
     it('should return false if user is not defined', function() {
-      const user = undefined;
+      let user; /* = undefined; */
       const game = {
         creator: {id: 42},
         challenger: {id: 1337},
@@ -1111,7 +1111,7 @@ describe('api/game.js', function() {
       assert.isFalse(Game.userIsPlayer(game, user));
     });
     it('should return false if user undefined', function() {
-      const user = undefined;
+      let user; /* = undefined; */
       const game = {
         creator: {id: 42},
         challenger: {id: 1337},
