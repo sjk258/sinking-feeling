@@ -70,7 +70,8 @@ export function logShots(game, log) {
     game.debug_status = status;
     game.debug_shooter = shooter;
 
-    log.push({time: shot.time, event: 'shot', initiator: shooter, result: result});
+    log.push({time: shot.time, event: 'shot', initiator: shooter,
+      result: result, shot: shot});
   }
 }
 

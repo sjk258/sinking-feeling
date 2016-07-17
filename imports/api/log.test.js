@@ -130,6 +130,9 @@ describe('log', function() {
       assert.equal(log[4].event, 'shot');
       assert.equal(log[4].initiator, 'creator');
       assert.equal(log[4].result, 'miss');
+      assert.equal(log[4].shot.row, 9);
+      assert.equal(log[4].shot.col, 9);
+      assert.equal(log[4].shot.time, first_shot);
     });
     it('multiple misses taken', function() {
         var log = Log.getLog(pairOfMisses(firstShot(prepGame({}))));
