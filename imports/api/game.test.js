@@ -1,4 +1,4 @@
-import { assert, expect } from 'meteor/practicalmeteor:chai';
+import { assert } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { _ } from 'meteor/underscore';
 
@@ -637,78 +637,6 @@ describe('api/game.js', function() {
     });
   });
 
-  describe('placeShip', function() {
-    it('vertical at origin', function(){
-      var positions = {};
-      var row = 0;
-      var col = 0;
-      var vertical = true;
-
-      Game.placeShip("carrier", row, col, vertical, positions);
-
-      assert.equal(1, Object.keys(positions).length);
-      assert.equal(row, positions.carrier.row);
-      assert.equal(col, positions.carrier.col);
-      assert.equal(vertical, positions.carrier.vertical);
-    });
-    it('all five', function(){
-      var positions = {};
-      var ships = ["carrier", "battleship", "cruiser", "submarine", "destroyer"];
-      var row = 0;
-      var col = 0;
-      var vertical = true;
-
-      ships.forEach(function(shipType){
-        Game.placeShip(shipType, row, col, vertical, positions);
-        col++;
-      });
-
-      assert.equal(ships.length, Object.keys(positions).length);
-      assert.equal(0, positions.carrier.col);
-      assert.equal(1, positions.battleship.col);
-      assert.equal(2, positions.cruiser.col);
-      assert.equal(3, positions.submarine.col);
-      assert.equal(4, positions.destroyer.col);
-    });
-    it('change existing', function(){
-      var positions = {};
-      var ship = "carrier";
-      var row = 0;
-      var col1 = 0;
-      var col2 = 5;
-      var vertical = true;
-
-      Game.placeShip(ship, row, col1, vertical, positions);
-      Game.placeShip(ship, row, col2, vertical, positions);
-
-      assert.equal(1, Object.keys(positions).length);
-      assert.equal(col2, positions.carrier.col);
-    });
-    it('invalid type', function(){
-      var invalid_ship = "pt boat";
-      expect(function(){
-        Game.placeShip(invalid_ship, 0, 0, true, {});
-      }).to.throw('Unrecognised ship type');
-    });
-    it('ship overlaps another', function(){
-      const positions = {};
-      Game.placeShip("carrier", 0, 0, true, positions);
-      Game.placeShip("battleship", 0, 1, true, positions);
-
-      assert.throw(function(){
-        Game.placeShip("battleship", 0, 0, true, positions);
-      }, "Ships Overlapping");
-
-      assert.equal(0, positions.carrier.col); // Still there
-    });
-    it('move overlaps same', function(){
-      const positions = {};
-      Game.placeShip("carrier", 0, 0, true, positions);
-      Game.placeShip("carrier", 1, 0, true, positions);
-
-      assert.equal(1, Object.keys(positions).length); // Still there
-    });
-  });
 
   describe('randomizeShips', function() {
     it('should change the positions of the ships', function () {
@@ -725,7 +653,6 @@ describe('api/game.js', function() {
       }));
     });
   });
-
 
   describe('getOwnBoard', function() {
     it('should work with empty board', function() {

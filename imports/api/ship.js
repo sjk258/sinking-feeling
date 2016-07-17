@@ -1,4 +1,3 @@
-import * as Game from './game.js';
 import * as Square from './square.js';
 import * as Util from './util.js';
 
@@ -13,11 +12,11 @@ export const types = Object.keys(lengths);
 
 export function create() {
   const ships = {};
-  Game.placeShip("carrier", 0, 0, true, ships);
-  Game.placeShip("battleship", 0, 1, true, ships);
-  Game.placeShip("cruiser", 0, 2, true, ships);
-  Game.placeShip("submarine", 0, 3, true, ships);
-  Game.placeShip("destroyer", 0, 4, true, ships);
+  place("carrier", 0, 0, true, ships);
+  place("battleship", 0, 1, true, ships);
+  place("cruiser", 0, 2, true, ships);
+  place("submarine", 0, 3, true, ships);
+  place("destroyer", 0, 4, true, ships);
   return ships;
 }
 
@@ -46,4 +45,19 @@ export function checkOverlap(ship_type, row, col, vertical, positions) {
   if(overlap(ship_type, row, col, vertical, positions)) {
     throw 'Ships Overlapping';
   }
+}
+
+export function place(ship_type, row, col, vertical, positions) {
+  checkOverlap(ship_type, row, col, vertical, positions);
+
+  if(!positions[ship_type]) {
+    positions[ship_type] = {};
+  }
+  if(types.indexOf(ship_type) < 0) {
+    throw 'Unrecognised ship type';
+  }
+
+  positions[ship_type].row = row;
+  positions[ship_type].col = col;
+  positions[ship_type].vertical = vertical;
 }

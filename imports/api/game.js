@@ -5,21 +5,6 @@ import * as Board from './board.js';
 import * as Ship from './ship.js';
 import {Games} from './games.js';
 
-export function placeShip(ship_type, row, col, vertical, positions) {
-  Ship.checkOverlap(ship_type, row, col, vertical, positions);
-
-  if (typeof positions[ship_type] == 'undefined') {
-    positions[ship_type] = {};
-  }
-  if(Ship.types.indexOf(ship_type) < 0) {
-    throw 'Unrecognised ship type';
-  }
-
-  positions[ship_type].row = row;
-  positions[ship_type].col = col;
-  positions[ship_type].vertical = vertical;
-}
-
 export function randomizeShips(ships) {
   const makePossibilities = function (length) {
     let i, j;
@@ -36,7 +21,7 @@ export function randomizeShips(ships) {
     const possibs = _.shuffle(makePossibilities(Ship.lengths[type]));
     _.some(possibs, possib => {
       try {
-        placeShip(type, possib[0], possib[1], possib[2], ships);
+        Ship.place(type, possib[0], possib[1], possib[2], ships);
         return true;
       } catch(e) {
         return false;
@@ -44,7 +29,6 @@ export function randomizeShips(ships) {
     });
   });
 }
-
 
 export function create(user, first_player='creator') {
   var game = {

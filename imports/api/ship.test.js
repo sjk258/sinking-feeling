@@ -71,4 +71,77 @@ describe('api/ships.js', function() {
     });
   });
 
+  describe('place', function() {
+    it('should correctly place a ship vertical at origin', function() {
+      var positions = {};
+      var row = 0;
+      var col = 0;
+      var vertical = true;
+
+      Ship.place("carrier", row, col, vertical, positions);
+
+      assert.equal(1, Object.keys(positions).length);
+      assert.equal(row, positions.carrier.row);
+      assert.equal(col, positions.carrier.col);
+      assert.equal(vertical, positions.carrier.vertical);
+    });
+    it('should correctly place all five ships', function() {
+      var positions = {};
+      var ships = ["carrier", "battleship", "cruiser", "submarine", "destroyer"];
+      var row = 0;
+      var col = 0;
+      var vertical = true;
+
+      ships.forEach(function(shipType) {
+        Ship.place(shipType, row, col, vertical, positions);
+        col++;
+      });
+
+      assert.equal(ships.length, Object.keys(positions).length);
+      assert.equal(0, positions.carrier.col);
+      assert.equal(1, positions.battleship.col);
+      assert.equal(2, positions.cruiser.col);
+      assert.equal(3, positions.submarine.col);
+      assert.equal(4, positions.destroyer.col);
+    });
+    it('should reposition an existing ship', function() {
+      var positions = {};
+      var ship = "carrier";
+      var row = 0;
+      var col1 = 0;
+      var col2 = 5;
+      var vertical = true;
+
+      Ship.place(ship, row, col1, vertical, positions);
+      Ship.place(ship, row, col2, vertical, positions);
+
+      assert.equal(1, Object.keys(positions).length);
+      assert.equal(col2, positions.carrier.col);
+    });
+    it('should throw an error for an invalid ship', function() {
+      var invalid_ship = "pt boat";
+      assert.throw(function() {
+        Ship.place(invalid_ship, 0, 0, true, {});
+      }, 'Unrecognised ship type');
+    });
+    it('should throw an error when placing a new ship that overlaps', function() {
+      const positions = {};
+      Ship.place("carrier", 0, 0, true, positions);
+      Ship.place("battleship", 0, 1, true, positions);
+
+      assert.throw(function() {
+        Ship.place("battleship", 0, 0, true, positions);
+      }, "Ships Overlapping");
+
+      assert.equal(0, positions.carrier.col); // Still there
+    });
+    it('should move a ship despite overlap with former position', function() {
+      const positions = {};
+      Ship.place("carrier", 0, 0, true, positions);
+      Ship.place("carrier", 1, 0, true, positions);
+
+      assert.equal(1, Object.keys(positions).length); // Still there
+    });
+  });
+
 });
