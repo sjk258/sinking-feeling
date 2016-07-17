@@ -112,6 +112,7 @@ export function initVsAi(game, ai) {
   game.challenger.name = AI.getPlayer(ai).full_name;
   game.challenger.ready = true;
   game.state = 'setup';
+  game.creator.ready_at = new Date();
 
   // TODO: This changes setup to active and should go away when we implement
   // ship placement in the UI.
@@ -136,7 +137,9 @@ export function joinWaiting(game, user) {
   // TODO: This changes setup to active and should go away when we implement
   // ship placement in the UI.
   game.creator.ready = true;
+  game.creator.ready_at = new Date();
   game.challenger.ready = true;
+  game.creator.ready_at = new Date();
   checkState(game);
 
   update(game);
