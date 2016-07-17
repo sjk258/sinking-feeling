@@ -44,24 +44,25 @@ describe('log', function() {
       return setupShips(challengerReady(creatorReady(startGame(game))));
     }
 
+    function shot(game, player, shot) {
+      game[player].shots.push(shot);
+      game.turn_number++;
+    }
+
     const first_shot = new Date(2016, 01, 01, 01, 02, 01);
     function firstShot(game) {
-      game.creator.shots.push({row: 9, col: 9, time: first_shot});
-      game.turn_number++;
+      shot(game, 'creator', {row: 9, col: 9, time: first_shot});
       return game;
     }
     function firstShotHit(game) {
-      game.creator.shots.push({row: 0, col: 0, time: first_shot});
-      game.turn_number++;
+      shot(game, 'creator', {row: 0, col: 0, time: first_shot});
       return game;
     }
 
     const pair = [new Date(2016, 01, 01, 01, 02, 02), new Date(2016, 01, 01, 01, 02, 03)];
     function pairOfMisses(game) {
-      game.creator.shots.push({row: 9, col: 8, time: pair[0]})
-      game.turn_number++;
-      game.challenger.shots.push({row: 9, col: 8, time: pair[0]})
-      game.turn_number++;
+      shot(game, 'creator', {row: 9, col: 8, time: pair[0]});
+      shot(game, 'challenger', {row: 9, col: 8, time: pair[0]});
       return game;
     };
 
@@ -147,10 +148,90 @@ describe('log', function() {
       assert.equal(log[4].result, 'hit');
     });
     it('hits and misses', function(){
+      var game = firstShot(prepGame({}));
+      var same_time = Date(2016, 01, 01, 01, 02, 07);
+      shot(game, 'challenger', {row: 9, col: 8, time: same_time});
+      shot(game, 'creator', {row: 9, col: 8, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 7, time: same_time});
+      shot(game, 'creator', {row: 9, col: 7, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 6, time: same_time});
+      shot(game, 'creator', {row: 0, col: 0, time: same_time});
 
+      var log = Log.getLog(game);
+
+      assert.lengthOf(log, 11);
+      assert.equal(log[5].initiator, 'challenger');
+      assert.equal(log[5].result, 'miss');
+      assert.equal(log[10].result, 'hit');
     });
     it('shots sunk', function() {
+      var game = firstShot(prepGame({}));
+      var same_time = Date(2016, 01, 01, 01, 02, 07);
+      shot(game, 'challenger', {row: 9, col: 8, time: same_time});
+      shot(game, 'creator', {row: 0, col: 1, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 7, time: same_time});
+      shot(game, 'creator', {row: 1, col: 1, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 6, time: same_time});
+      shot(game, 'creator', {row: 2, col: 1, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 4, time: same_time});
+      shot(game, 'creator', {row: 3, col: 1, time: same_time});
 
+      var log = Log.getLog(game);
+
+      assert.equal(log[log.length - 1].result, 'sunk');
+    });
+    it('game won', function() {
+      var game = firstShot(prepGame({}));
+      var same_time = Date(2016, 01, 01, 01, 02, 07);
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 0, col: 0, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 1, col: 0, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 2, col: 0, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 3, col: 0, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 4, col: 0, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 0, col: 1, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 1, col: 1, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 2, col: 1, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 3, col: 1, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 0, col: 2, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 1, col: 2, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 2, col: 2, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 0, col: 3, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 1, col: 3, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 2, col: 3, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 0, col: 4, time: same_time});
+      shot(game, 'challenger', {row: 9, col: 9, time: same_time});
+      shot(game, 'creator', {row: 1, col: 4, time: same_time});
+
+      var log = Log.getLog(game);
+
+      assert.equal(log[log.length - 1].result, 'all ships sunk');
+    });
+    it('game ended possibly not won', function() {
+      var ended_at = new Date(2016, 01, 01, 01, 03, 01);
+      var game = firstShot(prepGame({}));
+      game.ended_at = ended_at;
+      game.state = 'ended';
+
+      var log = Log.getLog(game);
+
+      assert.equal(log[log.length - 1].event, 'ended');
+      assert.equal(log[log.length - 1].time, ended_at);
     });
   });
   describe('player order', function() {

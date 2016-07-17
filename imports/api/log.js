@@ -1,6 +1,27 @@
 import * as Ship from './ship.js';
 import * as Board from './board.js';
 
+// The format of the log will look like this (depending on when in the game it
+// is being shown).
+// [
+//   {event: 'created', time: ....},
+//   {event: 'creator ready', time: ....},
+//   {event: 'challenger ready', time: ....},
+//   {event: 'started', time: ....},
+//   {event: 'shot', initiator: 'creator', result: 'miss', time: ....},
+//   {event: 'shot', initiator: 'challenger', result: 'miss', time: ....},
+//   {event: 'shot', initiator: 'creator', result: 'hit', time: ....},
+//   {event: 'shot', initiator: 'challenger', result: 'miss', time: ....},
+//   {event: 'shot', initiator: 'creator', result: 'sunk', time: ....},
+//   {event: 'shot', initiator: 'challenger', result: 'miss', time: ....},
+//   {event: 'shot', initiator: 'creator', result: 'hit', time: ....},
+//   {event: 'shot', initiator: 'challenger', result: 'miss', time: ....},
+//   {event: 'shot', initiator: 'creator', result: 'hit', time: ....},
+//   {event: 'shot', initiator: 'challenger', result: 'miss', time: ....},
+//   {event: 'shot', initiator: 'creator', result: 'all ships sunk', time: ....},
+//   {event: 'ended', time: ....}
+// ]
+
 export function getLog(game) {
   const log = [];
   if (typeof game.created_at != 'undefined') {
@@ -9,6 +30,9 @@ export function getLog(game) {
     if ((game.state == 'active') || (game.state == 'ended')) {
       log.push({time: game.time_started, event: 'started'});
       logShots(game, log);
+      if (game.state == 'ended'){
+        log.push({time: game.ended_at, event: 'ended'});
+      }
     }
   }
   return log;
@@ -43,6 +67,8 @@ export function logShots(game, log) {
     var shot = game[shooter].shots[Math.floor(i/2)];
 
     var result = determineResult(shot, status);
+    game.debug_status = status;
+    game.debug_shooter = shooter;
 
     log.push({time: shot.time, event: 'shot', initiator: shooter, result: result});
   }
@@ -71,7 +97,7 @@ export function determineResult(shot, status) {
     if(Board.spaceIsOnAShip(shot, ship, ship.length)) {
       result = 'hit';
       ship.hits++;
-      if(ship.hits == ship.length){
+      if(ship.hits >= ship.length){
         result = 'sunk';
       }
       return;
