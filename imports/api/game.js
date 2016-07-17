@@ -1,34 +1,7 @@
-import {_} from 'meteor/underscore';
-
 import * as AI from './ai.js';
 import * as Board from './board.js';
 import * as Ship from './ship.js';
 import {Games} from './games.js';
-
-export function randomizeShips(ships) {
-  const makePossibilities = function (length) {
-    let i, j;
-    const result = [];
-    for (i = 0; i < 10; i++) {
-      for (j = 0; j < 10 - length; j++) {
-        result.push([i, j, false]);
-        result.push([j, i, true]);
-      }
-    }
-    return result;
-  };
-  Ship.types.forEach(type => {
-    const possibs = _.shuffle(makePossibilities(Ship.lengths[type]));
-    _.some(possibs, possib => {
-      try {
-        Ship.place(type, possib[0], possib[1], possib[2], ships);
-        return true;
-      } catch(e) {
-        return false;
-      }
-    });
-  });
-}
 
 export function create(user, first_player='creator') {
   var game = {
@@ -47,8 +20,8 @@ export function create(user, first_player='creator') {
     state: 'created',
   };
 
-  randomizeShips(game.creator.ships);
-  randomizeShips(game.challenger.ships);
+  Ship.randomize(game.creator.ships);
+  Ship.randomize(game.challenger.ships);
 
   game._id = Games.insert(game);
   return game;
@@ -270,7 +243,6 @@ export function fire(game, row, col) {
     game.turn_number += 1;
   }
 }
-
 
 // only exported for testing, don't call this
 export function oppositePlayer(user){

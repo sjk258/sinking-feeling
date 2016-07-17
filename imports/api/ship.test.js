@@ -1,4 +1,6 @@
+import { _ } from 'meteor/underscore';
 import { assert } from 'meteor/practicalmeteor:chai';
+
 import * as Ship from './ship.js';
 
 describe('api/ships.js', function() {
@@ -141,6 +143,22 @@ describe('api/ships.js', function() {
       Ship.place("carrier", 1, 0, true, positions);
 
       assert.equal(1, Object.keys(positions).length); // Still there
+    });
+  });
+
+  describe('randomizeShips', function() {
+    it('should change the positions of the ships', function () {
+      const ships1 = Ship.create();
+      const ships2 = {};
+      Ship.types.forEach(type => {
+        ships2[type] = _.clone(ships1[type]);
+      });
+      Ship.randomize(ships1);
+      assert(_.some(Ship.types, type => {
+        return ships1[type].row != ships2[type].row ||
+          ships1[type].col != ships2[type].col ||
+          ships1[type].vertical != ships2[type].vertical;
+      }));
     });
   });
 

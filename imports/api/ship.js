@@ -1,3 +1,5 @@
+import { _ } from 'meteor/underscore';
+
 import * as Square from './square.js';
 import * as Util from './util.js';
 
@@ -60,4 +62,29 @@ export function place(ship_type, row, col, vertical, positions) {
   positions[ship_type].row = row;
   positions[ship_type].col = col;
   positions[ship_type].vertical = vertical;
+}
+
+export function randomize(ships) {
+  const makePossibilities = function (length) {
+    let i, j;
+    const result = [];
+    for (i = 0; i < 10; i++) {
+      for (j = 0; j < 10 - length; j++) {
+        result.push([i, j, false]);
+        result.push([j, i, true]);
+      }
+    }
+    return result;
+  };
+  types.forEach(type => {
+    const possibs = _.shuffle(makePossibilities(lengths[type]));
+    _.some(possibs, possib => {
+      try {
+        place(type, possib[0], possib[1], possib[2], ships);
+        return true;
+      } catch(e) {
+        return false;
+      }
+    });
+  });
 }
