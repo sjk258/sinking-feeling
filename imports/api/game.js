@@ -1,9 +1,11 @@
+import {_} from 'meteor/underscore';
+
 import * as AI from './ai.js';
 import * as Board from './board.js';
 import * as Ship from './ship.js';
 import * as Square from './square.js';
+import * as Util from './util.js';
 import {Games} from './games.js';
-import {_} from 'meteor/underscore';
 
 export function overlap(ship, row, col, vertical, ships) {
   for(let i = 0; i < Ship.lengths[ship]; i++) {
@@ -26,7 +28,7 @@ export function checkOverlap(ship_type, row, col, vertical, positions) {
   if (typeof positions[ship_type] != 'undefined'){
     // This is moving a ship, we don't want to include the pre-move ship in the
     // overlap test. This makes a copy that we can remove it from.
-    positions = JSON.parse(JSON.stringify(positions));
+    positions = Util.clone(positions);
     delete positions[ship_type];
   }
   if(overlap(ship_type, row, col, vertical, positions)){

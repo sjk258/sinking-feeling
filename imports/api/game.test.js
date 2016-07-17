@@ -1,9 +1,10 @@
 import { assert, expect } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { _ } from 'meteor/underscore';
+
 import * as Ship from './ship.js';
-//import * as Board from './board.js';
 import * as Game from './game.js';
+import * as Util from './util.js';
 import {checkBoard} from './board.test.js';
 import {Games} from './games.js';
 
@@ -253,7 +254,7 @@ describe('api/game.js', function() {
             shots: [],
           },
         };
-        const game = JSON.parse(JSON.stringify(exp));
+        const game = Util.clone(exp);
         Game.checkStateActive(game);
         assert.deepEqual(exp, game);
       });
@@ -284,7 +285,7 @@ describe('api/game.js', function() {
             ],
           },
         };
-        const game = JSON.parse(JSON.stringify(exp));
+        const game = Util.clone(exp);
         Game.checkStateActive(game);
         assert.deepEqual(exp, game);
       });
