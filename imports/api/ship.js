@@ -1,5 +1,6 @@
 import * as Game from './game.js';
 import * as Square from './square.js';
+import * as Util from './util.js';
 
 export const lengths = {
   carrier: 5,
@@ -33,4 +34,16 @@ export function overlap(ship, row, col, vertical, ships) {
     }
   }
   return false;
+}
+
+export function checkOverlap(ship_type, row, col, vertical, positions) {
+  if(positions[ship_type]) {
+    // This is moving a ship, we don't want to include the pre-move ship in the
+    // overlap test. This makes a copy that we can remove it from.
+    positions = Util.clone(positions);
+    delete positions[ship_type];
+  }
+  if(overlap(ship_type, row, col, vertical, positions)) {
+    throw 'Ships Overlapping';
+  }
 }
