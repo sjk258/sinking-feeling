@@ -3,26 +3,8 @@ import {_} from 'meteor/underscore';
 import * as AI from './ai.js';
 import * as Board from './board.js';
 import * as Ship from './ship.js';
-import * as Square from './square.js';
 import * as Util from './util.js';
 import {Games} from './games.js';
-
-export function overlap(ship, row, col, vertical, ships) {
-  for(let i = 0; i < Ship.lengths[ship]; i++) {
-    var ship_space = { row: row, col: col };
-    if(vertical){
-      ship_space.row += i;
-    }
-    else{
-      ship_space.col += i;
-    }
-    if(Square.spaceIsOnShip(ship_space, ships))
-    {
-      return true;
-    }
-  }
-  return false;
-}
 
 export function checkOverlap(ship_type, row, col, vertical, positions) {
   if (typeof positions[ship_type] != 'undefined'){
@@ -31,7 +13,7 @@ export function checkOverlap(ship_type, row, col, vertical, positions) {
     positions = Util.clone(positions);
     delete positions[ship_type];
   }
-  if(overlap(ship_type, row, col, vertical, positions)){
+  if(Ship.overlap(ship_type, row, col, vertical, positions)){
     throw 'Ships Overlapping';
   }
 }
