@@ -24,12 +24,6 @@ table.board {
   td.cell {
     border: 1px solid black;
     
-    &.clickable:hover {
-      background-image: none;
-      background-color: orange;
-      border: 1px solid orange;
-    }
-
     &.cell-E {
       background: url("/graphics/Water.svg");
       background-size: @cell-size @cell-size;
@@ -71,6 +65,12 @@ table.board {
         background: url("/graphics/ShipHorizontal.svg");
         background-size: @cell-size @cell-size;
       }
+    }
+
+    &.clickable:hover, &.selected {
+      background-image: none;
+      background-color: orange;
+      border: 1px solid orange;
     }
   }
 }

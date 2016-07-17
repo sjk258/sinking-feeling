@@ -83,12 +83,12 @@ export function initShips() {
   return ships;
 }
 
-export function create(creator) {
+export function create(user, first_player='creator') {
   var game = {
     created_at: new Date(),
     creator: {
-      id: creator._id,
-      name: creator.username,
+      id: user._id,
+      name: user.username,
       ships: initShips(),
       ready: false,
     },
@@ -96,22 +96,43 @@ export function create(creator) {
       ships: initShips(),
       ready: false,
     },
-    // TODO: setup moves immediately into game setup. This should change to
-    // 'created' eventually to indicate that the game is created but not fully
-    // initialized (i.e., it will require the caller to send it into waiting,
-    // pending, or setup depending on what the user wants).
-    state: 'setup',
+    first_player: first_player,
+    state: 'created',
   };
 
   randomizeShips(game.creator.ships);
   randomizeShips(game.challenger.ships);
 
-  // TODO: This hard-codes the opponent as an AI. When AI selection is
-  // implemented, this three assignments should get moved out.
-  game.challenger.ai = 'sue';
-  game.challenger.name = AI.getPlayer('sue').full_name;
+  game._id = Games.insert(game);
+  return game;
+}
+
+export function initVsAi(game, ai) {
+  game.challenger.ai = ai;
+  game.challenger.name = AI.getPlayer(ai).full_name;
   game.challenger.ready = true;
-  game.challenger.ready_at = new Date();
+  game.state = 'setup';
+  game.creator.ready_at = new Date();
+
+  // TODO: This changes setup to active and should go away when we implement
+  // ship placement in the UI.
+  game.creator.ready = true;
+  checkState(game);
+
+  update(game);
+  return game;
+}
+
+export function initToWaiting(game) {
+  game.state = 'waiting';
+  update(game);
+  return game;
+}
+
+export function joinWaiting(game, user) {
+  game.challenger.id = user._id;
+  game.challenger.name = user.username;
+  game.state = 'setup';
 
   // TODO: This changes setup to active and should go away when we implement
   // ship placement in the UI.
@@ -121,11 +142,7 @@ export function create(creator) {
   game.creator.ready_at = new Date();
   checkState(game);
 
-  // It is intentional that both of the above TODO blocks have a
-  // game.challenger.ready = true in them, as both are paths where it would get
-  // set.
-
-  game._id = Games.insert(game);
+  update(game);
   return game;
 }
 
@@ -138,7 +155,12 @@ export function checkStateCreated(game) {
 }
 
 export function checkStateWaiting(game) {
-  // Fool JShint into thinking we're using the parameter.
+  if(game && game.creator && 'id' in game.creator) {
+    // TODO: This skips setup and change to 'setup' when we implement ship
+    // placement in the UI.
+    game.state = 'active';
+  }
+
   game = game;
 }
 
@@ -297,14 +319,14 @@ export function fire(game, row, col) {
     computerShot(game);
     game.turn_number += 2;
   } else {
-    game.current_player = oppositeUser(player);
+    game.current_player = oppositePlayer(player);
     game.turn_number += 1;
   }
 }
 
 
 // only exported for testing, don't call this
-export function oppositeUser(user){
+export function oppositePlayer(user){
   var opposite_user = "";
   if(user == "creator")
   {
@@ -320,15 +342,43 @@ export function oppositeUser(user){
 export function getOwnBoard(game, user) {
   const board = Board.makeEmptyBoard();
   Board.addShips(board, game[user].ships, true);
-  Board.addShots(board, game[oppositeUser(user)].shots, game[user].ships);
+  Board.addShots(board, game[oppositePlayer(user)].shots, game[user].ships);
   const sunk = Board.checkSunk(board, game[user].ships);
   return {squares: board, sunk: sunk};
 }
 
 export function getAttackBoard(game, user) {
   const board = Board.makeEmptyBoard();
-  Board.addShips(board, game[oppositeUser(user)].ships, false);
-  Board.addShots(board, game[user].shots, game[oppositeUser(user)].ships);
-  const sunk = Board.checkSunk(board, game[oppositeUser(user)].ships);
+  Board.addShips(board, game[oppositePlayer(user)].ships, false);
+  Board.addShots(board, game[user].shots, game[oppositePlayer(user)].ships);
+  const sunk = Board.checkSunk(board, game[oppositePlayer(user)].ships);
   return {squares: board, sunk: sunk};
+}
+
+export function getUserPlayer(game, user) {
+  if(!user) return false;
+  if(user._id === game.creator.id) return 'creator';
+  if(user._id === game.challenger.id) return 'challenger';
+  return false;
+}
+
+export function userIsPlayer(game, user) {
+  if(!user) return false;
+  if(user._id === game.creator.id) return true;
+  if(user._id === game.challenger.id) return true;
+  return false;
+}
+
+export function userCanFire(game, user) {
+  if(!user) return false;
+  if(game.state !== 'active') return false;
+  if(!userIsPlayer(game, user)) return false;
+  const player = getUserPlayer(game, user);
+  return game.current_player === player;
+}
+
+export function userCanJoin(game, user) {
+  if(!user) return false;
+  if(game.state !== 'waiting') return false;
+  return user._id !== game.creator.id;
 }

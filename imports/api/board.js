@@ -162,3 +162,15 @@ export function spacesAreSame(space1, space2){
   }
   return false;
 }
+
+export function squareObjToName(obj) {
+  const row = 'ABCDEFGHIJ'[obj.row];
+  const col = obj.col + 1;
+  return row + col;
+}
+
+export function squareNameToObj(name) {
+  const row = 'ABCDEFGHIJ'.indexOf(name[0]);
+  const col = parseInt(name.substring(1), 10) - 1;
+  return {row, col};
+}

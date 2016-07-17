@@ -13,9 +13,10 @@
 
   <div>
     {{#if currentUser}}
-      <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game</button>
+      <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game against AI</button>
+      <button id="createWait" type="submit" class="btn btn-md">List in Waiting Room</button>
     {{else}}
-      <button class="btn btn-primary btn-md disabled">Create Game</button>
+      Log in to create a game.
     {{/if}}
   </div>
 </template>

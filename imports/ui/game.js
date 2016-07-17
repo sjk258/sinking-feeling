@@ -3,29 +3,32 @@
 
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
-import { $ } from 'meteor/jquery';
+import * as Board from '../api/board.js';
 
 import './game.html';
 import './game.less';
 import './board.js';
+import './http404.js';
 
 function getGame() {
   const gameID = FlowRouter.getParam('id');
   return Games.findOne({_id: gameID});
 }
 
-function getPlayer(game) {
+function getPlayerOne(game) {
   const user = Meteor.user();
-  if(user._id === game.creator.id) {
-    return 'creator';
-  }
-  if(user._id === game.challenger.id) {
-    return 'challenger';
-  }
-  // TODO: Must be a guest, default to creator for now. Do we even want guests
-  // to view the board?
-  return 'creator';
+  const player = Game.getUserPlayer(game, user);
+  return player || 'creator';
 }
+
+function canFire(game) {
+  const user = Meteor.user();
+  return Game.userCanFire(game, user);
+}
+
+Template.game.onCreated(function() {
+  Session.set('move', null);
+});
 
 Template.game.helpers({
   invalid() {
@@ -34,13 +37,43 @@ Template.game.helpers({
   game() {
     return getGame();
   },
+  showBothBoards(game) {
+    if(game.state === 'active') return true;
+    if(game.state === 'ended') return true;
+    return false;
+  },
   ownBoard() {
     const game = getGame();
-    return Game.getOwnBoard(game, getPlayer(game));
+    return Game.getOwnBoard(game, getPlayerOne(game));
   },
   attackBoard() {
     const game = getGame();
-    return Game.getAttackBoard(game, getPlayer(game));
+    return Game.getAttackBoard(game, getPlayerOne(game));
+  },
+});
+
+Template.game_meta_data.helpers({
+  ownName(game) {
+    const player = getPlayerOne(game);
+    return game[player].name;
+  },
+  opponentName(game) {
+    const player = Game.oppositePlayer(getPlayerOne(game));
+    return game[player].name;
+  },
+  turnName(game) {
+    return game[game.current_player].name;
+  }
+});
+
+Template.game_boards.helpers({
+  ownPlayer() {
+    const game = getGame();
+    return getPlayerOne(game);
+  },
+  otherPlayer() {
+    const game = getGame();
+    return Game.oppositePlayer(getPlayerOne(game));
   },
 });
 
@@ -49,57 +82,55 @@ Template.game_actions.events({
     event.preventDefault();
 
     const game = getGame();
-    const selection = $('#selection').val();
-
-    if (selection.length === 2)
-    {
-      const row = parseInt(selection.slice(1, 2), 10);
-      const col = convertToIndex(selection.slice(0, 1));
-
-      console.log(game.current_player + " taking shot.\nAttempting to hit position: " + selection);
-
-      // Get shot information (TODO: Check if shot is valid!)
-      Game.fire(game, row, col);
-      Game.checkState(game);
-      Game.update(game);
-
-      $('#selection').val("");
+    if(!canFire(game)) {
+      throw new Meteor.Error('invalid-fire', 'User tried to shoot when not their turn');
     }
-  }
+
+    const move = Session.get('move');
+    if(!move) return;
+
+    // Get shot information (TODO: Check if shot is valid!)
+    Game.fire(game, move.row, move.col);
+    Game.checkState(game);
+    Game.update(game);
+
+    Session.set('move', null);
+  },
+  'click .joinGame'(event) {
+    event.preventDefault();
+
+    const game = getGame();
+    const user = Meteor.user();
+    if(!Game.userCanJoin(game, user)) {
+      throw new Meteor.Error('invalid-join', 'User cannot join game');
+    }
+
+    Game.joinWaiting(game, user);
+  },
 });
 
 Template.game_actions.helpers({
-  active() {
-    const game = getGame();
-    return game.state === 'active';
+  canFire(game) {
+    return canFire(game);
   },
-  ended() {
-    const game = getGame();
+  waiting(game) {
+    return game.state === 'waiting';
+  },
+  canJoin(game) {
+    const user = Meteor.user();
+    return Game.userCanJoin(game, user);
+  },
+  ended(game) {
     return game.state === 'ended';
   },
-});
-
-Template.game_meta_data.helpers({
-  ownName() {
-    const game = getGame();
-    const player = getPlayer(game);
-    return game[player].name;
+  move() {
+    const move = Session.get('move');
+    if(!move) return "";
+    return Board.squareObjToName(move);
   },
-  opponentName() {
-    const game = getGame();
-    const player = Game.oppositeUser(getPlayer(game));
-    return game[player].name;
-  },
-});
-
-Template.game_boards.helpers({
-  ownPlayer() {
-    const game = getGame();
-    return getPlayer(game);
-  },
-  otherPlayer() {
-    const game = getGame();
-    return Game.oppositeUser(getPlayer(game));
+  fireDisabled() {
+    const move = Session.get('move');
+    return move ? "" : "disabled";
   },
 });
 
@@ -111,7 +142,3 @@ Template.game_meta_foot.helpers({
     return this.game[this.game.winner].name;
   },
 });
-
-function convertToIndex(val) {
-  return 'ABCDEFGHIJ'.indexOf(val);
-}

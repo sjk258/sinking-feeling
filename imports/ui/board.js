@@ -1,30 +1,49 @@
 /** Configuration for JSHint to recognize automatic globals: */
 
-import { $ } from 'meteor/jquery';
+import * as Game from '/imports/api/game.js';
+import * as Board from '/imports/api/board.js';
 
 import './board.html';
 import './board.less';
 
+function isSelected(row, col) {
+  let move = Session.get('move');
+  if(!move) return false;
+  return move.row === row && move.col === col;
+}
+
+Template.board_row.helpers({
+  rowName(row) {
+    return 'ABCDEFGHIJ'[row];
+  },
+});
+
 Template.board_cell.helpers({
-  classes() {
-    let list = "cell-" + this.ship.state;
-    if(this.ship.state === "S") {
-      list += " cell-S-" + this.ship.ship;
+  classes(game, row, col, square, own) {
+    const user = Meteor.user();
+    let list = "cell-" + square.state;
+    if(square.state === "S") {
+      list += " cell-S-" + square.ship;
     }
-    if(this.game.state === 'active') {
-      if(!this.own) list += " clickable";
+    if(Game.userCanFire(game, user) && !own) {
+      if(square.state === "E") {
+        list += " clickable";
+      }
+      if(isSelected(row, col)) {
+        list += " selected";
+      }
     }
     return list;
   },
   cell() {
-    const col = 'ABCDEFGHIJ'[this.col];
-    return col + this.row;
+    return Board.squareObjToName(this);
   },
 });
 
 Template.board_cell.events({
   "click .clickable.cell"(event) {
     const target = event.currentTarget;
-    $('#selection').val(target.dataset.cell);
+    const move = Board.squareNameToObj(target.dataset.cell);
+    Session.set('move', move);
   }
 });

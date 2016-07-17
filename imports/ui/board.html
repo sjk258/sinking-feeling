@@ -2,16 +2,16 @@
   <table class="board">
     <tr>
       <th></th>
-      <th>A</th>
-      <th>B</th>
-      <th>C</th>
-      <th>D</th>
-      <th>E</th>
-      <th>F</th>
-      <th>G</th>
-      <th>H</th>
-      <th>I</th>
-      <th>J</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
     </tr>
     {{#each board}}
       {{> board_row data=this row=@index game=../game own=../own}}
@@ -21,14 +21,14 @@
 
 <template name="board_row">
   <tr>
-    <th>{{row}}</th>
+    <th>{{rowName row}}</th>
     {{#each data}}
-      {{> board_cell row=../row col=@index ship=this game=../game own=../own}}
+      {{> board_cell row=../row col=@index square=this game=../game own=../own}}
     {{/each}}
   </tr>
 </template>
 
 <template name="board_cell">
-  <td class="cell {{classes}}" data-state="{{state}}" data-cell="{{cell}}">
+  <td class="cell {{classes game row col square own}}" data-state="{{state}}" data-cell="{{cell}}">
   </td>
 </template>
