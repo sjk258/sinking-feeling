@@ -1,5 +1,5 @@
 import * as Ship from './ship.js';
-import * as Board from './board.js';
+import * as Square from './square.js';
 
 // The format of the log will look like this (depending on when in the game it
 // is being shown).
@@ -95,7 +95,7 @@ function makeStatus(ships) {
 export function determineResult(shot, status) {
   var result = 'miss';
   status.forEach(function(ship) {
-    if(Board.spaceIsOnAShip(shot, ship, ship.length)) {
+    if(Square.spaceIsOnAShip(shot, ship, ship.length)) {
       result = 'hit';
       ship.hits++;
       if(ship.hits >= ship.length){

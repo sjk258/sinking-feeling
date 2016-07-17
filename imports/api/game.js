@@ -1,6 +1,7 @@
 import * as AI from './ai.js';
 import * as Board from './board.js';
 import * as Ship from './ship.js';
+import * as Square from './square.js';
 import {Games} from './games.js';
 import {_} from 'meteor/underscore';
 
@@ -13,7 +14,7 @@ export function overlap(ship, row, col, vertical, ships) {
     else{
       ship_space.col += i;
     }
-    if(Board.spaceIsOnShip(ship_space, ships))
+    if(Square.spaceIsOnShip(ship_space, ships))
     {
       return true;
     }
