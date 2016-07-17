@@ -3,7 +3,7 @@
 
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
-import * as Board from '../api/board.js';
+import * as Square from '../api/square.js';
 
 import './game.html';
 import './game.less';
@@ -126,7 +126,7 @@ Template.game_actions.helpers({
   move() {
     const move = Session.get('move');
     if(!move) return "";
-    return Board.squareObjToName(move);
+    return Square.squareObjToName(move);
   },
   fireDisabled() {
     const move = Session.get('move');

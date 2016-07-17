@@ -1,9 +1,9 @@
-import { assert, expect } from 'meteor/practicalmeteor:chai';
+import { assert } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-import { _ } from 'meteor/underscore';
+
 import * as Ship from './ship.js';
-//import * as Board from './board.js';
 import * as Game from './game.js';
+import * as Util from './util.js';
 import {checkBoard} from './board.test.js';
 import {Games} from './games.js';
 
@@ -245,15 +245,15 @@ describe('api/game.js', function() {
           state: 'active',
           current_player: 'creator',
           creator: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [],
           },
           challenger: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [],
           },
         };
-        const game = JSON.parse(JSON.stringify(exp));
+        const game = Util.clone(exp);
         Game.checkStateActive(game);
         assert.deepEqual(exp, game);
       });
@@ -264,7 +264,7 @@ describe('api/game.js', function() {
           state: 'active',
           current_player: 'creator',
           creator: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [
               {row: 0, col: 0},
               {row: 1, col: 0},
@@ -274,7 +274,7 @@ describe('api/game.js', function() {
             ],
           },
           challenger: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [
               {row: 0, col: 0},
               {row: 1, col: 0},
@@ -284,7 +284,7 @@ describe('api/game.js', function() {
             ],
           },
         };
-        const game = JSON.parse(JSON.stringify(exp));
+        const game = Util.clone(exp);
         Game.checkStateActive(game);
         assert.deepEqual(exp, game);
       });
@@ -298,7 +298,7 @@ describe('api/game.js', function() {
             state: 'active',
             current_player: 'creator',
             creator: {
-              ships: Game.initShips(),
+              ships: Ship.create(),
               shots: [
                 {row: 0, col: 0},
                 {row: 0, col: 1},
@@ -320,7 +320,7 @@ describe('api/game.js', function() {
               ],
             },
             challenger: {
-              ships: Game.initShips(),
+              ships: Ship.create(),
               shots: [],
             },
           };
@@ -633,137 +633,6 @@ describe('api/game.js', function() {
       assert.equal(game.challenger.shots[0].col, 0);
       assert.equal(game.turn_number, 2);
       assert.equal(game.current_player, 'creator');
-    });
-  });
-
-  describe('overlap', function(){
-    it('single space', function(){
-      const expected = true;
-      const positions = {cruiser: { row: 0, col: 0, vertical: true}};
-      const test_type = "submarine";
-      const test_row = 2;
-      const test_col = 0;
-      const test_vertical = true;
-
-      const result = Game.overlap(test_type, test_row, test_col, test_vertical,
-         positions);
-
-      assert.equal(expected, result);
-    });
-    it('nothing', function(){
-      const expected = false;
-      const positions = {cruiser: { row: 0, col: 0, vertical: true}};
-      const test_type = "submarine";
-      const test_row = 3;
-      const test_col = 0;
-      const test_vertical = true;
-
-      const result = Game.overlap(test_type, test_row, test_col, test_vertical,
-         positions);
-
-      assert.equal(expected, result);
-    });
-  });
-
-  describe('placeShip', function() {
-    it('vertical at origin', function(){
-      var positions = {};
-      var row = 0;
-      var col = 0;
-      var vertical = true;
-
-      Game.placeShip("carrier", row, col, vertical, positions);
-
-      assert.equal(1, Object.keys(positions).length);
-      assert.equal(row, positions.carrier.row);
-      assert.equal(col, positions.carrier.col);
-      assert.equal(vertical, positions.carrier.vertical);
-    });
-    it('all five', function(){
-      var positions = {};
-      var ships = ["carrier", "battleship", "cruiser", "submarine", "destroyer"];
-      var row = 0;
-      var col = 0;
-      var vertical = true;
-
-      ships.forEach(function(shipType){
-        Game.placeShip(shipType, row, col, vertical, positions);
-        col++;
-      });
-
-      assert.equal(ships.length, Object.keys(positions).length);
-      assert.equal(0, positions.carrier.col);
-      assert.equal(1, positions.battleship.col);
-      assert.equal(2, positions.cruiser.col);
-      assert.equal(3, positions.submarine.col);
-      assert.equal(4, positions.destroyer.col);
-    });
-    it('change existing', function(){
-      var positions = {};
-      var ship = "carrier";
-      var row = 0;
-      var col1 = 0;
-      var col2 = 5;
-      var vertical = true;
-
-      Game.placeShip(ship, row, col1, vertical, positions);
-      Game.placeShip(ship, row, col2, vertical, positions);
-
-      assert.equal(1, Object.keys(positions).length);
-      assert.equal(col2, positions.carrier.col);
-    });
-    it('invalid type', function(){
-      var invalid_ship = "pt boat";
-      expect(function(){
-        Game.placeShip(invalid_ship, 0, 0, true, {});
-      }).to.throw('Unrecognised ship type');
-    });
-    it('ship overlaps another', function(){
-      const positions = {};
-      Game.placeShip("carrier", 0, 0, true, positions);
-      Game.placeShip("battleship", 0, 1, true, positions);
-
-      assert.throw(function(){
-        Game.placeShip("battleship", 0, 0, true, positions);
-      }, "Ships Overlapping");
-
-      assert.equal(0, positions.carrier.col); // Still there
-    });
-    it('move overlaps same', function(){
-      const positions = {};
-      Game.placeShip("carrier", 0, 0, true, positions);
-      Game.placeShip("carrier", 1, 0, true, positions);
-
-      assert.equal(1, Object.keys(positions).length); // Still there
-    });
-  });
-
-  describe('randomizeShips', function() {
-    it('should change the positions of the ships', function () {
-      const ships1 = Game.initShips();
-      const ships2 = {};
-      Ship.types.forEach(type => {
-        ships2[type] = _.clone(ships1[type]);
-      });
-      Game.randomizeShips(ships1);
-      assert(_.some(Ship.types, type => {
-        return ships1[type].row != ships2[type].row ||
-          ships1[type].col != ships2[type].col ||
-          ships1[type].vertical != ships2[type].vertical;
-      }));
-    });
-  });
-
-  describe('initShips', function() {
-    it('should return an object with all defined ship types', function() {
-      const ships = Game.initShips();
-      assert.sameMembers(Object.keys(ships), Ship.types);
-    });
-    it('should provide each ship with keys row, col, and vertical', function() {
-      const ships = Game.initShips();
-      Ship.types.forEach(type => {
-        assert.sameMembers(Object.keys(ships[type]), ['row', 'col', 'vertical']);
-      });
     });
   });
 

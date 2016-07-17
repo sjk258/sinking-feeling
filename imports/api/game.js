@@ -2,86 +2,6 @@ import * as AI from './ai.js';
 import * as Board from './board.js';
 import * as Ship from './ship.js';
 import {Games} from './games.js';
-import {_} from 'meteor/underscore';
-
-export function overlap(ship, row, col, vertical, ships) {
-  for(let i = 0; i < Ship.lengths[ship]; i++) {
-    var ship_space = { row: row, col: col };
-    if(vertical){
-      ship_space.row += i;
-    }
-    else{
-      ship_space.col += i;
-    }
-    if(Board.spaceIsOnShip(ship_space, ships))
-    {
-      return true;
-    }
-  }
-  return false;
-}
-
-export function checkOverlap(ship_type, row, col, vertical, positions) {
-  if (typeof positions[ship_type] != 'undefined'){
-    // This is moving a ship, we don't want to include the pre-move ship in the
-    // overlap test. This makes a copy that we can remove it from.
-    positions = JSON.parse(JSON.stringify(positions));
-    delete positions[ship_type];
-  }
-  if(overlap(ship_type, row, col, vertical, positions)){
-    throw 'Ships Overlapping';
-  }
-}
-
-export function placeShip(ship_type, row, col, vertical, positions) {
-  checkOverlap(ship_type, row, col, vertical, positions);
-
-  if (typeof positions[ship_type] == 'undefined') {
-    positions[ship_type] = {};
-  }
-  if(Ship.types.indexOf(ship_type) < 0) {
-    throw 'Unrecognised ship type';
-  }
-
-  positions[ship_type].row = row;
-  positions[ship_type].col = col;
-  positions[ship_type].vertical = vertical;
-}
-
-export function randomizeShips(ships) {
-  const makePossibilities = function (length) {
-    let i, j;
-    const result = [];
-    for (i = 0; i < 10; i++) {
-      for (j = 0; j < 10 - length; j++) {
-        result.push([i, j, false]);
-        result.push([j, i, true]);
-      }
-    }
-    return result;
-  };
-  Ship.types.forEach(type => {
-    const possibs = _.shuffle(makePossibilities(Ship.lengths[type]));
-    _.some(possibs, possib => {
-      try {
-        placeShip(type, possib[0], possib[1], possib[2], ships);
-        return true;
-      } catch(e) {
-        return false;
-      }
-    });
-  });
-}
-
-export function initShips() {
-  const ships = {};
-  placeShip("carrier", 0, 0, true, ships);
-  placeShip("battleship", 0, 1, true, ships);
-  placeShip("cruiser", 0, 2, true, ships);
-  placeShip("submarine", 0, 3, true, ships);
-  placeShip("destroyer", 0, 4, true, ships);
-  return ships;
-}
 
 export function create(user, first_player='creator') {
   var game = {
@@ -89,19 +9,19 @@ export function create(user, first_player='creator') {
     creator: {
       id: user._id,
       name: user.username,
-      ships: initShips(),
+      ships: Ship.create(),
       ready: false,
     },
     challenger: {
-      ships: initShips(),
+      ships: Ship.create(),
       ready: false,
     },
     first_player: first_player,
     state: 'created',
   };
 
-  randomizeShips(game.creator.ships);
-  randomizeShips(game.challenger.ships);
+  Ship.randomize(game.creator.ships);
+  Ship.randomize(game.challenger.ships);
 
   game._id = Games.insert(game);
   return game;
@@ -323,7 +243,6 @@ export function fire(game, row, col) {
     game.turn_number += 1;
   }
 }
-
 
 // only exported for testing, don't call this
 export function oppositePlayer(user){

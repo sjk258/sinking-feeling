@@ -1,7 +1,7 @@
 /** Configuration for JSHint to recognize automatic globals: */
 
 import * as Game from '/imports/api/game.js';
-import * as Board from '/imports/api/board.js';
+import * as Square from '/imports/api/square.js';
 
 import './board.html';
 import './board.less';
@@ -36,14 +36,14 @@ Template.board_cell.helpers({
     return list;
   },
   cell() {
-    return Board.squareObjToName(this);
+    return Square.squareObjToName(this);
   },
 });
 
 Template.board_cell.events({
   "click .clickable.cell"(event) {
     const target = event.currentTarget;
-    const move = Board.squareNameToObj(target.dataset.cell);
+    const move = Square.squareNameToObj(target.dataset.cell);
     Session.set('move', move);
   }
 });
