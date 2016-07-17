@@ -64,7 +64,7 @@ describe('log', function() {
       shot(game, 'creator', {row: 9, col: 8, time: pair[0]});
       shot(game, 'challenger', {row: 9, col: 8, time: pair[0]});
       return game;
-    };
+    }
 
     it('created game', function() {
       const game = startGame({});
