@@ -76,15 +76,6 @@ export function randomizeShips(ships) {
   });
 }
 
-export function initShips() {
-  const ships = {};
-  placeShip("carrier", 0, 0, true, ships);
-  placeShip("battleship", 0, 1, true, ships);
-  placeShip("cruiser", 0, 2, true, ships);
-  placeShip("submarine", 0, 3, true, ships);
-  placeShip("destroyer", 0, 4, true, ships);
-  return ships;
-}
 
 export function create(user, first_player='creator') {
   var game = {
@@ -92,11 +83,11 @@ export function create(user, first_player='creator') {
     creator: {
       id: user._id,
       name: user.username,
-      ships: initShips(),
+      ships: Ship.create(),
       ready: false,
     },
     challenger: {
-      ships: initShips(),
+      ships: Ship.create(),
       ready: false,
     },
     first_player: first_player,

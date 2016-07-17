@@ -28,4 +28,18 @@ describe('api/ships.js', function() {
       });
     });
   });
+
+  describe('create', function() {
+    it('should return an object with all defined ship types', function() {
+      const ships = Ship.create();
+      assert.sameMembers(Object.keys(ships), Ship.types);
+    });
+    it('should provide each ship with keys row, col, and vertical', function() {
+      const ships = Ship.create();
+      Ship.types.forEach(type => {
+        assert.sameMembers(Object.keys(ships[type]), ['row', 'col', 'vertical']);
+      });
+    });
+  });
+
 });

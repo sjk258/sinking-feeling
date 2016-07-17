@@ -1,5 +1,5 @@
 import { assert } from 'meteor/practicalmeteor:chai';
-import * as Game from './game.js';
+import * as Ship from './ship.js';
 import * as Log from './log.js';
 
 describe('log', function() {
@@ -29,8 +29,8 @@ describe('log', function() {
 
     const setup_complete = new Date(2016, 01, 01, 01, 01, 04);
     function setupShips(game) {
-      game.creator.ships = Game.initShips();
-      game.challenger.ships = Game.initShips();
+      game.creator.ships = Ship.create();
+      game.challenger.ships = Ship.create();
       game.time_started = setup_complete;
       game.state = 'active';
       game.first_player = 'creator';

@@ -246,11 +246,11 @@ describe('api/game.js', function() {
           state: 'active',
           current_player: 'creator',
           creator: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [],
           },
           challenger: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [],
           },
         };
@@ -265,7 +265,7 @@ describe('api/game.js', function() {
           state: 'active',
           current_player: 'creator',
           creator: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [
               {row: 0, col: 0},
               {row: 1, col: 0},
@@ -275,7 +275,7 @@ describe('api/game.js', function() {
             ],
           },
           challenger: {
-            ships: Game.initShips(),
+            ships: Ship.create(),
             shots: [
               {row: 0, col: 0},
               {row: 1, col: 0},
@@ -299,7 +299,7 @@ describe('api/game.js', function() {
             state: 'active',
             current_player: 'creator',
             creator: {
-              ships: Game.initShips(),
+              ships: Ship.create(),
               shots: [
                 {row: 0, col: 0},
                 {row: 0, col: 1},
@@ -321,7 +321,7 @@ describe('api/game.js', function() {
               ],
             },
             challenger: {
-              ships: Game.initShips(),
+              ships: Ship.create(),
               shots: [],
             },
           };
@@ -741,7 +741,7 @@ describe('api/game.js', function() {
 
   describe('randomizeShips', function() {
     it('should change the positions of the ships', function () {
-      const ships1 = Game.initShips();
+      const ships1 = Ship.create();
       const ships2 = {};
       Ship.types.forEach(type => {
         ships2[type] = _.clone(ships1[type]);
@@ -755,18 +755,6 @@ describe('api/game.js', function() {
     });
   });
 
-  describe('initShips', function() {
-    it('should return an object with all defined ship types', function() {
-      const ships = Game.initShips();
-      assert.sameMembers(Object.keys(ships), Ship.types);
-    });
-    it('should provide each ship with keys row, col, and vertical', function() {
-      const ships = Game.initShips();
-      Ship.types.forEach(type => {
-        assert.sameMembers(Object.keys(ships[type]), ['row', 'col', 'vertical']);
-      });
-    });
-  });
 
   describe('getOwnBoard', function() {
     it('should work with empty board', function() {
