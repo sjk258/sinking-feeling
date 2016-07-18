@@ -1,11 +1,18 @@
 /* globals FlowRouter */
 import { Template } from 'meteor/templating';
 
+import { $ } from 'meteor/jquery';
+
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
 
 import './home.html';
 import './home.less';
+
+Template.home.onCreated(function bodyOnCreated() {
+  //this.state = new ReactiveDict();
+  
+});
 
 Template.home.helpers({
   games() {
@@ -44,7 +51,7 @@ Template.home_game.helpers({
     }
     
     return state;
-  },
+  }
 });
 
 Template.home.events({
@@ -52,7 +59,9 @@ Template.home.events({
     const user = Meteor.user();
     if(!user) throw Meteor.error('not-logged-in');
 
-    const game = Game.create(user);
+    const oppSelection = $("input[name='opp-radio']:checked").val();
+
+    const game = Game.create(user, oppSelection);
     game.current_player = "creator";
     Games.update(game._id, {$set: game});
     FlowRouter.go('game', { id: game._id });

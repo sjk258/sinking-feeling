@@ -83,7 +83,7 @@ export function initShips() {
   return ships;
 }
 
-export function create(creator) {
+export function create(creator, aiName = 'sue') {
   var game = {
     created_at: new Date(),
     creator: {
@@ -108,8 +108,8 @@ export function create(creator) {
 
   // TODO: This hard-codes the opponent as an AI. When AI selection is
   // implemented, this three assignments should get moved out.
-  game.challenger.ai = 'sue';
-  game.challenger.name = AI.getPlayer('sue').full_name;
+  game.challenger.ai = aiName;
+  game.challenger.name = AI.getPlayer(aiName).full_name;
   game.challenger.ready = true;
 
   // TODO: This changes setup to active and should go away when we implement
