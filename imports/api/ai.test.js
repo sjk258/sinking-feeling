@@ -97,4 +97,36 @@ describe('api/ai.js', function() {
       });
     });
   });
+
+  describe('getPlayers', function() {
+    it('should return an array of objects', function() {
+      const players = AI.getPlayers();
+      assert.isArray(players);
+      for(let player of players) {
+        assert.isObject(player);
+      }
+    });
+    it('should return objects with correct fields', function() {
+      const players = AI.getPlayers();
+      for(let player of players) {
+        assert.property(player, 'name');
+        assert.property(player, 'full_name');
+        assert.property(player, 'makeMove');
+      }
+    });
+    it('should sort by full_name ascending by default', function() {
+      const players = AI.getPlayers();
+      assert.isArray(players);
+      for(let i = 0; i < players.length-1; i++) {
+        assert(players[i].full_name <= players[i+1].full_name);
+      }
+    });
+    it('should sort by name descending upon request', function() {
+      const players = AI.getPlayers('name', true);
+      assert.isArray(players);
+      for(let i = 0; i < players.length-1; i++) {
+        assert(players[i].name >= players[i+1].name);
+      }
+    });
+  });
 });

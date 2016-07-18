@@ -47,3 +47,27 @@ export function getPlayer(name) {
 
   return {name, full_name, makeMove};
 }
+
+export function getPlayers(field='full_name', descending=true) {
+  const names = getNames();
+  const players = [];
+  for(let name in names) {
+    players.push(getPlayer(name));
+  }
+
+  let cmp;
+  if(descending) {
+    cmp = (a, b) => {
+      if(a === b) return 0;
+      return (b < a) ? -1 : 1;
+    };
+  } else {
+    cmp = (a, b) => {
+      if(a === b) return 0;
+      return (a < b) ? -1 : 1;
+    };
+  }
+
+  players.sort((a, b) => (cmp(a[field], b[field])));
+  return players;
+}
