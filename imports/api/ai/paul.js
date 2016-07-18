@@ -6,6 +6,12 @@ import * as Jack from './jack.js';
 
 export const name = 'paul';
 export const full_name = 'Parity Paul';
+export const difficulty = 3;
+export const difficulty_name = "Moderate";
+export const description = "Parity Paul is a modest improvement over Jack. " +
+"He knows that the smallest ship is two squares in length, so he makes his " +
+"random shots in a checkboard pattern. Unfortunately, he still tends to " +
+"waste time shooting around sunk ships.";
 
 export function checkParity(move, shift, mod=2) {
   return (move.row + move.col + shift) % mod === 0;
