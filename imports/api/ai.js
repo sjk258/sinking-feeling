@@ -35,5 +35,15 @@ export function getPlayer(name) {
   if (!(name in ai_players)) {
     name = default_name;
   }
-  return ai_players[name];
+
+  // Instead of returning the player as-is, construct a new object with just
+  // the fields we want to expose. This also prevents the user from
+  // inadvertently changing the stored data.
+  const player = ai_players[name];
+
+  name = player.name;
+  const full_name = player.full_name;
+  const makeMove = player.makeMove;
+
+  return {name, full_name, makeMove};
 }
