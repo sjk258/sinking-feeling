@@ -2,12 +2,19 @@ import {_} from 'meteor/underscore';
 
 import * as AI from '../ai.js';
 import * as Ship from '../ship.js';
-
 import * as Jack from './jack.js';
 import * as Pat from './pat.js';
 
 export const name = 'felicity';
 export const full_name = 'Focused Felicity';
+export const difficulty = 5;
+export const difficulty_name = "Hard";
+export const description = "Focused Felicity is a challenging AI who is " +
+"focused on winning. She starts out selecting squares at random much like " +
+"Partioning Pat does (forming a pattern based on the lengths of the " +
+"remaining ships). However, she's much smarter in how she responds to hit " +
+"ships: she targets based on the arrangement of the hits and misses, and she " +
+"stops focusing on the area once all hit ships are sunk.";
 
 export function hunt(board, state) {
   return Pat.hunt(board, state);

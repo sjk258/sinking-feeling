@@ -2,6 +2,11 @@ import {_} from 'meteor/underscore';
 
 export const name = 'ralph';
 export const full_name = 'Random Ralph';
+export const difficulty = 1;
+export const difficulty_name = "Easy";
+export const description = "Random Ralph is an easy player to beat: he " +
+"selects squares to target at random. Even if he hits a ship, he'll continue " +
+"to fire randomly.";
 
 /* Converts an integer in the range 0 to 99 to a move: {row: <val>, col: <val>}
  * Each integer uniquely identifies a move

@@ -1,30 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 
-/**
- * Symbolic name of this AI.
- * @constant {String}
- * @default
- */
 export const name = 'sue';
-
-/**
- * User-friendly name of this AI.
- * @constant {String}
- * @default
- */
 export const full_name = 'Sequential Sue';
+export const difficulty = 0;
+export const difficulty_name = "Trivial";
+export const description = "Sequential Sue is a trivially easy player to " +
+"beat: she makes her turns in a predicatable sequence, starting at the top " +
+"right corner of the board.";
 
-/**
- * Return the move that Sue would like to make next.
- *
- * @param {Object[][]} board - Two-dimensional array representing the board.
- * @param {string} board[][].state - State value for a board square.
- * @param {Object} state - Opaque internal state maintained by AI.
- *
- * @returns {number[]} Two-element array representing [row,col] of move.
- *
- * @throws {Meteor.error} No more moves are possible
- */
 export function makeMove(board) {
   const squares = board.squares;
   let row = 0;

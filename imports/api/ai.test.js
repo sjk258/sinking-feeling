@@ -43,6 +43,24 @@ describe('api/ai.js', function() {
           assert.property(ai, 'full_name');
           assert.isString(ai.full_name);
         });
+        it('should return an object with numeric attribute difficulty', function() {
+          const ai = AI.getPlayer(name);
+          assert.isObject(ai);
+          assert.property(ai, 'difficulty');
+          assert.isNumber(ai.difficulty);
+        });
+        it('should return an object with string attribute difficulty_name', function() {
+          const ai = AI.getPlayer(name);
+          assert.isObject(ai);
+          assert.property(ai, 'difficulty_name');
+          assert.isString(ai.difficulty_name);
+        });
+        it('should return an object with string attribute description', function() {
+          const ai = AI.getPlayer(name);
+          assert.isObject(ai);
+          assert.property(ai, 'description');
+          assert.isString(ai.description);
+        });
         it('should return an object with method makeMove', function() {
           const ai = AI.getPlayer(name);
           assert.isObject(ai);
@@ -109,8 +127,12 @@ describe('api/ai.js', function() {
     it('should return objects with correct fields', function() {
       const players = AI.getPlayers();
       for(let player of players) {
+        assert.lengthOf(Object.keys(player), 6);
         assert.property(player, 'name');
         assert.property(player, 'full_name');
+        assert.property(player, 'difficulty');
+        assert.property(player, 'difficulty_name');
+        assert.property(player, 'description');
         assert.property(player, 'makeMove');
       }
     });

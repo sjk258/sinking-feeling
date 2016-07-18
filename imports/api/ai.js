@@ -43,9 +43,12 @@ export function getPlayer(name) {
 
   name = player.name;
   const full_name = player.full_name;
+  const difficulty = player.difficulty;
+  const difficulty_name = player.difficulty_name;
+  const description = player.description;
   const makeMove = player.makeMove;
 
-  return {name, full_name, makeMove};
+  return {name, full_name, difficulty, difficulty_name, description, makeMove};
 }
 
 export function getPlayers(field='full_name', descending=true) {
