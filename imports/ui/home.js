@@ -1,6 +1,6 @@
 /* globals FlowRouter */
 import { Template } from 'meteor/templating';
-
+import { $ } from 'meteor/jquery';
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
 
@@ -52,8 +52,10 @@ Template.home.events({
     const user = Meteor.user();
     if(!user) throw new Meteor.error('not-logged-in');
 
+    const oppSelection = $("input[name='opp-radio']:checked").val();
+
     const game = Game.create(user);
-    Game.initVsAi(game, 'sue');
+    Game.initVsAi(game, oppSelection);
     FlowRouter.go('game', { id: game._id });
   },
   'click #createWait'() {
