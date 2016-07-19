@@ -7,6 +7,10 @@ import * as Game from '../api/game.js';
 import './home.html';
 import './home.less';
 
+Template.home.onCreated(function() {
+  Session.set('pageState', 'gameList');
+});
+
 Template.home.helpers({
   games() {
     return Games.find({});

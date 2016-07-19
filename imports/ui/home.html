@@ -3,22 +3,40 @@
     <span class="home-page-title">Home</span>
   </div>
 
-  <div>
-    <ul class="list-group">
-      {{#each games}}
-        {{> home_game}}
-      {{/each}}
-    </ul>
-  </div>
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#gamelist">Game List</a></li>
+    <li><a data-toggle="tab" href="#createGame">Create Game</a></li>
+    <li><a data-toggle="tab" href="#waitingRoom">Waiting Room</a></li>
+  </ul>
 
-  <div>
-    {{> game_create_form}}
+  <div class="tab-content">
+    <br/>
+    
+    <div id="gamelist" class="tab-pane fade in  active">
+      <ul class="list-group">
+        {{#each games}}
+          {{> home_game}}
+        {{/each}}
+      </ul>
+    </div>
+  
+
+    <div id="createGame" class="tab-pane fade">
+      {{> game_create_form}}
+      {{#if currentUser}}
+        <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game</button>
+      {{else}}
+        Log in to create a game.
+      {{/if}}
+    </div>
+
+    <div id="waitingRoom" class="tab-pane fade">
     {{#if currentUser}}
-      <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game</button>
-      <button id="createWait" type="submit" class="btn btn-md">List in Waiting Room</button>
-    {{else}}
-      Log in to create a game.
-    {{/if}}
+        <button id="createWait" type="submit" class="btn btn-md">List in Waiting Room</button>
+      {{else}}
+        Log in to create a game.
+      {{/if}}
+    </div>
   </div>
 </template>
 
