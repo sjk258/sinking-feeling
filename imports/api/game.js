@@ -4,7 +4,7 @@ import * as Ship from './ship.js';
 import {Games} from './games.js';
 
 
-export function create(user, gameName='Default Name', first_player=null) {
+export function create(user, first_player=null, gameName='Default Name') {
   var game = {
     created_at: new Date(),
     name: gameName,

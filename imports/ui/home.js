@@ -91,7 +91,7 @@ Template.home.events({
 
     if (Session.get('isOpponentAI'))
     {
-      game = Game.create(user, $("#name-input").val());
+      game = Game.create(user, null, $("#name-input").val());
       Game.initVsAi(game, Session.get('selectedAI').name);
     }
     else if (Session.get('isOpponentFriend'))
@@ -112,13 +112,13 @@ Template.home.events({
       }
       else
       {
-        game = Game.create(user, $("#name-input").val());
+        game = Game.create(user, null, $("#name-input").val());
         Game.joinWaiting(game, oppUser);
       }
     }
     else  // Post to waiting room
     {
-      game = Game.create(user, $("#name-input").val());
+      game = Game.create(user, null, $("#name-input").val());
       Game.initToWaiting(game);
     }
 
