@@ -60,7 +60,19 @@ describe('api/game.js', function() {
         assert.isDefined(game.challenger.ships[type]);
       });
     });
+    it('should set default first player', function(){
+      const game = Game.create(user);
+
+      assert.equal(game.first_player, 'creator');
+    })
+    it('should set first player with argument', function(){
+      const first_test_value = 'this is the test value for the first player';
+      const game = Game.create(user, first_test_value);
+
+      assert.equal(game.first_player, first_test_value);
+    });
   });
+
   describe('update', function() {
     let user = {};
     beforeEach(function(){
