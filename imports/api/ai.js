@@ -29,6 +29,7 @@ const ai_players = {
 export const default_name = 'sue';
 
 export function getNames() {
+  //return ['sue','ralph','jack','paul','pat','felicity','chad'];
   return Object.keys(ai_players);
 }
 
@@ -53,11 +54,11 @@ export function getPlayer(name) {
   return {name, full_name, difficulty, difficulty_name, description, makeMove};
 }
 
-export function getPlayers(field='full_name', descending=true) {
+export function getPlayers(field='full_name', descending=false) {
   const names = getNames();
   const players = [];
-  for(let name in names) {
-    players.push(getPlayer(name));
+  for(var name in names) {
+    players.push(getPlayer(names[name]));
   }
 
   let cmp;

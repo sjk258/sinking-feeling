@@ -78,6 +78,17 @@ describe('api/game.js', function() {
 
       assert.equal(game.first_player, first_test_value);
     });
+    it('should set the game name to \'Default Name\'', function(){
+      const game = Game.create(user);
+
+      assert.equal(game.name, 'Default Name');
+    });
+    it('should set the game name with arguement', function(){
+      const game_name_value = 'game name';
+      const game = Game.create(user, null, game_name_value);
+
+      assert.equal(game.name, game_name_value);
+    });
   });
 
   describe('update', function() {
