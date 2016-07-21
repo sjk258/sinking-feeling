@@ -3,7 +3,8 @@ import * as Board from './board.js';
 import * as Ship from './ship.js';
 import {Games} from './games.js';
 
-export function create(user, gameName='Default Name', first_player='creator') {
+
+export function create(user, gameName='Default Name', first_player=null) {
   var game = {
     created_at: new Date(),
     name: gameName,
@@ -20,6 +21,12 @@ export function create(user, gameName='Default Name', first_player='creator') {
     first_player: first_player,
     state: 'created',
   };
+
+  const player_names = ['creator', 'challenger'];
+  if(game.first_player === null){
+    game.first_player = player_names[
+      Math.floor(Math.random() * player_names.length)];
+  }
 
   Ship.randomize(game.creator.ships);
   Ship.randomize(game.challenger.ships);
