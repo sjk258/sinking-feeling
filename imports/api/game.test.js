@@ -269,7 +269,7 @@ describe('api/game.js', function() {
   });
 
   describe('checkAiFirstShot', function(){
-    let game = {}
+    let game = {};
     beforeEach(function() {
       game = {
         first_player: 'creator',
@@ -296,7 +296,7 @@ describe('api/game.js', function() {
       game.challenger.ai = 'a value';
 
       // I couldn't get this test to work, as the function override didn't take
-      // effect correctly. The only other way is to create a full AI. 
+      // effect correctly. The only other way is to create a full AI.
       // var saveComputerShot = Game.computerShot;
       // var shotTaken = false;
       // debugger;
