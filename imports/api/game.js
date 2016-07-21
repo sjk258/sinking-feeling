@@ -3,9 +3,10 @@ import * as Board from './board.js';
 import * as Ship from './ship.js';
 import {Games} from './games.js';
 
-export function create(user, first_player='creator') {
+export function create(user, gameName='Default Name', first_player='creator') {
   var game = {
     created_at: new Date(),
+    name: gameName,
     creator: {
       id: user._id,
       name: user.username,

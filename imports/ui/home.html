@@ -4,15 +4,15 @@
   </div>
 
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#gamelist">Game List</a></li>
-    <li><a data-toggle="tab" href="#createGame">Create Game</a></li>
-    <li><a data-toggle="tab" href="#waitingRoom">Waiting Room</a></li>
+    <li class="active"><a data-toggle="tab" href="#gamelistTab">Game List</a></li>
+    <li><a data-toggle="tab" href="#createGameTab">Create Game</a></li>
+    <li><a data-toggle="tab" href="#waitingRoomTab">Waiting Room</a></li>
   </ul>
 
   <div class="tab-content">
     <br/>
     
-    <div id="gamelist" class="tab-pane fade in  active">
+    <div id="gamelistTab" class="tab-pane fade in  active">
       <ul class="list-group">
         {{#each games}}
           {{> home_game}}
@@ -21,8 +21,9 @@
     </div>
   
 
-    <div id="createGame" class="tab-pane fade">
+    <div id="createGameTab" class="tab-pane fade">
       {{> game_create_form}}
+      <br />
       {{#if currentUser}}
         <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game</button>
       {{else}}
@@ -30,9 +31,10 @@
       {{/if}}
     </div>
 
-    <div id="waitingRoom" class="tab-pane fade">
-    {{#if currentUser}}
-        <button id="createWait" type="submit" class="btn btn-md">List in Waiting Room</button>
+    <div id="waitingRoomTab" class="tab-pane fade">
+      {{#if currentUser}}
+      <!--<button id="createWait" type="submit" class="btn btn-md">List in Waiting Room</button>-->
+      {{> list_of_wait_games}}
       {{else}}
         Log in to create a game.
       {{/if}}
@@ -45,28 +47,28 @@
     <div class="list-item">
       <table style="width:100%;table-layout:fixed;">
         <tbody>
-        <tr>
-          <td>
-            <span class="game-title">{{_id}}</span>
-            {{#with gameState _id}}
-              <span class="label {{label_style}}">{{state}}</span>
-            {{/with}}
-            <span class="badge">{{turn_number}}</span>
-          </td>
-          <td rowspan="2" width="60px" align="center">
-          
-          </td>
-          <td rowspan="2" width="20px" align="center">
-            <a href="#" class="deleteGame">
-              <span class="glyphicon glyphicon-remove"></span>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span class="game-players">{{creator.name}} vs. {{challenger.name}}</span>
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <span class="game-title">{{name}}</span>
+              {{#with gameState _id}}
+                <span class="label {{label_style}}">{{state}}</span>
+              {{/with}}
+              <span class="badge">{{turn_number}}</span>
+            </td>
+            <td rowspan="2" width="60px" align="center">
+            
+            </td>
+            <td rowspan="2" width="20px" align="center">
+              <a href="#" class="deleteGame">
+                <span class="glyphicon glyphicon-remove"></span>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span class="game-players">{{creator.name}} vs. {{challenger.name}}</span>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -74,65 +76,57 @@
 </template>
 
 <template name="game_create_form">
-  <form id="newGameForm">
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <div class="form-group">
-              <label for="gameName">Name</label>
-              <input type="text" class="form-control" id="gameName">
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td style="width:20%">
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="sue">Sequential Sue</label>
-            </div>
-          </td>
-          <td style="width:20%">
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="ralph">Random Ralph</label>
-            </div>
-          </td>
-          <td style="width:20%">
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="jack">Geometric Jack</label>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="paul">Parity Paul</label>
-            </div>
-          </td>
-          <td>
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="pat">Partitioning Pat</label>
-            </div>
-          </td>
-          <td>
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="felicity">Focused Felicity</label>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="preston" disabled>Probablistic Preston</label>
-            </div>
-          </td>
-          <td>
-            <div class="radio">
-              <label><input type="radio" name="opp-radio" value="chad">Cheating Chad</label>
-            </div>
-          </td>
-        </tr>
+  <div class="form-group">
+    <label for="name-input">Name</label>
+    <input class="form-control" id="name-input" type="text">
+  </div>
 
-      </tbody>
-    </table>
-  </form>
+  <div id="select-opp-div">
+    <label>Opponents</label>
+    {{#each aiPlayers}}
+      <div class="radio">
+        <label><input type="radio" name="opp-radio" value="{{name}}">{{full_name}}</label>
+      </div>
+    {{/each}}
+    <div class="radio">
+      <label><input type="radio" name="opp-radio" value="waiting">Post to Waiting Room</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="opp-radio" value="friend">Friend</label>
+    </div>
+  </div>
+  <br />
+  {{#if isOpponentAi}}
+    {{#with selectedAi}}
+      <p><h3>{{full_name}}</h3></p>
+      <p><span><strong>Difficulty: </strong>{{difficulty_name}}</span></p>
+      <p><span><strong>Description: </strong>{{description}}</span></p>
+    {{/with}}
+  {{/if}}
+  {{#if isOpponentFriend}}
+    <div class="form-group">
+      <label for="friend-input">Friend Account</label>
+      <input class="form-control" id="friend-input" type="text">
+    </div>
+  {{/if}}
+</template>
+
+<template name="list_of_wait_games">
+  <div class="list-item" id="wait-list-game">
+  {{#each games}}
+    <a href="#" class="list-group-item joinGame">
+      <table style="width:100%;table-layout:fixed;">
+        <tbody>
+          <tr>
+            <td>
+              <span class="game-title">{{name}}</span>
+              <span class="label label-warning">waiting</span>
+            </td>
+          </tr>
+          <tr><td><span class="game-players">By {{creator.name}}</span></td></tr>
+        </tbody>
+      </table>
+    </a>
+  {{/each}}
+  </div>
 </template>

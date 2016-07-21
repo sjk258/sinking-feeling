@@ -3,18 +3,39 @@ import { Template } from 'meteor/templating';
 import { $ } from 'meteor/jquery';
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
+import * as AI from '../api/ai.js';
 
 import './home.html';
 import './home.less';
 
 Template.home.onCreated(function() {
-  Session.set('pageState', 'gameList');
+  Session.set('selectedAI', null);
+  Session.set('isOpponentAI', false);
+  Session.set('isOpponentFriend', false);
 });
 
 Template.home.helpers({
   games() {
-    return Games.find({});
+    if (Meteor.userId() !== null)
+    {
+      return Games.find( { $or: [ {'creator.id': Meteor.userId()}, {'challenger.id': Meteor.userId() } ] } );
+    }
   },
+});
+
+Template.game_create_form.helpers({
+  aiPlayers() {
+    return AI.getPlayers("difficulty");
+  },
+  isOpponentAi() {
+    return Session.get('isOpponentAI');
+  },
+  isOpponentFriend() {
+    return Session.get('isOpponentFriend');
+  },
+  selectedAi() {
+    return Session.get('selectedAI');
+  }
 });
 
 Template.home_game.helpers({
@@ -51,30 +72,107 @@ Template.home_game.helpers({
   },
 });
 
+Template.list_of_wait_games.helpers({
+  games() {
+    if (Meteor.userId() !== null)
+    {
+      return Games.find( { 'state': 'waiting' } );
+    }
+  }
+});
+
 Template.home.events({
   'click #createGame'() {
     const user = Meteor.user();
     if(!user) throw new Meteor.error('not-logged-in');
 
-    const oppSelection = $("input[name='opp-radio']:checked").val();
+    let gotoGame = true;
+    var game;
 
-    const game = Game.create(user);
-    Game.initVsAi(game, oppSelection);
-    FlowRouter.go('game', { id: game._id });
-  },
-  'click #createWait'() {
-    const user = Meteor.user();
-    if(!user) throw new Meteor.error('not-logged-in');
+    if (Session.get('isOpponentAI'))
+    {
+      game = Game.create(user, $("#name-input").val());
+      Game.initVsAi(game, Session.get('selectedAI').name);
+    }
+    else if (Session.get('isOpponentFriend'))
+    {
+      const oppUsername = $("#friend-input").val();
 
-    const game = Game.create(user);
-    Game.initToWaiting(game);
-    FlowRouter.go('game', { id: game._id });
-  },
+      const oppUser = Meteor.users.findOne( { 'username': oppUsername } );
+
+      if (oppUser === null || oppUser === undefined)
+      {
+        console.log("User doesn't exist...");
+        gotoGame = false;
+      }
+      else if (oppUser._id === user._id)
+      {
+        console.log("Can't play against yourself...");
+        gotoGame = false;
+      }
+      else
+      {
+        game = Game.create(user, $("#name-input").val());
+        Game.joinWaiting(game, oppUser);
+      }
+    }
+    else  // Post to waiting room
+    {
+      game = Game.create(user, $("#name-input").val());
+      Game.initToWaiting(game);
+    }
+
+    if (gotoGame)
+    {
+      FlowRouter.go('game', { id: game._id });
+    }
+  }
 });
 
 Template.home_game.events({
   'click .deleteGame'(event) {
     event.preventDefault();
     Games.remove(this._id);
+  }
+});
+
+Template.game_create_form.events({
+  'change #select-opp-div'() {
+    const oppSelection = $("input[name='opp-radio']:checked").val();
+
+    if (oppSelection === 'friend')
+    {
+      Session.set('isOpponentAI', false);
+      Session.set('isOpponentFriend', true);
+    }
+    else if (oppSelection === 'waiting')
+    {
+      Session.set('isOpponentAI', false);
+      Session.set('isOpponentFriend', false);
+    }
+    else
+    {
+      Session.set('isOpponentAI', true);
+      Session.set('isOpponentFriend', false);
+      Session.set('selectedAI', AI.getPlayer(oppSelection));
+    }
+  },
+});
+
+Template.list_of_wait_games.events({
+  'click .joinGame'(event) {
+    event.preventDefault();
+
+    const game = Games.findOne( { '_id': this._id } );
+
+    if (game.creator.id === Meteor.userId())
+    {
+      console.log("Cant join own game!");
+    }
+    else
+    {
+      Game.joinWaiting(game, Meteor.user());
+      FlowRouter.go('game', { id: game._id });
+    }
   }
 });
