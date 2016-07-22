@@ -121,6 +121,18 @@ export function checkStateSetup(game) {
 
   game.turn_number = 0;
   game.time_started = new Date();
+
+  checkAiFirstShot(game);
+}
+
+export function checkAiFirstShot(game){
+  if(game.first_player == 'challenger'){
+    if (typeof game.challenger.ai != 'undefined'){
+      computerShot(game);
+      game.turn_number++;
+      game.current_player = 'creator';
+    }
+  }
 }
 
 export function checkStateActive(game) {
