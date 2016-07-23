@@ -5,25 +5,25 @@
 
   <div id="gamelistTab" class="tab-pane fade in  active">
     <ul class="list-group">
-      {{#each games}}
-        {{> home_game}}
+      {{#each game in games}}
+        {{> home_game game=game}}
       {{/each}}
     </ul>
   </div>
 </template>
 
 <template name="home_game">
-  <a href="/game/{{_id}}" class="list-group-item">
+  <a href="/game/{{game._id}}" class="list-group-item">
     <div class="list-item">
       <table style="width:100%;table-layout:fixed;">
         <tbody>
           <tr>
             <td>
-              <span class="game-title">{{name}}</span>
-              {{#with gameState _id}}
+              <span class="game-title">{{title game}}</span>
+              {{#with gameState game._id}}
                 <span class="label {{label_style}}">{{state}}</span>
               {{/with}}
-              <span class="badge">{{turn_number}}</span>
+              <span class="badge">{{game.turn_number}}</span>
             </td>
             <td rowspan="2" width="60px" align="center">
             
@@ -36,7 +36,7 @@
           </tr>
           <tr>
             <td>
-              <span class="game-players">{{creator.name}} vs. {{challenger.name}}</span>
+              <span class="game-players">{{game.creator.name}} vs. {{game.challenger.name}}</span>
             </td>
           </tr>
         </tbody>

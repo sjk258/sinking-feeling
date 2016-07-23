@@ -78,16 +78,18 @@ describe('api/game.js', function() {
 
       assert.equal(game.first_player, first_test_value);
     });
-    it('should set the game name to \'Default Name\'', function(){
+    it('should not set game.title if no title is provided', function() {
       const game = Game.create(user);
-
-      assert.equal(game.name, 'Default Name');
+      assert.notProperty(game, 'title');
     });
-    it('should set the game name with arguement', function(){
-      const game_name_value = 'game name';
-      const game = Game.create(user, null, game_name_value);
-
-      assert.equal(game.name, game_name_value);
+    it('should set game.title if title is provided', function() {
+      const title = 'game name';
+      const game = Game.create(user, null, title);
+      assert.propertyVal(game, 'title', title);
+    });
+    it('should not set game.title if provided title is empty', function() {
+      const game = Game.create(user, null, '');
+      assert.notProperty(game, 'title');
     });
   });
 
@@ -984,6 +986,20 @@ describe('api/game.js', function() {
       var board = Game.getAttackBoard(game, user).squares;
 
       checkBoard(exp, board);
+    });
+  });
+
+  describe('getTitle', function() {
+    it('should return game.title if defined', function() {
+      const game = { title: 'Example Title' };
+      const title = Game.getTitle(game);
+      assert.equal(title, game.title);
+    });
+    it('should return "Unnamed Game <truncated id>" if game.title not defined', function() {
+      const game = { _id: 'abcdefghij' };
+      const expected = 'Unnamed Game abcdef';
+      const title = Game.getTitle(game);
+      assert.equal(title, expected);
     });
   });
 

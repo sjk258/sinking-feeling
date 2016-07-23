@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
-import { Games } from '../api/games.js';
+import { Games } from '/imports/api/games.js';
+import * as Game from '/imports/api/game.js';
 
 import './home.html';
 import './home.less';
@@ -50,6 +51,10 @@ Template.home_game.helpers({
     }
     
     return state;
+  },
+
+  title(game) {
+    return Game.getTitle(game);
   },
 });
 
