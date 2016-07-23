@@ -35,6 +35,14 @@ FlowRouter.route('/waiting', {
   }
 });
 
+import '/imports/ui/create.js';
+FlowRouter.route('/create', {
+  name: 'create',
+  action: function() {
+    BlazeLayout.render('layout', {content: 'create_game'});
+  }
+});
+
 import '/imports/ui/http404.js';
 FlowRouter.notFound = {
   action: function() {

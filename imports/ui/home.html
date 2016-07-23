@@ -3,32 +3,12 @@
     <span class="home-page-title">Home</span>
   </div>
 
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#gamelistTab">Game List</a></li>
-    <li><a data-toggle="tab" href="#createGameTab">Create Game</a></li>
-  </ul>
-
-  <div class="tab-content">
-    <br/>
-    
-    <div id="gamelistTab" class="tab-pane fade in  active">
-      <ul class="list-group">
-        {{#each games}}
-          {{> home_game}}
-        {{/each}}
-      </ul>
-    </div>
-  
-
-    <div id="createGameTab" class="tab-pane fade">
-      {{> game_create_form}}
-      <br />
-      {{#if currentUser}}
-        <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game</button>
-      {{else}}
-        Log in to create a game.
-      {{/if}}
-    </div>
+  <div id="gamelistTab" class="tab-pane fade in  active">
+    <ul class="list-group">
+      {{#each games}}
+        {{> home_game}}
+      {{/each}}
+    </ul>
   </div>
 </template>
 
@@ -63,40 +43,4 @@
       </table>
     </div>
   </a>
-</template>
-
-<template name="game_create_form">
-  <div class="form-group">
-    <label for="name-input">Name</label>
-    <input class="form-control" id="name-input" type="text">
-  </div>
-
-  <div id="select-opp-div">
-    <label>Opponents</label>
-    {{#each aiPlayers}}
-      <div class="radio">
-        <label><input type="radio" name="opp-radio" value="{{name}}">{{full_name}}</label>
-      </div>
-    {{/each}}
-    <div class="radio">
-      <label><input type="radio" name="opp-radio" value="waiting">Post to Waiting Room</label>
-    </div>
-    <div class="radio">
-      <label><input type="radio" name="opp-radio" value="friend">Friend</label>
-    </div>
-  </div>
-  <br />
-  {{#if isOpponentAi}}
-    {{#with selectedAi}}
-      <p><h3>{{full_name}}</h3></p>
-      <p><span><strong>Difficulty: </strong>{{difficulty_name}}</span></p>
-      <p><span><strong>Description: </strong>{{description}}</span></p>
-    {{/with}}
-  {{/if}}
-  {{#if isOpponentFriend}}
-    <div class="form-group">
-      <label for="friend-input">Friend Account</label>
-      <input class="form-control" id="friend-input" type="text">
-    </div>
-  {{/if}}
 </template>
