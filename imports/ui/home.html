@@ -6,7 +6,6 @@
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#gamelistTab">Game List</a></li>
     <li><a data-toggle="tab" href="#createGameTab">Create Game</a></li>
-    <li><a data-toggle="tab" href="#waitingRoomTab">Waiting Room</a></li>
   </ul>
 
   <div class="tab-content">
@@ -26,15 +25,6 @@
       <br />
       {{#if currentUser}}
         <button id="createGame" type="submit" class="btn btn-primary btn-md">Create Game</button>
-      {{else}}
-        Log in to create a game.
-      {{/if}}
-    </div>
-
-    <div id="waitingRoomTab" class="tab-pane fade">
-      {{#if currentUser}}
-      <!--<button id="createWait" type="submit" class="btn btn-md">List in Waiting Room</button>-->
-      {{> list_of_wait_games}}
       {{else}}
         Log in to create a game.
       {{/if}}
@@ -109,24 +99,4 @@
       <input class="form-control" id="friend-input" type="text">
     </div>
   {{/if}}
-</template>
-
-<template name="list_of_wait_games">
-  <div class="list-item" id="wait-list-game">
-  {{#each games}}
-    <a href="#" class="list-group-item joinGame">
-      <table style="width:100%;table-layout:fixed;">
-        <tbody>
-          <tr>
-            <td>
-              <span class="game-title">{{name}}</span>
-              <span class="label label-warning">waiting</span>
-            </td>
-          </tr>
-          <tr><td><span class="game-players">By {{creator.name}}</span></td></tr>
-        </tbody>
-      </table>
-    </a>
-  {{/each}}
-  </div>
 </template>

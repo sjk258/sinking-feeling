@@ -72,15 +72,6 @@ Template.home_game.helpers({
   },
 });
 
-Template.list_of_wait_games.helpers({
-  games() {
-    if (Meteor.userId() !== null)
-    {
-      return Games.find( { 'state': 'waiting' } );
-    }
-  }
-});
-
 Template.home.events({
   'click #createGame'() {
     const user = Meteor.user();
@@ -157,22 +148,4 @@ Template.game_create_form.events({
       Session.set('selectedAI', AI.getPlayer(oppSelection));
     }
   },
-});
-
-Template.list_of_wait_games.events({
-  'click .joinGame'(event) {
-    event.preventDefault();
-
-    const game = Games.findOne( { '_id': this._id } );
-
-    if (game.creator.id === Meteor.userId())
-    {
-      console.log("Cant join own game!");
-    }
-    else
-    {
-      Game.joinWaiting(game, Meteor.user());
-      FlowRouter.go('game', { id: game._id });
-    }
-  }
 });
