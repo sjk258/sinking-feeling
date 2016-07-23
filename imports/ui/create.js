@@ -1,7 +1,6 @@
 /* globals FlowRouter */
 import { Template } from 'meteor/templating';
 import { $ } from 'meteor/jquery';
-import { Games } from '../api/games.js';
 import * as AI from '../api/ai.js';
 import * as Game from '../api/game.js';
 
