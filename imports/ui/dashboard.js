@@ -118,34 +118,6 @@ Template.dashboard.helpers({
       ],
     });
   },
-  title(game) {
-    return Game.getTitle(game);
-  },
-  players(game) {
-    const player = Game.getUserPlayer(game, Meteor.user());
-    /* jshint -W086 */
-    switch(game.state) {
-      case 'created':
-        return "Created by " + game.creator.name;
-      case 'waiting':
-        return "Waiting on player to join";
-      case 'pending':
-        if(player === 'creator') {
-          return "You are waiting on " + game.challenger.name;
-        } else {
-          return game.creator.name + " is waiting on you";
-        }
-      case 'declined':
-        if(player === 'creator') {
-          return game.challenger.name + " declined your invitation";
-        } else {
-          return "You declined " + game.creator.name + "'s invitation";
-        }
-      default:
-        return game.creator.name + " vs. " + game.challenger.name;
-    }
-    /* jshint +W086 */
-  },
 });
 
 Template.dash_invited.helpers({
@@ -188,6 +160,7 @@ Template.dash_done.helpers({
   },
   players(game) {
     const player = Game.getUserPlayer(game, Meteor.user());
+    /* jshint -W086 */
     switch(game.state) {
       case 'declined':
         if(player === 'creator') {
@@ -198,6 +171,7 @@ Template.dash_done.helpers({
       default:
         return game.creator.name + " vs. " + game.challenger.name;
     }
+    /* jshint +W086 */
   },
 });
 
