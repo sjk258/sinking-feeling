@@ -239,6 +239,7 @@ export function remove(game, player) {
 }
 
 export function opponentRemoved(game, player) {
+  /* jshint -W086 */
   const opponent = oppositePlayer(player);
   switch(game.state) {
     case 'created':
@@ -257,6 +258,7 @@ export function opponentRemoved(game, player) {
       }
       return ('remove' in game[opponent] && game[opponent].remove);
   }
+  /* jshint +W086 */
 }
 
 export function update(game) {

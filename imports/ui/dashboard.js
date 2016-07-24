@@ -30,6 +30,7 @@ Template.dashboard.helpers({
   },
   players(game) {
     const player = Game.getUserPlayer(game, Meteor.user());
+    /* jshint -W086 */
     switch(game.state) {
       case 'created':
         return "Created by " + game.creator.name;
@@ -47,11 +48,9 @@ Template.dashboard.helpers({
         } else {
           return "You declined " + game.creator.name + "'s invitation";
         }
-      case 'setup':
-      case 'active':
-      case 'ended':
       default:
         return game.creator.name + " vs. " + game.challenger.name;
     }
+    /* jshint +W086 */
   },
 });
