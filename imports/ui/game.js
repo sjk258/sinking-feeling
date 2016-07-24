@@ -163,7 +163,7 @@ Template.game_log.helpers({
     return Log.getLog(game);
   },
   timestamp(entry) {
-    return entry.time;
+    return moment(entry.time).format("dddd, MMMM M, YYYY [at] h:kk A [UTC]Z");
   },
   format(game, entry) {
     if(entry.event === 'created') {
@@ -292,11 +292,5 @@ Template.game_actions.helpers({
   },
   urlResign(game) {
     return FlowRouter.path('game', {id: game._id}, {action: 'resign'});
-  },
-});
-
-Template.game_meta_foot.helpers({
-  dateFormat(ts) {
-    return moment(ts).format("dddd, MMMM M, YYYY [at] h:kk A [UTC]Z");
   },
 });

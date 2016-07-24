@@ -17,7 +17,6 @@
     {{/if}}
 
     {{> game_actions game=game}}
-    {{> game_meta_foot game=game}}
   {{/if}}
 </template>
 
@@ -189,20 +188,4 @@
     </div>
   </div>
   {{/if}}
-</template>
-
-<template name="game_meta_foot">
-  <div class="row text-center">
-    <div class="col-sm-12">
-      <div class="small">
-        <p>Game created: {{dateFormat game.created_at}}</p>
-        {{#if game.time_started}}
-        <p>Game started: {{dateFormat game.time_started}}</p>
-        {{/if}}
-        {{#if game.time_finished}}
-        <p>Game ended: {{dateFormat game.time_finished}}</p>
-        {{/if}}
-      </div>
-    </div>
-  </div>
 </template>
