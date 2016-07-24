@@ -169,7 +169,8 @@ Template.game_log.helpers({
       return "Game over!";
     }
     if(entry.event !== 'shot') {
-      return JSON.stringify(entry);
+      //return JSON.stringify(entry);
+      return false;
     }
     let result = (entry.turn + 1) + '. ';
     result += game[entry.initiator].name + ": ";
@@ -181,8 +182,6 @@ Template.game_log.helpers({
       result += " " + ship;
     }
     return result;
-    // You, move 7: D10, Miss.
-    // Ralph, move 8: B8, Hit! Ralph sunk your Cruiser!
   },
 });
 
