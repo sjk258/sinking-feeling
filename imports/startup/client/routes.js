@@ -27,6 +27,22 @@ FlowRouter.route('/rules', {
   }
 });
 
+import '/imports/ui/waiting.js';
+FlowRouter.route('/waiting', {
+  name: 'waiting',
+  action: function() {
+    BlazeLayout.render('layout', {content: 'waiting_room'});
+  }
+});
+
+import '/imports/ui/create.js';
+FlowRouter.route('/create', {
+  name: 'create',
+  action: function() {
+    BlazeLayout.render('layout', {content: 'create_game'});
+  }
+});
+
 import '/imports/ui/http404.js';
 FlowRouter.notFound = {
   action: function() {
