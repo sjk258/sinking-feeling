@@ -194,14 +194,6 @@
 <template name="game_meta_foot">
   <div class="row text-center">
     <div class="col-sm-12">
-      {{#if game.time_finished}}
-      <p>
-        Game over! The winner is: {{winner game}}!
-        {{#if game.resignation}}
-          ({{resignedPlayer game}} resigned.)
-        {{/if}}
-      </p>
-      {{/if}}
       <div class="small">
         <p>Game created: {{dateFormat game.created_at}}</p>
         {{#if game.time_started}}

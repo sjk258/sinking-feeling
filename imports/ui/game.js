@@ -82,6 +82,13 @@ Template.game.helpers({
         return "Waiting for players to finish setup.";
       }
     }
+    if(game.state === 'ended') {
+      let result = "Game over! The winner is: " + game[game.winner].name + "!";
+      if('resignation' in game) {
+        result += " (" + game[game.resignation].name + " resigned.)";
+      }
+      return result;
+    }
     return false;
   },
 });
@@ -292,10 +299,4 @@ Template.game_meta_foot.helpers({
   dateFormat(ts) {
     return moment(ts).format("dddd, MMMM M, YYYY [at] h:kk A [UTC]Z");
   },
-  winner(game) {
-    return game[game.winner].name;
-  },
-  resignedPlayer(game) {
-    return game[game.resignation].name;
-  }
 });
