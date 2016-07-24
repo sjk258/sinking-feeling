@@ -31,7 +31,7 @@ export function getLog(game) {
       log.push({time: game.time_started, event: 'started'});
       logShots(game, log);
       if (game.state == 'ended'){
-        log.push({time: game.ended_at, event: 'ended'});
+        log.push({time: game.time_finished, event: 'ended'});
       }
     }
   }

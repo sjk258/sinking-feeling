@@ -15,9 +15,6 @@
     {{#if showBothBoards game}}
       {{> game_both_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
     {{/if}}
-
-    {{> game_actions game=game}}
-    {{> game_meta_foot game=game}}
   {{/if}}
 </template>
 
@@ -77,6 +74,7 @@
       <div class="row">
         <div class="col-lg-6">
           {{> game_board game=game board=attackBoard own=false player=(otherPlayer game)}}
+          {{> game_actions game=game}}
         </div>
         <div class="col-lg-6">
           {{> game_board game=game board=ownBoard own=true player=(ownPlayer game)}}
@@ -189,28 +187,4 @@
     </div>
   </div>
   {{/if}}
-</template>
-
-<template name="game_meta_foot">
-  <div class="row text-center">
-    <div class="col-sm-12">
-      {{#if game.time_finished}}
-      <p>
-        Game over! The winner is: {{winner game}}!
-        {{#if game.resignation}}
-          ({{resignedPlayer game}} resigned.)
-        {{/if}}
-      </p>
-      {{/if}}
-      <div class="small">
-        <p>Game created: {{dateFormat game.created_at}}</p>
-        {{#if game.time_started}}
-        <p>Game started: {{dateFormat game.time_started}}</p>
-        {{/if}}
-        {{#if game.time_finished}}
-        <p>Game ended: {{dateFormat game.time_finished}}</p>
-        {{/if}}
-      </div>
-    </div>
-  </div>
 </template>

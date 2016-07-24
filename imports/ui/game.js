@@ -82,6 +82,13 @@ Template.game.helpers({
         return "Waiting for players to finish setup.";
       }
     }
+    if(game.state === 'ended') {
+      let result = "Game over! The winner is: " + game[game.winner].name + "!";
+      if('resignation' in game) {
+        result += " (" + game[game.resignation].name + " resigned.)";
+      }
+      return result;
+    }
     return false;
   },
 });
@@ -156,7 +163,7 @@ Template.game_log.helpers({
     return Log.getLog(game);
   },
   timestamp(entry) {
-    return entry.time;
+    return moment(entry.time).format("dddd, MMMM M, YYYY [at] h:kk A [UTC]Z");
   },
   format(game, entry) {
     if(entry.event === 'created') {
@@ -169,7 +176,8 @@ Template.game_log.helpers({
       return "Game over!";
     }
     if(entry.event !== 'shot') {
-      return JSON.stringify(entry);
+      //return JSON.stringify(entry);
+      return false;
     }
     let result = (entry.turn + 1) + '. ';
     result += game[entry.initiator].name + ": ";
@@ -181,8 +189,6 @@ Template.game_log.helpers({
       result += " " + ship;
     }
     return result;
-    // You, move 7: D10, Miss.
-    // Ralph, move 8: B8, Hit! Ralph sunk your Cruiser!
   },
 });
 
@@ -287,16 +293,4 @@ Template.game_actions.helpers({
   urlResign(game) {
     return FlowRouter.path('game', {id: game._id}, {action: 'resign'});
   },
-});
-
-Template.game_meta_foot.helpers({
-  dateFormat(ts) {
-    return moment(ts).format("dddd, MMMM M, YYYY [at] h:kk A [UTC]Z");
-  },
-  winner(game) {
-    return game[game.winner].name;
-  },
-  resignedPlayer(game) {
-    return game[game.resignation].name;
-  }
 });
