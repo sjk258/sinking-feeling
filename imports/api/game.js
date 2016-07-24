@@ -45,17 +45,34 @@ export function initVsAi(game, ai) {
   game.state = 'setup';
   game.creator.ready_at = new Date();
 
-  // TODO: This changes setup to active and should go away when we implement
-  // ship placement in the UI.
-  game.creator.ready = true;
   checkState(game);
+  update(game);
+  return game;
+}
 
+export function initToPending(game, user) {
+  game.challenger.id = user._id;
+  game.challenger.name = user.username;
+  game.challenger.response = 'none';
+  game.state = 'pending';
+
+  checkState(game);
+  update(game);
+  return game;
+}
+
+export function respondToPending(game, join) {
+  game.challenger.response = join ? 'accept' : 'decline';
+
+  checkState(game);
   update(game);
   return game;
 }
 
 export function initToWaiting(game) {
   game.state = 'waiting';
+
+  checkState(game);
   update(game);
   return game;
 }
@@ -65,14 +82,7 @@ export function joinWaiting(game, user) {
   game.challenger.name = user.username;
   game.state = 'setup';
 
-  // TODO: This changes setup to active and should go away when we implement
-  // ship placement in the UI.
-  game.creator.ready = true;
-  game.creator.ready_at = new Date();
-  game.challenger.ready = true;
-  game.creator.ready_at = new Date();
   checkState(game);
-
   update(game);
   return game;
 }
@@ -86,18 +96,20 @@ export function checkStateCreated(game) {
 }
 
 export function checkStateWaiting(game) {
-  if(game && game.creator && 'id' in game.creator) {
-    // TODO: This skips setup and change to 'setup' when we implement ship
-    // placement in the UI.
-    game.state = 'active';
+  if(game && game.challenger && 'id' in game.challenger) {
+    game.state = 'setup';
   }
-
-  game = game;
 }
 
 export function checkStatePending(game) {
-  // Fool JShint into thinking we're using the parameter.
-  game = game;
+  if(game.challenger.response === 'accept') {
+    delete game.challenger.response;
+    game.state = 'setup';
+  }
+  if(game.challenger.response === 'decline') {
+    delete game.challenger.response;
+    game.state = 'declined';
+  }
 }
 
 export function checkStateDeclined(game) {
@@ -199,6 +211,16 @@ export function checkState(game) {
     states[game.state](game);
   } else {
     throw Meteor.Error('invalid-state', 'The game has an invalid state');
+  }
+
+  // TODO: This changes setup to active and should go away when we implement
+  // ship placement in the UI.
+  if(game.state === 'setup') {
+    game.creator.ready = true;
+    game.creator.ready_at = new Date();
+    game.challenger.ready = true;
+    game.creator.ready_at = new Date();
+    states.setup(game);
   }
 }
 

@@ -110,6 +110,26 @@ Template.game_actions.events({
 
     Game.joinWaiting(game, user);
   },
+  'click .acceptInvite'(event) {
+    event.preventDefault();
+    const game = getGame();
+    const user = Meteor.user();
+    if(user._id === game.challenger.id) {
+      Game.respondToPending(game, true);
+    } else {
+      throw new Meteor.Error('not-your-game');
+    }
+  },
+  'click .declineInvite'(event) {
+    event.preventDefault();
+    const game = getGame();
+    const user = Meteor.user();
+    if(user._id === game.challenger.id) {
+      Game.respondToPending(game, false);
+    } else {
+      throw new Meteor.Error('not-your-game');
+    }
+  },
 });
 
 Template.game_actions.helpers({
@@ -119,9 +139,29 @@ Template.game_actions.helpers({
   waiting(game) {
     return game.state === 'waiting';
   },
+  pending(game) {
+    return game.state === 'pending';
+  },
   canJoin(game) {
     const user = Meteor.user();
     return Game.userCanJoin(game, user);
+  },
+  amInviter(game) {
+    const user = Meteor.user();
+    if(!user) return false;
+    return game.creator.id === user._id;
+  },
+  amInvitee(game) {
+    const user = Meteor.user();
+    if(!user) return false;
+    return game.challenger.id === user._id;
+  },
+  notMyGame(game) {
+    const user = Meteor.user();
+    if(!user) return true;
+    if(game.creator.id === user._id) return false;
+    if(game.challenger.id === user._id) return false;
+    return true;
   },
   ended(game) {
     return game.state === 'ended';

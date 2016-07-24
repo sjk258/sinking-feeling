@@ -127,7 +127,12 @@ describe('api/game.js', function() {
 
   describe('checkStatePending', function() {
     it('should not fail', function() {
-      Game.checkStatePending({});
+      const game = {
+        challenger: {
+          response: 'none',
+        },
+      };
+      Game.checkStatePending(game);
     });
   });
 
