@@ -626,6 +626,7 @@ describe('api/game.js', function() {
   describe('fire', function() {
     it('works as expected for creator in two-player', function() {
       const game = {
+        state: 'active',
         creator: {
           shots: [],
           ships: {
@@ -660,6 +661,7 @@ describe('api/game.js', function() {
     });
     it('works as expected for challenger in two-player', function() {
       const game = {
+        state: 'active',
         creator: {
           shots: [],
           ships: {
@@ -694,6 +696,7 @@ describe('api/game.js', function() {
     });
     it('works as expected for creator versus AI', function() {
       const game = {
+        state: 'active',
         creator: {
           shots: [],
           ships: {
