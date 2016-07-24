@@ -57,6 +57,9 @@ Template.game.helpers({
   title(game) {
     return Game.getTitle(game);
   },
+});
+
+Template.game_confirmations.helpers({
   actionRemove() {
     return getAction() === 'remove';
   },
@@ -76,7 +79,7 @@ Template.game.helpers({
   },
 });
 
-Template.game.events({
+Template.game_confirmations.events({
   'click .removeGame'() {
     const game = getGame();
     const user = Meteor.user();
