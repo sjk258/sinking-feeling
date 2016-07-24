@@ -7,11 +7,16 @@ import * as Game from '../api/game.js';
 import './create.html';
 
 function checkSubmit() {
+  const first = Session.get('first_player');
   const type = Session.get('opponent_type');
   const user = Meteor.user();
 
   if(!user) {
     return "User not logged in";
+  }
+
+  if(!first) {
+    return "Need to select first player";
   }
 
   if(type === 'waiting') {
@@ -45,7 +50,8 @@ function checkSubmit() {
 }
 
 Template.create_game.onCreated(function() {
-  Session.set('opponent_type', null);
+  Session.set('first_player', null);
+  Session.set('opponent_type', 'random');
   Session.set('selected_ai', AI.default_name);
   Session.set('selected_user', null);
 });
@@ -64,6 +70,10 @@ Template.create_game.helpers({
 });
 
 Template.create_game.events({
+  'change input[name=first-player]'(event) {
+    const first = event.target.value;
+    Session.set('first_player', first);
+  },
   'change input[name=opponent-type]'(event) {
     const type = event.target.value;
     Session.set('opponent_type', type);
@@ -73,10 +83,11 @@ Template.create_game.events({
     if(fail) throw new Meteor.error('cannot-submit', fail);
 
     const user = Meteor.user();
+    const first = Session.get('first_player');
     const type = Session.get('opponent_type');
     const title = $("#game-title")[0].value;
 
-    const game = Game.create(user, null, title);
+    const game = Game.create(user, first, title);
 
     if(type === 'ai') {
       const player = Session.get('selected_ai');

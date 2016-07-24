@@ -1,3 +1,5 @@
+import {_} from 'meteor/underscore';
+
 import * as AI from './ai.js';
 import * as Board from './board.js';
 import * as Ship from './ship.js';
@@ -26,9 +28,8 @@ export function create(user, first_player=null, title=null) {
   }
 
   const player_names = ['creator', 'challenger'];
-  if(game.first_player === null){
-    game.first_player = player_names[
-      Math.floor(Math.random() * player_names.length)];
+  if(!_.contains(player_names, game.first_player)) {
+    game.first_player = _.sample(player_names);
   }
 
   Ship.randomize(game.creator.ships);
