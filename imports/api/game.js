@@ -4,10 +4,9 @@ import * as Ship from './ship.js';
 import {Games} from './games.js';
 
 
-export function create(user, first_player=null, gameName='Default Name') {
+export function create(user, first_player=null, title=null) {
   var game = {
     created_at: new Date(),
-    name: gameName,
     creator: {
       id: user._id,
       name: user.username,
@@ -21,6 +20,10 @@ export function create(user, first_player=null, gameName='Default Name') {
     first_player: first_player,
     state: 'created',
   };
+
+  if(title) {
+    game.title = title;
+  }
 
   const player_names = ['creator', 'challenger'];
   if(game.first_player === null){
@@ -299,6 +302,13 @@ export function getUserPlayer(game, user) {
   if(user._id === game.creator.id) return 'creator';
   if(user._id === game.challenger.id) return 'challenger';
   return false;
+}
+
+export function getTitle(game) {
+  if('title' in game) {
+    return game.title;
+  }
+  return 'Unnamed Game ' + game._id.substring(0, 6);
 }
 
 export function userIsPlayer(game, user) {
