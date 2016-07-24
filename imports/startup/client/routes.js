@@ -11,6 +11,14 @@ FlowRouter.route('/', {
   }
 });
 
+import '/imports/ui/dashboard.js';
+FlowRouter.route('/dashboard', {
+  name: 'dashboard',
+  action: function() {
+    BlazeLayout.render('layout', {content: 'dashboard'});
+  }
+});
+
 import '/imports/ui/game.js';
 FlowRouter.route('/game/:id', {
   name: 'game',

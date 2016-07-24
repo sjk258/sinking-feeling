@@ -1,66 +1,36 @@
-import { Template } from 'meteor/templating';
-import { Games } from '/imports/api/games.js';
-import * as Game from '/imports/api/game.js';
+
+import * as Board from '/imports/api/board.js';
 
 import './home.html';
 import './home.less';
-
-Template.home.onCreated(function() {
-  Session.set('selectedAI', null);
-  Session.set('isOpponentAI', false);
-  Session.set('isOpponentFriend', false);
-});
+import './board.js';
 
 Template.home.helpers({
-  games() {
-    if (Meteor.userId() !== null)
-    {
-      return Games.find( { $or: [ {'creator.id': Meteor.userId()}, {'challenger.id': Meteor.userId() } ] } );
-    }
+  fake() {
+    const squares = Board.makeEmptyBoard();
+    const game = {
+      state: 'ended',
+    };
+
+    squares[0][0].state = 'M';
+    squares[1][1].state = 'M';
+    squares[3][2].state = 'M';
+
+    squares[2][2] = {state: 'X', ship: 'Left'};
+    squares[2][3] = {state: 'X', ship: 'Horizontal'};
+    squares[2][4] = {state: 'X', ship: 'Right'};
+
+    squares[5][5].state = 'M';
+    squares[6][6].state = 'M';
+    squares[7][7].state = 'M';
+    squares[8][8].state = 'M';
+    squares[9][9].state = 'M';
+
+    squares[6][0].state = 'M';
+    squares[7][1].state = 'H';
+    squares[7][2].state = 'M';
+    squares[8][1].state = 'H';
+
+    return { squares, game };
   },
-});
-
-Template.home_game.helpers({
-  gameState(gameId) {
-    const state = Games.findOne({_id: gameId}, {state: 1});
-
-    switch(state.state)
-    {
-      case 'created':
-        state.label_style = "label-primary";
-        break;
-      case 'waiting':
-      case 'pending':
-        state.label_style = "label-warning";
-        break;
-      case 'declined':
-        state.label_style = "label-danger";
-        break;
-      case 'setup':
-        state.label_style = "label-info";
-        break;
-      case 'active':
-        state.label_style = "label-success";
-        break;
-      case 'ended':
-        state.label_style = "label-default";
-        break;
-      default:
-        state.label_style = "label-default";
-        break;
-    }
-    
-    return state;
-  },
-
-  title(game) {
-    return Game.getTitle(game);
-  },
-});
-
-Template.home_game.events({
-  'click .deleteGame'(event) {
-    event.preventDefault();
-    Games.remove(this._id);
-  }
 });
