@@ -3,10 +3,11 @@
 
 import { _ } from 'meteor/underscore';
 
-import { Games } from '../api/games.js';
-import * as Game from '../api/game.js';
-import * as Square from '../api/square.js';
-import * as Ship from '../api/ship.js';
+import { Games } from '/imports/api/games.js';
+import * as Game from '/imports/api/game.js';
+import * as Log from '/imports/api/log.js';
+import * as Ship from '/imports/api/ship.js';
+import * as Square from '/imports/api/square.js';
 
 import './game.html';
 import './game.less';
@@ -122,7 +123,7 @@ Template.game_confirmations.events({
   },
 });
 
-Template.game_boards.helpers({
+Template.game_both_boards.helpers({
   ownPlayer(game) {
     return getPlayerOne(game);
   },
@@ -147,6 +148,41 @@ Template.sunk_ships.helpers({
     }));
     lens.sort((a,b) => (a.len - b.len));
     return lens;
+  },
+});
+
+Template.game_log.helpers({
+  log(game) {
+    return Log.getLog(game);
+  },
+  timestamp(entry) {
+    return entry.time;
+  },
+  format(game, entry) {
+    if(entry.event === 'created') {
+      return "Get ready for that Sinking Feeling!";
+    }
+    if(entry.event === 'started') {
+      return "Game setup is complete and the game begins.";
+    }
+    if(entry.event === 'ended') {
+      return "Game over!";
+    }
+    if(entry.event !== 'shot') {
+      return JSON.stringify(entry);
+    }
+    let result = (entry.turn + 1) + '. ';
+    result += game[entry.initiator].name + ": ";
+    result += Square.squareObjToName(entry.shot) + ", ";
+    result += entry.result;
+    if(entry.result === 'sunk') {
+      const opponent = Game.oppositePlayer(entry.initiator);
+      const ship = Square.spaceShip(entry.shot, game[opponent].ships);
+      result += " " + ship;
+    }
+    return result;
+    // You, move 7: D10, Miss.
+    // Ralph, move 8: B8, Hit! Ralph sunk your Cruiser!
   },
 });
 
