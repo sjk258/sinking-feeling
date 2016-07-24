@@ -84,7 +84,7 @@ Template.create_game.events({
     } else if(type === 'invite') {
       const id = Session.get('selected_user');
       const user = Meteor.users.findOne({ '_id': id });
-      Game.joinWaiting(game, user);
+      Game.initToPending(game, user);
     } else {
       Game.initToWaiting(game);
     }

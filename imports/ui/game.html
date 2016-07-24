@@ -98,6 +98,25 @@
     </div>
   </div>
   {{/if}}
+  {{#if pending game}}
+  <div class="row text-center">
+    <div class="col-sm-12">
+      {{#if amInviter game}}
+        <p>{{game.challenger.name}} hasn't responded to your invitation yet.</p>
+      {{/if}}
+      {{#if amInvitee game}}
+        <p>{{game.creator.name}} has invited you to join this game.</p>
+        <p>
+          <button class="acceptInvite">Accept Invitation</button>
+          <button class="declineInvite">Decline Invitation</button>
+        </p>
+      {{/if}}
+      {{#if notMyGame game}}
+        <p>{{game.creator.name}} has invited someone else to join this game.</p>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
 </template>
 
 <template name="game_meta_foot">

@@ -54,6 +54,23 @@ export function initVsAi(game, ai) {
   return game;
 }
 
+export function initToPending(game, user) {
+  game.challenger.id = user._id;
+  game.challenger.name = user.username;
+  game.challenger.response = 'none';
+  game.state = 'pending';
+
+  update(game);
+  return game;
+}
+
+export function respondToPending(game, join) {
+  game.challenger.response = join ? 'accept' : 'decline';
+  checkState(game);
+  update(game);
+  return game;
+}
+
 export function initToWaiting(game) {
   game.state = 'waiting';
   update(game);
@@ -96,8 +113,14 @@ export function checkStateWaiting(game) {
 }
 
 export function checkStatePending(game) {
-  // Fool JShint into thinking we're using the parameter.
-  game = game;
+  if(game.challenger.response === 'accept') {
+    delete game.challenger.response;
+    game.state = 'setup';
+  }
+  if(game.challenger.response === 'decline') {
+    delete game.challenger.response;
+    game.state = 'declined';
+  }
 }
 
 export function checkStateDeclined(game) {
