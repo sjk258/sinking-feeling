@@ -12,17 +12,12 @@
       <p class="turn">{{turn game}}</p>
     </div>
 
-    {{#with game}}
-      {{#if showBothBoards game}}
+    {{#if showBothBoards game}}
       {{> game_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
-      {{/if}}
+    {{/if}}
 
-      <br />
-      <br />
-
-      {{> game_actions game=game}}
-      {{> game_meta_foot game=game}}
-    {{/with}}
+    {{> game_actions game=game}}
+    {{> game_meta_foot game=game}}
   {{/if}}
 </template>
 
