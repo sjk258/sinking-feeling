@@ -74,7 +74,7 @@ Template.create_game.events({
 
     const user = Meteor.user();
     const type = Session.get('opponent_type');
-    const title = $("#game-title").value;
+    const title = $("#game-title")[0].value;
 
     const game = Game.create(user, null, title);
 
