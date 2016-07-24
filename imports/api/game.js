@@ -332,13 +332,16 @@ export function playerShot(game, player, row, col) {
 export function fire(game, row, col) {
   let player = game.current_player;
   playerShot(game, player, row, col);
+  game.turn_number += 1;
+
+  checkState(game);
+  if(game.state !== 'active') return;
 
   if ('ai' in game.challenger) {
     computerShot(game);
-    game.turn_number += 2;
+    game.turn_number += 1;
   } else {
     game.current_player = oppositePlayer(player);
-    game.turn_number += 1;
   }
 }
 
