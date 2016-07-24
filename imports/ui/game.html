@@ -5,6 +5,32 @@
 
   <h2 class="text-center">{{title game}}</h2>
 
+  {{#if actionRemove}}
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        Do you really want to remove this game?
+      </div>
+      <div class="panel-body">
+        <p>
+          {{#if actionRemoveWillDelete game}}
+          Removing this game will result in it being immediately deleted.
+          This action is irreversible.
+          {{else}}
+          Removing this game will prevent it from showing up on your dashboard.
+          This action is irreversible.
+          The game will not be deleted until your opponent also removes the game
+          from their dashboard.
+          {{/if}}
+        </p>
+        <p>
+          <button class="removeGame btn btn-danger">Remove</button>
+          <a class="btn btn-default" href="{{urlSelf}}">Cancel</a>
+        </p>
+      </div>
+    </div>
+    <p>Do you really want to remove this game?</p>
+  {{/if}}
+
     {{#with game}}
       {{#if showBothBoards game}}
       {{> game_meta_data game=game}}

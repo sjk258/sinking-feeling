@@ -2,49 +2,13 @@
   {{#if currentUser}}
     <h1>{{currentUser.username}}'s Games</h1>
 
-    <div id="gamelistTab" class="tab-pane fade in  active">
-      <ul class="list-group">
-        {{#each game in games}}
-          {{> dashboard_game game=game}}
-        {{/each}}
-      </ul>
-    </div>
+    <ul class="list-group">
+      {{#each game in games}}
+        {{> listing id=game._id title=(title game) players=(players game)
+          state=game.state turn_number=game.turn_number canDelete=true}}
+      {{/each}}
+    </ul>
   {{else}}
     <p>This page only applies to logged-in users.</p>
   {{/if}}
-</template>
-
-<template name="dashboard_game">
-  <a href="/game/{{game._id}}" class="list-group-item">
-    <div class="list-item">
-      <table style="width:100%;table-layout:fixed;">
-        <tbody>
-          <tr>
-            <td>
-              <span class="game-title">{{title game}}</span>
-              {{#with gameState game._id}}
-                <span class="label {{label_style}}">{{state}}</span>
-              {{/with}}
-              <span class="badge">{{game.turn_number}}</span>
-            </td>
-            <td rowspan="2" width="60px" align="center">
-
-            </td>
-            <td rowspan="2" width="20px" align="center">
-              {{#with game}}
-              <a href="#" class="deleteGame">
-                <span class="glyphicon glyphicon-remove"></span>
-              </a>
-              {{/with}}
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <span class="game-players">{{game.creator.name}} vs. {{game.challenger.name}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </a>
 </template>

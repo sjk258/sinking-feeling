@@ -1,20 +1,9 @@
 <template name="waiting_room">
   <h1>Waiting Room</h1>
-  <div class="list-item" id="wait-list-game">
+  <div class="list-group">
   {{#each game in games}}
-    <a href="{{linkTo game}}" class="list-group-item">
-      <table style="width:100%;table-layout:fixed;">
-        <tbody>
-          <tr>
-            <td>
-              <span class="game-title">{{name}}</span>
-              <span class="label label-warning">waiting</span>
-            </td>
-          </tr>
-          <tr><td><span class="game-players">By {{game.creator.name}}</span></td></tr>
-        </tbody>
-      </table>
-    </a>
+    {{> listing id=game._id title=(title game) players=(players game)
+      state=false turn_number=false canDelete=false}}
   {{else}}
   <p>There are currently no games available to join.</p>
   {{/each}}

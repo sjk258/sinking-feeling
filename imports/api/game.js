@@ -111,6 +111,10 @@ export function checkStatePending(game) {
     delete game.challenger.response;
     game.state = 'declined';
   }
+  if('remove' in game.challenger && game.challenger.remove) {
+    delete game.challenger.response;
+    game.state = 'declined';
+  }
 }
 
 export function checkStateDeclined(game) {
@@ -223,6 +227,38 @@ export function checkState(game) {
     game.creator.ready_at = new Date();
     states.setup(game);
   }
+}
+
+export function remove(game, player) {
+  if(opponentRemoved(game, player)) {
+    Games.remove(game._id);
+  } else {
+    game[player].remove = true;
+    update(game);
+  }
+}
+
+export function opponentRemoved(game, player) {
+  /* jshint -W086 */
+  const opponent = oppositePlayer(player);
+  switch(game.state) {
+    case 'created':
+    case 'waiting':
+      return true;
+    case 'pending':
+    case 'declined':
+      if(player === 'creator') {
+        return true;
+      } else {
+        return ('remove' in game[opponent] && game[opponent].remove);
+      }
+    default:
+      if('ai' in game[opponent]) {
+        return true;
+      }
+      return ('remove' in game[opponent] && game[opponent].remove);
+  }
+  /* jshint +W086 */
 }
 
 export function update(game) {
