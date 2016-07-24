@@ -4,6 +4,7 @@ import * as Game from '/imports/api/game.js';
 
 import './dashboard.html';
 import './dashboard.less';
+import './listing.js';
 
 Template.dashboard.helpers({
   games() {
@@ -18,49 +19,33 @@ Template.dashboard.helpers({
       return [];
     }
   },
-});
-
-Template.dashboard_game.helpers({
-  gameState(gameId) {
-    const state = Games.findOne({_id: gameId}, {state: 1});
-
-    switch(state.state)
-    {
-      case 'created':
-        state.label_style = "label-primary";
-        break;
-      case 'waiting':
-      case 'pending':
-        state.label_style = "label-warning";
-        break;
-      case 'declined':
-        state.label_style = "label-danger";
-        break;
-      case 'setup':
-        state.label_style = "label-info";
-        break;
-      case 'active':
-        state.label_style = "label-success";
-        break;
-      case 'ended':
-        state.label_style = "label-default";
-        break;
-      default:
-        state.label_style = "label-default";
-        break;
-    }
-    
-    return state;
-  },
-
   title(game) {
     return Game.getTitle(game);
   },
-});
-
-Template.dashboard_game.events({
-  'click .deleteGame'(event) {
-    event.preventDefault();
-    Games.remove(this._id);
-  }
+  players(game) {
+    const player = Game.getUserPlayer(game, Meteor.user());
+    switch(game.state) {
+      case 'created':
+        return "Created by " + game.creator.name;
+      case 'waiting':
+        return "Waiting on player to join";
+      case 'pending':
+        if(player === 'creator') {
+          return "You are waiting on " + game.challenger.name;
+        } else {
+          return game.creator.name + " is waiting on you";
+        }
+      case 'declined':
+        if(player === 'creator') {
+          return game.challenger.name + " declined your invitation";
+        } else {
+          return "You declined " + game.creator.name + "'s invitation";
+        }
+      case 'setup':
+      case 'active':
+      case 'ended':
+      default:
+        return game.creator.name + " vs. " + game.challenger.name;
+    }
+  },
 });

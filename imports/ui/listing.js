@@ -8,7 +8,7 @@ import './listing.less';
 
 Template.listing.helpers({
   stateStyle(state) {
-    switch(state.state) {
+    switch(state) {
       case 'created':
         return "label-primary";
       case 'waiting':
@@ -31,7 +31,7 @@ Template.listing.helpers({
   },
 });
 
-Template.dashboard_game.events({
+Template.listing.events({
   'click .deleteGame'(event) {
     event.preventDefault();
     Games.remove(this._id);

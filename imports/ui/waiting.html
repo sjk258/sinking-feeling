@@ -1,6 +1,6 @@
 <template name="waiting_room">
   <h1>Waiting Room</h1>
-  <div class="list-item" id="wait-list-game">
+  <div class="list-group">
   {{#each game in games}}
     {{> listing id=game._id title=(title game) players=(players game)
       state=false turn_number=false canDelete=false}}
