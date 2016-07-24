@@ -9,19 +9,22 @@
   }
 }
 
-ul.sunkships {
-  list-style-type: none;
-  display: inline;
-  padding: 0;
+.ship-status {
+  ul {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0;
+    margin: 0 5px;
 
-  li {
-    display: inline;
+    li {
+      display: inline;
+    }
   }
 
-  li:after {
-    content: ", ";
+  ul.sunk:before {
+    content: "Sunk: "
   }
-  li:last-child:after {
-    content: "";
+  ul.unsunk:before {
+    content: "Remaining: "
   }
 }

@@ -95,25 +95,33 @@
       {{playerName game player}}'s board
     </div>
     <div class="panel-body">
-      <div class="text-center">
-        {{> board board=board.squares game=game own=own}}
-      </div>
+      {{> board board=board.squares game=game own=own}}
+    </div>
+    <div class="panel-footer">
       {{> sunk_ships sunk=board.sunk}}
     </div>
   </div>
 </template>
 
 <template name="sunk_ships">
-  Ships sunk:
-  <ul class="sunkships">
-  {{#if sunk}}
-    {{#each sunk}}
-      <li>{{this}}</li>
-    {{/each}}
-  {{else}}
-    <li>None yet!</li>
-  {{/if}}
-  </ul>
+  <div class="ship-status">
+    {{#let unsunk=(getUnsunk sunk)}}
+      {{#if sunk}}
+        <ul class="sunk">
+          {{#each item in (getLengths sunk)}}
+            <li><span class="label label-primary" title="{{item.type}}">{{item.len}}</span></li>
+          {{/each}}
+        </ul>
+      {{/if}}
+      {{#if unsunk}}
+        <ul class="unsunk">
+          {{#each item in (getLengths unsunk)}}
+            <li><span class="label label-info" title="{{item.type}}">{{item.len}}</span></li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    {{/let}}
+  </div>
 </template>
 
 <template name="game_actions">

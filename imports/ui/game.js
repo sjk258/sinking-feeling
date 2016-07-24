@@ -1,9 +1,12 @@
 /** Configuration for JSHint to recognize automatic globals: */
 /* globals FlowRouter, moment */
 
+import { _ } from 'meteor/underscore';
+
 import { Games } from '../api/games.js';
 import * as Game from '../api/game.js';
 import * as Square from '../api/square.js';
+import * as Ship from '../api/ship.js';
 
 import './game.html';
 import './game.less';
@@ -131,6 +134,19 @@ Template.game_boards.helpers({
 Template.game_board.helpers({
   playerName(game, player) {
     return game[player].name;
+  },
+});
+
+Template.sunk_ships.helpers({
+  getUnsunk(sunk) {
+    return _.difference(Ship.types, sunk);
+  },
+  getLengths(types) {
+    const lens = _.map(types, (type) => ({
+      type, len: Ship.lengths[type]
+    }));
+    lens.sort((a,b) => (a.len - b.len));
+    return lens;
   },
 });
 
