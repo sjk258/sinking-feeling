@@ -1,6 +1,7 @@
 /* globals FlowRouter */
 
 import { Template } from 'meteor/templating';
+import { _ } from 'meteor/underscore';
 
 import './listing.html';
 import './listing.less';
@@ -24,6 +25,10 @@ Template.listing.helpers({
       default:
         return "label-default";
     }
+  },
+  turn(turn_number) {
+    if(!_.isNumber(turn_number)) return turn_number;
+    return turn_number + 1;
   },
   gameUrl(id) {
     return FlowRouter.path('game', {id});
