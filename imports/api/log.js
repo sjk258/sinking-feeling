@@ -71,7 +71,7 @@ export function logShots(game, log) {
     game.debug_shooter = shooter;
 
     log.push({time: shot.time, event: 'shot', initiator: shooter,
-      result: result, shot: shot});
+      result: result, shot: shot, turn: i});
   }
 }
 

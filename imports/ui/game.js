@@ -1,9 +1,13 @@
 /** Configuration for JSHint to recognize automatic globals: */
 /* globals FlowRouter, moment */
 
-import { Games } from '../api/games.js';
-import * as Game from '../api/game.js';
-import * as Square from '../api/square.js';
+import { _ } from 'meteor/underscore';
+
+import { Games } from '/imports/api/games.js';
+import * as Game from '/imports/api/game.js';
+import * as Log from '/imports/api/log.js';
+import * as Ship from '/imports/api/ship.js';
+import * as Square from '/imports/api/square.js';
 
 import './game.html';
 import './game.less';
@@ -22,7 +26,7 @@ function getAction() {
 function getPlayerOne(game) {
   const user = Meteor.user();
   const player = Game.getUserPlayer(game, user);
-  return player || 'creator';
+  return player || 'challenger';
 }
 
 function canFire(game) {
@@ -57,6 +61,32 @@ Template.game.helpers({
   title(game) {
     return Game.getTitle(game);
   },
+  players(game) {
+    let names = game.creator.name + " vs. " + game.challenger.name;
+    if('ai' in game.challenger) {
+      names += ' (AI)';
+    }
+    return names;
+  },
+  turn(game) {
+    if(game.state === "active") {
+      return "Move " + (game.turn_number + 1) + ": " +
+        game[game.current_player].name + "'s turn.";
+    }
+    if(game.state === "setup") {
+      if(game.creator.ready) {
+        return "Waiting for " + game.challenger.name + " to finish setup.";
+      } else if(game.challenger.ready) {
+        return "Waiting for " + game.creator.name + " to finish setup.";
+      } else {
+        return "Waiting for players to finish setup.";
+      }
+    }
+    return false;
+  },
+});
+
+Template.game_confirmations.helpers({
   actionRemove() {
     return getAction() === 'remove';
   },
@@ -76,7 +106,7 @@ Template.game.helpers({
   },
 });
 
-Template.game.events({
+Template.game_confirmations.events({
   'click .removeGame'() {
     const game = getGame();
     const user = Meteor.user();
@@ -93,28 +123,66 @@ Template.game.events({
   },
 });
 
-Template.game_meta_data.helpers({
-  ownName(game) {
-    const player = getPlayerOne(game);
-    return game[player].name;
-  },
-  opponentName(game) {
-    const player = Game.oppositePlayer(getPlayerOne(game));
-    return game[player].name;
-  },
-  turnName(game) {
-    return game[game.current_player].name;
-  }
-});
-
-Template.game_boards.helpers({
-  ownPlayer() {
-    const game = getGame();
+Template.game_both_boards.helpers({
+  ownPlayer(game) {
     return getPlayerOne(game);
   },
-  otherPlayer() {
-    const game = getGame();
+  otherPlayer(game) {
     return Game.oppositePlayer(getPlayerOne(game));
+  },
+});
+
+Template.game_board.helpers({
+  playerName(game, player) {
+    return game[player].name;
+  },
+});
+
+Template.sunk_ships.helpers({
+  getUnsunk(sunk) {
+    return _.difference(Ship.types, sunk);
+  },
+  getLengths(types) {
+    const lens = _.map(types, (type) => ({
+      type, len: Ship.lengths[type]
+    }));
+    lens.sort((a,b) => (a.len - b.len));
+    return lens;
+  },
+});
+
+Template.game_log.helpers({
+  log(game) {
+    return Log.getLog(game);
+  },
+  timestamp(entry) {
+    return entry.time;
+  },
+  format(game, entry) {
+    if(entry.event === 'created') {
+      return "Get ready for that Sinking Feeling!";
+    }
+    if(entry.event === 'started') {
+      return "Game setup is complete and the game begins.";
+    }
+    if(entry.event === 'ended') {
+      return "Game over!";
+    }
+    if(entry.event !== 'shot') {
+      return JSON.stringify(entry);
+    }
+    let result = (entry.turn + 1) + '. ';
+    result += game[entry.initiator].name + ": ";
+    result += Square.squareObjToName(entry.shot) + ", ";
+    result += entry.result;
+    if(entry.result === 'sunk') {
+      const opponent = Game.oppositePlayer(entry.initiator);
+      const ship = Square.spaceShip(entry.shot, game[opponent].ships);
+      result += " " + ship;
+    }
+    return result;
+    // You, move 7: D10, Miss.
+    // Ralph, move 8: B8, Hit! Ralph sunk your Cruiser!
   },
 });
 
