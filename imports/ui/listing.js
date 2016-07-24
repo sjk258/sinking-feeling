@@ -1,7 +1,6 @@
 /* globals FlowRouter */
 
 import { Template } from 'meteor/templating';
-import { Games } from '/imports/api/games.js';
 
 import './listing.html';
 import './listing.less';
@@ -29,11 +28,7 @@ Template.listing.helpers({
   gameUrl(id) {
     return FlowRouter.path('game', {id});
   },
-});
-
-Template.listing.events({
-  'click .deleteGame'(event) {
-    event.preventDefault();
-    Games.remove(this._id);
-  }
+  removeUrl(id) {
+    return FlowRouter.path('game', {id}, {action: 'remove'});
+  },
 });

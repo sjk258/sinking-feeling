@@ -11,8 +11,14 @@ Template.dashboard.helpers({
     if (Meteor.userId() !== null) {
       return Games.find({
         $or: [
-          { 'creator.id': Meteor.userId() },
-          { 'challenger.id': Meteor.userId() },
+          {
+            'creator.id': Meteor.userId(),
+            'creator.remove': { $exists: false },
+          },
+          {
+            'challenger.id': Meteor.userId(),
+            'challenger.remove': { $exists: false },
+          },
         ]
       });
     } else {

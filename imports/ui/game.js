@@ -15,6 +15,10 @@ function getGame() {
   return Games.findOne({_id: gameID});
 }
 
+function getAction() {
+  return FlowRouter.getQueryParam('action');
+}
+
 function getPlayerOne(game) {
   const user = Meteor.user();
   const player = Game.getUserPlayer(game, user);
@@ -52,6 +56,27 @@ Template.game.helpers({
   },
   title(game) {
     return Game.getTitle(game);
+  },
+  actionRemove() {
+    return getAction() === 'remove';
+  },
+  actionRemoveWillDelete(game) {
+    const player = Game.getUserPlayer(game, Meteor.user());
+    return Game.opponentRemoved(game, player);
+  },
+  urlSelf() {
+    const id = FlowRouter.getParam('id');
+    return FlowRouter.path('game', {id});
+  },
+});
+
+Template.game.events({
+  'click .removeGame'() {
+    const game = getGame();
+    const user = Meteor.user();
+    const player = Game.getUserPlayer(game, user);
+    Game.remove(game, player);
+    FlowRouter.go('dashboard');
   },
 });
 
