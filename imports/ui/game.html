@@ -7,13 +7,15 @@
 
     {{> game_confirmations game=game}}
 
-    <div class="game-lead">
-      <p class="players">{{players game}}</p>
-      <p class="turn">{{turn game}}</p>
-    </div>
-
     {{#if showBothBoards game}}
+      <div class="game-lead">
+        <p class="players">{{players game}}</p>
+        <p class="turn">{{turn game}}</p>
+      </div>
+
       {{> game_both_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
+    {{else}}
+      {{> game_actions game=game}}
     {{/if}}
   {{/if}}
 </template>

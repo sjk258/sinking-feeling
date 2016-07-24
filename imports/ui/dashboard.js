@@ -7,24 +7,154 @@ import './dashboard.less';
 import './listing.js';
 
 Template.dashboard.helpers({
-  games() {
-    if (Meteor.userId() !== null) {
-      return Games.find({
-        $or: [
-          {
-            'creator.id': Meteor.userId(),
-            'creator.remove': { $exists: false },
-          },
-          {
-            'challenger.id': Meteor.userId(),
-            'challenger.remove': { $exists: false },
-          },
-        ]
-      });
-    } else {
-      return [];
+  allGames() {
+    const id = Meteor.userId();
+    if(!id) return [];
+    return Games.find({
+      $or: [
+        {
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+        },
+        {
+          'challenger.id': id,
+          'challenger.remove': { $exists: false },
+        },
+      ],
+    });
+  },
+  invited() {
+    const id = Meteor.userId();
+    if(!id) return [];
+    return Games.find({
+      state: 'pending',
+      'challenger.id': Meteor.userId(),
+      'challenger.remove': { $exists: false },
+    });
+  },
+  active() {
+    const id = Meteor.userId();
+    if(!id) return [];
+    return Games.find({
+      $or: [
+        {
+          'state': 'setup',
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+          'creator.ready': { $exists: false },
+        },
+        {
+          'state': 'setup',
+          'challenger.id': id,
+          'challenger.remove': { $exists: false },
+          'challenger.ready': { $exists: false },
+        },
+        {
+          'state': 'active',
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+          'current_player': 'creator',
+        },
+        {
+          'state': 'active',
+          'challenger.id': id,
+          'challenger.remove': { $exists: false },
+          'current_player': 'challenger',
+        },
+      ],
+    });
+  },
+  waiting() {
+    const id = Meteor.userId();
+    if(!id) return [];
+    return Games.find({
+      $or: [
+        {
+          'state': 'setup',
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+          'creator.ready': { $exists: true },
+        },
+        {
+          'state': 'setup',
+          'challenger.id': id,
+          'challenger.remove': { $exists: false },
+          'challenger.ready': { $exists: true },
+        },
+        {
+          'state': 'active',
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+          'current_player': 'challenger',
+        },
+        {
+          'state': 'active',
+          'challenger.id': id,
+          'challenger.remove': { $exists: false },
+          'current_player': 'creator',
+        },
+        {
+          'state': { $in: ['waiting', 'pending'] },
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+        }
+      ],
+    });
+  },
+  done() {
+    const id = Meteor.userId();
+    if(!id) return [];
+    return Games.find({
+      'state': { $in: ['declined', 'ended'] },
+      $or: [
+        {
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+        },
+        {
+          'challenger.id': id,
+          'challenger.remove': { $exists: false },
+        },
+      ],
+    });
+  },
+});
+
+Template.dash_invited.helpers({
+  title(game) {
+    return Game.getTitle(game);
+  },
+  players(game) {
+    return "Invited by " + game.creator.name;
+  },
+});
+
+Template.dash_active.helpers({
+  title(game) {
+    return Game.getTitle(game);
+  },
+  players(game) {
+    return game.creator.name + " vs. " + game.challenger.name;
+  },
+});
+
+Template.dash_waiting.helpers({
+  title(game) {
+    return Game.getTitle(game);
+  },
+  players(game) {
+    switch(game.state) {
+      case 'waiting':
+        return "Waiting on player to join";
+      case 'pending':
+        return "You are waiting on " + game.challenger.name;
+      default:
+        return game.creator.name + " vs. " + game.challenger.name;
     }
   },
+});
+
+Template.dash_done.helpers({
   title(game) {
     return Game.getTitle(game);
   },
@@ -32,16 +162,6 @@ Template.dashboard.helpers({
     const player = Game.getUserPlayer(game, Meteor.user());
     /* jshint -W086 */
     switch(game.state) {
-      case 'created':
-        return "Created by " + game.creator.name;
-      case 'waiting':
-        return "Waiting on player to join";
-      case 'pending':
-        if(player === 'creator') {
-          return "You are waiting on " + game.challenger.name;
-        } else {
-          return game.creator.name + " is waiting on you";
-        }
       case 'declined':
         if(player === 'creator') {
           return game.challenger.name + " declined your invitation";
@@ -54,3 +174,4 @@ Template.dashboard.helpers({
     /* jshint +W086 */
   },
 });
+
