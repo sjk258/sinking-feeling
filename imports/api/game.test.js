@@ -72,11 +72,23 @@ describe('api/game.js', function() {
       assert.include(results, 'creator');
       assert.include(results, 'challenger');
     });
-    it('should set first player with argument', function(){
+    it('should disregard invalid player choice', function() {
       const first_test_value = 'this is the test value for the first player';
       const game = Game.create(user, first_test_value);
-
-      assert.equal(game.first_player, first_test_value);
+      assert.property(game, 'first_player');
+      assert.include(['creator','challenger'], game.first_player);
+    });
+    it('should use the provided player as first if creator', function() {
+      for(let i = 0; i < 30; i++) {
+        const game = Game.create(user, 'creator');
+        assert.propertyVal(game, 'first_player', 'creator');
+      }
+    });
+    it('should use the provided player as first if challenger', function() {
+      for(let i = 0; i < 30; i++) {
+        const game = Game.create(user, 'challenger');
+        assert.propertyVal(game, 'first_player', 'challenger');
+      }
     });
     it('should not set game.title if no title is provided', function() {
       const game = Game.create(user);
