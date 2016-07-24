@@ -1,0 +1,22 @@
+<template name="home">
+  <div class="container home">
+    <h1>Sinking Feeling</h1>
+    {{#with fake}}
+    {{> board board=squares game=game own=false}}
+    {{/with}}
+    <p>
+      Sinking Feeling is a clone of the game Battleship, which was originally
+      popularized by Milton Bradley. On Sinking Feeling, you have the
+      opportunity to play against computer AI opponents as well as against
+      other players. New players should review the <a href="/rules">rules</a>
+      before <a href="/create">creating their first game</a>.
+    </p>
+    {{#if currentUser}}
+    {{else}}
+    <p>
+      If you're new to the site, be sure to <a href="/sign-up">sign up</a>: you
+      have to be logged in to play!
+    </p>
+    {{/if}}
+  </div>
+</template>
