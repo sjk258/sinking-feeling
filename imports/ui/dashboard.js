@@ -7,6 +7,22 @@ import './dashboard.less';
 import './listing.js';
 
 Template.dashboard.helpers({
+  allGames() {
+    const id = Meteor.userId();
+    if(!id) return [];
+    return Games.find({
+      $or: [
+        {
+          'creator.id': id,
+          'creator.remove': { $exists: false },
+        },
+        {
+          'challenger.id': id,
+          'challenger.remove': { $exists: false },
+        },
+      ],
+    });
+  },
   invited() {
     const id = Meteor.userId();
     if(!id) return [];
@@ -89,14 +105,13 @@ Template.dashboard.helpers({
     const id = Meteor.userId();
     if(!id) return [];
     return Games.find({
+      'state': { $in: ['declined', 'ended'] },
       $or: [
         {
-          'state': { $in: ['declined', 'ended'] },
           'creator.id': id,
           'creator.remove': { $exists: false },
         },
         {
-          'state': 'ended',
           'challenger.id': id,
           'challenger.remove': { $exists: false },
         },
@@ -172,9 +187,14 @@ Template.dash_done.helpers({
     return Game.getTitle(game);
   },
   players(game) {
+    const player = Game.getUserPlayer(game, Meteor.user());
     switch(game.state) {
       case 'declined':
-        return game.challenger.name + " declined your invitation";
+        if(player === 'creator') {
+          return game.challenger.name + " declined your invitation";
+        } else {
+          return "You declined " + game.creator.name + "'s invitation";
+        }
       default:
         return game.creator.name + " vs. " + game.challenger.name;
     }

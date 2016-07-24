@@ -2,16 +2,23 @@
   {{#if currentUser}}
     <h1>{{currentUser.username}}'s Games</h1>
 
-    {{#if invited}}
+    {{#if allGames.count}}
+    {{else}}
+      <p>
+        You don't have any games yet.
+      </p>
+    {{/if}}
+
+    {{#if invited.count}}
       {{> dash_invited games=invited}}
     {{/if}}
-    {{#if active}}
+    {{#if active.count}}
       {{> dash_active games=active}}
     {{/if}}
-    {{#if waiting}}
+    {{#if waiting.count}}
       {{> dash_waiting games=waiting}}
     {{/if}}
-    {{#if done}}
+    {{#if done.count}}
       {{> dash_done games=done}}
     {{/if}}
   {{else}}
