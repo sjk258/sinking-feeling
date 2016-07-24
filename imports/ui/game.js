@@ -22,7 +22,7 @@ function getAction() {
 function getPlayerOne(game) {
   const user = Meteor.user();
   const player = Game.getUserPlayer(game, user);
-  return player || 'creator';
+  return player || 'challenger';
 }
 
 function canFire(game) {
@@ -111,13 +111,17 @@ Template.game_meta_data.helpers({
 });
 
 Template.game_boards.helpers({
-  ownPlayer() {
-    const game = getGame();
+  ownPlayer(game) {
     return getPlayerOne(game);
   },
-  otherPlayer() {
-    const game = getGame();
+  otherPlayer(game) {
     return Game.oppositePlayer(getPlayerOne(game));
+  },
+});
+
+Template.game_board.helpers({
+  playerName(game, player) {
+    return game[player].name;
   },
 });
 

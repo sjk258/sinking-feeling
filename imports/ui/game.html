@@ -103,14 +103,26 @@
 <template name="game_boards">
   <div class="row text-center">
     <div class="col-sm-6">
-      <strong>Your Board</strong>
-      {{> board board=ownBoard.squares game=game own=true}}
-      {{> sunk_ships sunk=ownBoard.sunk}}
+      {{> game_board panelClass="panel-primary" heading="Opponent's Board"
+        game=game board=attackBoard own=false player=(otherPlayer game)}}
     </div>
     <div class="col-sm-6">
-      <strong>Their Board</strong>
-      {{> board board=attackBoard.squares game=game own=false}}
-      {{> sunk_ships sunk=attackBoard.sunk}}
+      {{> game_board panelClass="panel-primary" heading="Your Board"
+        game=game board=ownBoard own=true player=(ownPlayer game)}}
+    </div>
+  </div>
+</template>
+
+<template name="game_board">
+  <div class="game-board panel {{panelClass}}">
+    <div class="panel-heading">
+      {{playerName game player}}'s board
+    </div>
+    <div class="panel-body">
+      <div class="text-center">
+        {{> board board=board.squares game=game own=own}}
+      </div>
+      {{> sunk_ships sunk=board.sunk}}
     </div>
   </div>
 </template>
