@@ -57,6 +57,29 @@ Template.game.helpers({
   title(game) {
     return Game.getTitle(game);
   },
+  players(game) {
+    let names = game.creator.name + " vs. " + game.challenger.name;
+    if('ai' in game.challenger) {
+      names += ' (AI)';
+    }
+    return names;
+  },
+  turn(game) {
+    if(game.state === "active") {
+      return "Move " + (game.turn_number + 1) + ": " +
+        game[game.current_player].name + "'s turn.";
+    }
+    if(game.state === "setup") {
+      if(game.creator.ready) {
+        return "Waiting for " + game.challenger.name + " to finish setup.";
+      } else if(game.challenger.ready) {
+        return "Waiting for " + game.creator.name + " to finish setup.";
+      } else {
+        return "Waiting for players to finish setup.";
+      }
+    }
+    return false;
+  },
 });
 
 Template.game_confirmations.helpers({
@@ -94,20 +117,6 @@ Template.game_confirmations.events({
     Game.resign(game, player);
     FlowRouter.go('game', {id: game._id});
   },
-});
-
-Template.game_meta_data.helpers({
-  ownName(game) {
-    const player = getPlayerOne(game);
-    return game[player].name;
-  },
-  opponentName(game) {
-    const player = Game.oppositePlayer(getPlayerOne(game));
-    return game[player].name;
-  },
-  turnName(game) {
-    return game[game.current_player].name;
-  }
 });
 
 Template.game_boards.helpers({
