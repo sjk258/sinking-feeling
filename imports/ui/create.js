@@ -50,8 +50,8 @@ function checkSubmit() {
 }
 
 Template.create_game.onCreated(function() {
-  Session.set('first_player', null);
-  Session.set('opponent_type', 'random');
+  Session.set('first_player', 'random');
+  Session.set('opponent_type', null);
   Session.set('selected_ai', AI.default_name);
   Session.set('selected_user', null);
 });
