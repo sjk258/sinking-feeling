@@ -234,6 +234,9 @@ export function remove(game, player) {
     Games.remove(game._id);
   } else {
     game[player].remove = true;
+    if(game.state === 'active' || game.state === 'setup') {
+      resign(game, player);
+    }
     update(game);
   }
 }
@@ -259,6 +262,19 @@ export function opponentRemoved(game, player) {
       return ('remove' in game[opponent] && game[opponent].remove);
   }
   /* jshint +W086 */
+}
+
+export function resign(game, player) {
+  const opponent = oppositePlayer(player);
+
+  game.resignation = player;
+  game.state = 'ended';
+  game.winner = opponent;
+  game.time_finished = new Date();
+
+  delete game.current_player;
+
+  update(game);
 }
 
 export function update(game) {

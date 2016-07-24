@@ -3,33 +3,55 @@
     {{> http404}}
   {{else}}
 
-  <h2 class="text-center">{{title game}}</h2>
+    <h2 class="text-center">{{title game}}</h2>
 
-  {{#if actionRemove}}
-    <div class="panel panel-danger">
-      <div class="panel-heading">
-        Do you really want to remove this game?
+    {{#if actionRemove}}
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          Do you really want to remove this game?
+        </div>
+        <div class="panel-body">
+          <p>
+            {{#if actionRemoveWillDelete game}}
+              Removing this game will result in it being immediately deleted.
+              This action is irreversible.
+            {{else}}
+              Removing this game will prevent it from showing up on your
+              dashboard.
+              This action is irreversible.
+              The game will not be deleted until your opponent also removes the
+              game from their dashboard.
+              {{#if actionRemoveWillResign game}}
+                You will also automatically forfeit the game to your opponent.
+              {{/if}}
+            {{/if}}
+          </p>
+          <p>
+            <button class="removeGame btn btn-danger">Remove</button>
+            <a class="btn btn-default" href="{{urlSelf}}">Cancel</a>
+          </p>
+        </div>
       </div>
-      <div class="panel-body">
-        <p>
-          {{#if actionRemoveWillDelete game}}
-          Removing this game will result in it being immediately deleted.
-          This action is irreversible.
-          {{else}}
-          Removing this game will prevent it from showing up on your dashboard.
-          This action is irreversible.
-          The game will not be deleted until your opponent also removes the game
-          from their dashboard.
-          {{/if}}
-        </p>
-        <p>
-          <button class="removeGame btn btn-danger">Remove</button>
-          <a class="btn btn-default" href="{{urlSelf}}">Cancel</a>
-        </p>
+      <p>Do you really want to remove this game?</p>
+    {{/if}}
+
+    {{#if actionResign}}
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          Do you really want to resign?
+        </div>
+        <div class="panel-body">
+          <p>
+            If you resign, you will automatically lose the game. Are you sure
+            this is what you really want?
+          </p>
+          <p>
+            <button class="resignGame btn btn-danger">Resign</button>
+            <a class="btn btn-default" href="{{urlSelf}}">Cancel</a>
+          </p>
+        </div>
       </div>
-    </div>
-    <p>Do you really want to remove this game?</p>
-  {{/if}}
+    {{/if}}
 
     {{#with game}}
       {{#if showBothBoards game}}
@@ -114,6 +136,15 @@
     </div>
   </div>
   {{/if}}
+  {{#if canResign game}}
+  <div class="row text-center">
+    <div class="col-sm-12">
+      <p>
+        <a class="btn btn-danger" href="{{urlResign game}}">Resign Game</a>
+      </p>
+    </div>
+  </div>
+  {{/if}}
   {{#if waiting game}}
   <div class="row text-center">
     <div class="col-sm-12">
@@ -149,7 +180,12 @@
   <div class="row text-center">
     <div class="col-sm-12">
       {{#if game.time_finished}}
-      <p>Game over! The winner is: {{winner}}!</p>
+      <p>
+        Game over! The winner is: {{winner game}}!
+        {{#if game.resignation}}
+          ({{resignedPlayer game}} resigned.)
+        {{/if}}
+      </p>
       {{/if}}
       <div class="small">
         <p>Game created: {{dateFormat game.created_at}}</p>

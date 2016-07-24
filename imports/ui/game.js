@@ -64,6 +64,12 @@ Template.game.helpers({
     const player = Game.getUserPlayer(game, Meteor.user());
     return Game.opponentRemoved(game, player);
   },
+  actionRemoveWillResign(game) {
+    return game.state === 'active' || game.state === 'setup';
+  },
+  actionResign() {
+    return getAction() === 'resign';
+  },
   urlSelf() {
     const id = FlowRouter.getParam('id');
     return FlowRouter.path('game', {id});
@@ -77,6 +83,13 @@ Template.game.events({
     const player = Game.getUserPlayer(game, user);
     Game.remove(game, player);
     FlowRouter.go('dashboard');
+  },
+  'click .resignGame'() {
+    const game = getGame();
+    const user = Meteor.user();
+    const player = Game.getUserPlayer(game, user);
+    Game.resign(game, player);
+    FlowRouter.go('game', {id: game._id});
   },
 });
 
@@ -161,6 +174,9 @@ Template.game_actions.helpers({
   canFire(game) {
     return canFire(game);
   },
+  canResign(game) {
+    return game.state === 'active' && getAction() !== 'resign';
+  },
   waiting(game) {
     return game.state === 'waiting';
   },
@@ -200,13 +216,19 @@ Template.game_actions.helpers({
     const move = Session.get('move');
     return move ? "" : "disabled";
   },
+  urlResign(game) {
+    return FlowRouter.path('game', {id: game._id}, {action: 'resign'});
+  },
 });
 
 Template.game_meta_foot.helpers({
   dateFormat(ts) {
     return moment(ts).format("dddd, MMMM M, YYYY [at] h:kk A [UTC]Z");
   },
-  winner() {
-    return this.game[this.game.winner].name;
+  winner(game) {
+    return game[game.winner].name;
   },
+  resignedPlayer(game) {
+    return game[game.resignation].name;
+  }
 });
