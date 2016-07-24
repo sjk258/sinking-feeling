@@ -50,6 +50,9 @@ Template.game.helpers({
     const game = getGame();
     return Game.getAttackBoard(game, getPlayerOne(game));
   },
+  title(game) {
+    return Game.getTitle(game);
+  },
 });
 
 Template.game_meta_data.helpers({
