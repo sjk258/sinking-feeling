@@ -26,10 +26,9 @@ const ai_players = {
   'chad': AI_Chad,
 };
 
-export const default_name = 'sue';
+export const default_name = 'felicity';
 
 export function getNames() {
-  //return ['sue','ralph','jack','paul','pat','felicity','chad'];
   return Object.keys(ai_players);
 }
 
@@ -57,7 +56,7 @@ export function getPlayer(name) {
 export function getPlayers(field='full_name', descending=false) {
   const names = getNames();
   const players = [];
-  for(var name in names) {
+  for(let name in names) {
     players.push(getPlayer(names[name]));
   }
 
