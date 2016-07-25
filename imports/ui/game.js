@@ -302,7 +302,13 @@ Template.game_actions.events({
     Session.set('move', null);
   },
   'click .StartGame'(event) {
-    //
+    const game = getGame();
+    const user = Meteor.user();
+    const player = Game.getUserPlayer(game, user);
+
+    game[player].ready = true;
+    Game.checkState(game);
+    Game.update(game);
   },
 });
 
