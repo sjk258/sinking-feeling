@@ -41,13 +41,13 @@ Template.dashboard.helpers({
           'state': 'setup',
           'creator.id': id,
           'creator.remove': { $exists: false },
-          'creator.ready': { $exists: false },
+          'creator.ready': false,
         },
         {
           'state': 'setup',
           'challenger.id': id,
           'challenger.remove': { $exists: false },
-          'challenger.ready': { $exists: false },
+          'challenger.ready': false,
         },
         {
           'state': 'active',
@@ -73,13 +73,13 @@ Template.dashboard.helpers({
           'state': 'setup',
           'creator.id': id,
           'creator.remove': { $exists: false },
-          'creator.ready': { $exists: true },
+          'creator.ready': true,
         },
         {
           'state': 'setup',
           'challenger.id': id,
           'challenger.remove': { $exists: false },
-          'challenger.ready': { $exists: true },
+          'challenger.ready': true,
         },
         {
           'state': 'active',
