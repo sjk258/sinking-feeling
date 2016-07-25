@@ -27,7 +27,7 @@
           <p class="turn">{{turn game}}</p>
         </div>
 
-        {{> game_own_board game=game board=ownBoard}}
+        {{> game_own_board game=game board=setupBoard}}
       {{else}}
         {{> game_actions game=game}}
       {{/if}}

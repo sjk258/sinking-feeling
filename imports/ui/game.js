@@ -8,6 +8,7 @@ import * as Game from '/imports/api/game.js';
 import * as Log from '/imports/api/log.js';
 import * as Ship from '/imports/api/ship.js';
 import * as Square from '/imports/api/square.js';
+import * as Util from '/imports/api/util.js';
 
 import './game.html';
 import './game.less';
@@ -67,6 +68,18 @@ Template.game.helpers({
   attackBoard() {
     const game = getGame();
     return Game.getAttackBoard(game, getPlayerOne(game));
+  },
+  setupBoard() {
+    const game = Util.clone(getGame());
+    const ship = Session.get('ship');
+
+    const user = Meteor.user();
+    const player = Game.getUserPlayer(game, user);
+    if(ship) {
+      delete game[player].ships[ship];
+    }
+
+    return Game.getOwnBoard(game, player);
   },
   title(game) {
     return Game.getTitle(game);
