@@ -191,6 +191,12 @@ Template.game_log.helpers({
     if(entry.event === 'ended') {
       return "Game over!";
     }
+    if(entry.event === 'challenger ready') {
+      return game.challenger.name + " finished setup.";
+    }
+    if(entry.event === 'creator ready') {
+      return game.creator.name + " finished setup.";
+    }
     if(entry.event !== 'shot') {
       //return JSON.stringify(entry);
       return false;
