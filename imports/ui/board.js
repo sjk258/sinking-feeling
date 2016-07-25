@@ -29,9 +29,16 @@ Template.board_cell.helpers({
       if(square.state === "E") {
         list += " clickable";
       }
-      if(isSelected(row, col)) {
-        list += " selected";
+    }
+    if(Game.userCanSetup(game, user) && own) {
+      if(Session.get('ship')) {
+        list += " clickable";
+      } else if(square.state === "S") {
+        list += " clickable";
       }
+    }
+    if(isSelected(row, col)) {
+      list += " selected";
     }
     return list;
   },

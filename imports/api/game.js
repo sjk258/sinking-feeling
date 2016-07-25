@@ -5,7 +5,6 @@ import * as Board from './board.js';
 import * as Ship from './ship.js';
 import {Games} from './games.js';
 
-
 export function create(user, first_player=null, title=null) {
   var game = {
     created_at: new Date(),
@@ -14,10 +13,12 @@ export function create(user, first_player=null, title=null) {
       name: user.username,
       ships: Ship.create(),
       ready: false,
+      shots: [],
     },
     challenger: {
       ships: Ship.create(),
       ready: false,
+      shots: [],
     },
     first_player: first_player,
     state: 'created',
@@ -127,10 +128,7 @@ export function checkStateSetup(game) {
   if(!game.challenger.ready) return;
 
   delete game.creator.ready;
-  game.creator.shots = [];
-
   delete game.challenger.ready;
-  game.challenger.shots = [];
 
   game.state = 'active';
 
@@ -220,6 +218,7 @@ export function checkState(game) {
 
   // TODO: This changes setup to active and should go away when we implement
   // ship placement in the UI.
+  /*
   if(game.state === 'setup') {
     game.creator.ready = true;
     game.creator.ready_at = new Date();
@@ -227,6 +226,7 @@ export function checkState(game) {
     game.creator.ready_at = new Date();
     states.setup(game);
   }
+  */
 }
 
 export function remove(game, player) {
@@ -402,6 +402,14 @@ export function userCanFire(game, user) {
   if(!userIsPlayer(game, user)) return false;
   const player = getUserPlayer(game, user);
   return game.current_player === player;
+}
+
+export function userCanSetup(game, user) {
+  if(!user) return false;
+  if(game.state !== 'setup') return false;
+  if(!userIsPlayer(game, user)) return false;
+  const player = getUserPlayer(game, user);
+  return !game[player].ready;
 }
 
 export function userCanJoin(game, user) {

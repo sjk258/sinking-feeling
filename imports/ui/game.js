@@ -36,11 +36,17 @@ function canFire(game) {
 
 Template.game.onCreated(function() {
   Session.set('move', null);
+  Session.set('ship', null);
+  Session.set('rotate', false);
+  Session.set('alert', null);
 });
 
 Template.game.helpers({
   invalid() {
     return !getGame();
+  },
+  alert() {
+    return Session.get('alert');
   },
   game() {
     return getGame();
@@ -48,6 +54,10 @@ Template.game.helpers({
   showBothBoards(game) {
     if(game.state === 'active') return true;
     if(game.state === 'ended') return true;
+    return false;
+  },
+  showPlayerBoard(game) {
+    if(game.state === 'setup') return true;
     return false;
   },
   ownBoard() {
@@ -139,6 +149,12 @@ Template.game_both_boards.helpers({
   },
 });
 
+Template.game_own_board.helpers({
+  ownPlayer(game) {
+    return getPlayerOne(game);
+  },
+});
+
 Template.game_board.helpers({
   playerName(game, player) {
     return game[player].name;
@@ -192,6 +208,21 @@ Template.game_log.helpers({
   },
 });
 
+function clickedMove(rotate) {
+  const game = getGame();
+  const user = Meteor.user();
+  const player = Game.getUserPlayer(game, user);
+  const ships = game[player].ships;
+  const move = Session.get('move');
+  const ship = Square.spaceShip(move, ships);
+  if(!ship) throw new Meteor.Error('invalid-ship');
+
+  Session.set('ship', ship);
+  Session.set('move', null);
+  Session.set('rotate', rotate);
+  Session.set('alert', null);
+}
+
 Template.game_actions.events({
   'click .fireShot'(event) {
     event.preventDefault();
@@ -242,6 +273,43 @@ Template.game_actions.events({
       throw new Meteor.Error('not-your-game');
     }
   },
+  'click .MoveShip'() {
+    clickedMove(false);
+  },
+  'click .RotateShip'() {
+    clickedMove(true);
+  },
+  'click .ConfirmMove'() {
+    const ship = Session.get('ship');
+    const rotate = Session.get('rotate');
+    const move = Session.get('move');
+
+    const game = getGame();
+    const user = Meteor.user();
+    const player = Game.getUserPlayer(game, user);
+
+    let vertical = game[player].ships[ship].vertical;
+    if(rotate) vertical = !vertical;
+
+    try {
+      Ship.place(ship, move.row, move.col, vertical, game[player].ships);
+      Game.update(game);
+    } catch(e) {
+      Session.set('alert', e);
+    }
+
+    Session.set('ship', null);
+    Session.set('move', null);
+  },
+  'click .StartGame'() {
+    const game = getGame();
+    const user = Meteor.user();
+    const player = Game.getUserPlayer(game, user);
+
+    game[player].ready = true;
+    Game.checkState(game);
+    Game.update(game);
+  },
 });
 
 Template.game_actions.helpers({
@@ -256,6 +324,10 @@ Template.game_actions.helpers({
   },
   pending(game) {
     return game.state === 'pending';
+  },
+  canSetup(game) {
+    const user = Meteor.user();
+    return Game.userCanSetup(game, user);
   },
   canJoin(game) {
     const user = Meteor.user();
@@ -289,6 +361,16 @@ Template.game_actions.helpers({
   fireDisabled() {
     const move = Session.get('move');
     return move ? "" : "disabled";
+  },
+  moveDisabled() {
+    const ship = Session.get('ship');
+    const move = Session.get('move');
+    return (move && !ship) ? "" : "disabled";
+  },
+  confirmDisabled() {
+    const ship = Session.get('ship');
+    const move = Session.get('move');
+    return (ship && move) ? "" : "disabled";
   },
   urlResign(game) {
     return FlowRouter.path('game', {id: game._id}, {action: 'resign'});

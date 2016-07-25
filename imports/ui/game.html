@@ -4,6 +4,12 @@
   {{else}}
 
     <h2 class="text-center">{{title game}}</h2>
+    
+    {{#if alert}}
+      <div class="alert alert-danger" role="alert">
+        {{alert}}
+      </div>
+    {{/if}}
 
     {{> game_confirmations game=game}}
 
@@ -15,7 +21,11 @@
 
       {{> game_both_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
     {{else}}
-      {{> game_actions game=game}}
+      {{#if showPlayerBoard game}}
+        {{> game_own_board game=game board=ownBoard}}
+      {{else}}
+        {{> game_actions game=game}}
+      {{/if}}
     {{/if}}
   {{/if}}
 </template>
@@ -84,6 +94,18 @@
       </div>
     </div>
     <div class="col-lg-3 col-md-6">
+      {{> game_log game=game}}
+    </div>
+  </div>
+</template>
+
+<template name="game_own_board">
+  <div class="row text-center">
+    <div class="col-md-6">
+      {{> game_board game=game board=board own=true player=(ownPlayer game)}}
+      {{> game_actions game=game}}
+    </div>
+        <div class="col-md-6">
       {{> game_log game=game}}
     </div>
   </div>
@@ -188,5 +210,29 @@
       {{/if}}
     </div>
   </div>
+  {{/if}}
+  {{#if canSetup game}}
+    <div>
+      <p> To move a ship , click on desired ship then click
+      <button class="btn btn-default MoveShip {{moveDisabled}}">Move Ship</button> then click in new empty square
+      <p align='left'>
+        Note: The ship must fit in its new location 
+      </p>
+      <br>
+      </p>
+      <p> to rotate ship click on desired ship then click 
+        <button class="btn btn-default RotateShip {{moveDisabled}}">Rotate Ship</button> until selected ship is at the desired orientation
+      </p>
+      <p align='left'>
+        Note: the There must be clearence for the ship to rotate
+      </p>
+      <br>
+      <p>
+        <button class="btn btn-default ConfirmMove {{confirmDisabled}}">Confirm</button>
+      </p>
+      <p> When ready to start the game click 
+        <button class="btn btn-default StartGame">Start Game</button>
+      </p>
+    </div>
   {{/if}}
 </template>
