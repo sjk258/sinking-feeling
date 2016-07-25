@@ -273,13 +273,13 @@ Template.game_actions.events({
       throw new Meteor.Error('not-your-game');
     }
   },
-  'click .MoveShip'(event) {
+  'click .MoveShip'() {
     clickedMove(false);
   },
-  'click .RotateShip'(event) {
+  'click .RotateShip'() {
     clickedMove(true);
   },
-  'click .ConfirmMove'(event) {
+  'click .ConfirmMove'() {
     const ship = Session.get('ship');
     const rotate = Session.get('rotate');
     const move = Session.get('move');
@@ -301,7 +301,7 @@ Template.game_actions.events({
     Session.set('ship', null);
     Session.set('move', null);
   },
-  'click .StartGame'(event) {
+  'click .StartGame'() {
     const game = getGame();
     const user = Meteor.user();
     const player = Game.getUserPlayer(game, user);
