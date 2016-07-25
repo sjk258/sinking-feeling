@@ -63,6 +63,13 @@ Template.game.helpers({
   },
   ownBoard() {
     const game = getGame();
+
+    const user = Meteor.user();
+    if(!Game.userIsPlayer(game, user)) {
+      const player = Game.oppositePlayer(getPlayerOne(game));
+      return Game.getAttackBoard(game, player);
+    }
+
     return Game.getOwnBoard(game, getPlayerOne(game));
   },
   attackBoard() {

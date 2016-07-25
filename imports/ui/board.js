@@ -26,9 +26,10 @@ Template.board_cell.helpers({
     if(square.state === "S") {
       list += " cell-S-" + square.ship;
     }
+    let clickable = false;
     if(Game.userCanFire(game, user) && !own) {
       if(square.state === "E") {
-        list += " clickable";
+        clickable = true;
       }
     }
     if(Game.userCanSetup(game, user) && own) {
@@ -39,14 +40,17 @@ Template.board_cell.helpers({
         let vertical = ships[type].vertical;
         if(Session.get('rotate')) vertical = !vertical;
         if(!Ship.checkPlacement(type, row, col, vertical, ships)) {
-          list += " clickable";
+          clickable = true;
         }
       } else if(square.state === "S") {
-        list += " clickable";
+        clickable = true;
       }
     }
-    if(isSelected(row, col)) {
-      list += " selected";
+    if(clickable) {
+      list += " clickable";
+      if(isSelected(row, col)) {
+        list += " selected";
+      }
     }
     return list;
   },
