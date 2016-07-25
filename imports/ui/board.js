@@ -1,6 +1,7 @@
 /** Configuration for JSHint to recognize automatic globals: */
 
 import * as Game from '/imports/api/game.js';
+import * as Ship from '/imports/api/ship.js';
 import * as Square from '/imports/api/square.js';
 
 import './board.html';
@@ -31,8 +32,15 @@ Template.board_cell.helpers({
       }
     }
     if(Game.userCanSetup(game, user) && own) {
-      if(Session.get('ship')) {
-        list += " clickable";
+      const type = Session.get('ship');
+      const player = Game.getUserPlayer(game, Meteor.user());
+      if(type) {
+        const ships = game[player].ships;
+        let vertical = ships[type].vertical;
+        if(Session.get('rotate')) vertical = !vertical;
+        if(!Ship.checkPlacement(type, row, col, vertical, ships)) {
+          list += " clickable";
+        }
       } else if(square.state === "S") {
         list += " clickable";
       }
