@@ -22,6 +22,11 @@
       {{> game_both_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
     {{else}}
       {{#if showPlayerBoard game}}
+        <div class="game-lead">
+          <p class="players">{{players game}}</p>
+          <p class="turn">{{turn game}}</p>
+        </div>
+
         {{> game_own_board game=game board=ownBoard}}
       {{else}}
         {{> game_actions game=game}}
