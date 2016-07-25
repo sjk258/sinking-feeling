@@ -342,6 +342,8 @@ Template.game_actions.helpers({
     return canFire(game);
   },
   canResign(game) {
+    const user = Meteor.user();
+    if(!Game.userIsPlayer(game, user)) return false;
     return game.state === 'active' && getAction() !== 'resign';
   },
   waiting(game) {
@@ -370,10 +372,7 @@ Template.game_actions.helpers({
   },
   notMyGame(game) {
     const user = Meteor.user();
-    if(!user) return true;
-    if(game.creator.id === user._id) return false;
-    if(game.challenger.id === user._id) return false;
-    return true;
+    return !Game.userIsPlayer(game, user);
   },
   ended(game) {
     return game.state === 'ended';
