@@ -250,18 +250,6 @@ describe('api/game.js', function() {
         Game.checkStateSetup(game);
         assert.notProperty(game.challenger, 'ready');
       });
-      it('should add creator.shots', function() {
-        Game.checkStateSetup(game);
-        assert.property(game.creator, 'shots');
-        assert.isArray(game.creator.shots);
-        assert.lengthOf(game.creator.shots, 0);
-      });
-      it('should add challenger.shots', function() {
-        Game.checkStateSetup(game);
-        assert.property(game.challenger, 'shots');
-        assert.isArray(game.challenger.shots);
-        assert.lengthOf(game.challenger.shots, 0);
-      });
       it('should populate first_player as creator if missing', function() {
         Game.checkStateSetup(game);
         assert.propertyVal(game, 'first_player', 'creator');
