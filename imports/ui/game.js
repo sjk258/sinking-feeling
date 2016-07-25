@@ -172,6 +172,12 @@ Template.game_board.helpers({
   playerName(game, player) {
     return game[player].name;
   },
+  isSetup(game) {
+    return game.state === 'setup';
+  },
+  movingShip() {
+    return Session.get('ship');
+  },
 });
 
 Template.sunk_ships.helpers({

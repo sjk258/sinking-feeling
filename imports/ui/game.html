@@ -125,7 +125,15 @@
       {{> board board=board.squares game=game own=own}}
     </div>
     <div class="panel-footer">
-      {{> sunk_ships sunk=board.sunk}}
+      {{#if isSetup game}}
+        {{#if movingShip}}
+          Select a destination for your {{movingShip}}.
+        {{else}}
+          Select a ship to move.
+        {{/if}}
+      {{else}}
+        {{> sunk_ships sunk=board.sunk}}
+      {{/if}}
     </div>
   </div>
 </template>
