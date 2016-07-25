@@ -63,10 +63,27 @@ Template.game.helpers({
   },
   ownBoard() {
     const game = getGame();
+
+    if(game.state === 'ended') {
+      return Game.getOwnBoard(game, getPlayerOne(game));
+    }
+
+    const user = Meteor.user();
+    if(!Game.userIsPlayer(game, user)) {
+      const player = Game.oppositePlayer(getPlayerOne(game));
+      return Game.getAttackBoard(game, player);
+    }
+
     return Game.getOwnBoard(game, getPlayerOne(game));
   },
   attackBoard() {
     const game = getGame();
+
+    if(game.state === 'ended') {
+      const player = Game.oppositePlayer(getPlayerOne(game));
+      return Game.getOwnBoard(game, player);
+    }
+
     return Game.getAttackBoard(game, getPlayerOne(game));
   },
   setupBoard() {
