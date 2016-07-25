@@ -22,7 +22,12 @@
       {{> game_both_boards game=game ownBoard=ownBoard attackBoard=attackBoard}}
     {{else}}
       {{#if showPlayerBoard game}}
-        {{> game_own_board game=game board=ownBoard}}
+        <div class="game-lead">
+          <p class="players">{{players game}}</p>
+          <p class="turn">{{turn game}}</p>
+        </div>
+
+        {{> game_own_board game=game board=setupBoard}}
       {{else}}
         {{> game_actions game=game}}
       {{/if}}
@@ -120,7 +125,15 @@
       {{> board board=board.squares game=game own=own}}
     </div>
     <div class="panel-footer">
-      {{> sunk_ships sunk=board.sunk}}
+      {{#if isSetup game}}
+        {{#if movingShip}}
+          Select a destination for your {{movingShip}}.
+        {{else}}
+          Select a ship to move.
+        {{/if}}
+      {{else}}
+        {{> sunk_ships sunk=board.sunk}}
+      {{/if}}
     </div>
   </div>
 </template>
@@ -212,27 +225,35 @@
   </div>
   {{/if}}
   {{#if canSetup game}}
-    <div>
-      <p> To move a ship , click on desired ship then click
-      <button class="btn btn-default MoveShip {{moveDisabled}}">Move Ship</button> then click in new empty square
-      <p align='left'>
-        Note: The ship must fit in its new location 
-      </p>
-      <br>
-      </p>
-      <p> to rotate ship click on desired ship then click 
-        <button class="btn btn-default RotateShip {{moveDisabled}}">Rotate Ship</button> until selected ship is at the desired orientation
-      </p>
-      <p align='left'>
-        Note: the There must be clearence for the ship to rotate
-      </p>
-      <br>
-      <p>
-        <button class="btn btn-default ConfirmMove {{confirmDisabled}}">Confirm</button>
-      </p>
-      <p> When ready to start the game click 
-        <button class="btn btn-default StartGame">Start Game</button>
-      </p>
+    <div class="row text-center">
+      <div class="col-sm-12">
+        <p>
+          <button class="btn btn-default MoveShip {{moveDisabled}}">Move</button>
+          <button class="btn btn-default RotateShip {{moveDisabled}}">Rotate</button>
+          &nbsp;
+          <button class="btn btn-default ConfirmMove {{confirmDisabled}}">Confirm</button>
+          &nbsp;
+          <button class="btn btn-warning StartGame">Finished Setup</button>
+        </p>
+        <div class="text-left">
+          <p>
+            To move a ship:
+          </p>
+          <ol>
+            <li>Click on a ship.</li>
+            <li>Click Move (to move) or Rotate (to rotate and move).</li>
+            <li>
+              Click on the square where you want to move the ship. This square
+              will be the new top/left corner of the ship. Only valid squares
+              are clickable.
+            </li>
+            <li>Click Confirm to finalize placement.</li>
+          </ol>
+          <p>
+            When are you are finished setup, click Finished Setup.
+          </p>
+        </div>
+      </div>
     </div>
   {{/if}}
 </template>
