@@ -200,18 +200,6 @@ export function checkState(game) {
   } else {
     throw Meteor.Error('invalid-state', 'The game has an invalid state');
   }
-
-  // TODO: This changes setup to active and should go away when we implement
-  // ship placement in the UI.
-  /*
-  if(game.state === 'setup') {
-    game.creator.ready = true;
-    game.creator.ready_at = new Date();
-    game.challenger.ready = true;
-    game.creator.ready_at = new Date();
-    states.setup(game);
-  }
-  */
 }
 
 export function remove(game, player) {
