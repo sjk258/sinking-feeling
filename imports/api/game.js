@@ -44,8 +44,8 @@ export function initVsAi(game, ai) {
   game.challenger.ai = ai;
   game.challenger.name = AI.getPlayer(ai).full_name;
   game.challenger.ready = true;
+  game.challenger.ready_at = new Date();
   game.state = 'setup';
-  game.creator.ready_at = new Date();
   return game;
 }
 
